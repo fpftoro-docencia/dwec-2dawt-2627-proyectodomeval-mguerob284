@@ -1,4 +1,4 @@
-# Nombre de tu aplicación
+# PokéMemories · Salón de la Fama y Álbum de Recuerdos Pokémon
 
 <!-- Sprint 2: la insignia de tu workflow, con tu organización y tu repositorio. -->
 ![Integración continua](https://github.com/<organización>/<repositorio>/actions/workflows/ci.yml/badge.svg)
@@ -9,34 +9,45 @@
 
 ## Mi proyecto
 
-<!-- Sprint 1. De qué es tu aplicación y para quién, en dos o tres frases. -->
+**PokéMemories** es una aplicación web pensada para entrenadores y aficionados a Pokémon que quieren inmortalizar, registrar y rememorar sus partidas y desafíos completados (ediciones como *HeartGold*, *Esmeralda*, *Platino*, *Rojo Fuego*, etc.).
+
+La aplicación permite registrar cada aventura en el navegador vinculando las horas de juego, la fecha de victoria en la Liga, la licencia oficial de entrenador y el equipo titular de 1 a 6 Pokémon (con sus motes, niveles y ataques insignia). Además, rinde homenaje especial a las **«Leyendas Caídas»**: aquellos Pokémon que no llegaron a la cima de la Liga porque cayeron en batallas épicas a lo largo del camino, pero cuya hazaña merece un lugar de honor en el recuerdo de la partida.
 
 **Web publicada:** <!-- https://<proyecto>.vercel.app -->
 
 ### La entidad
 
-<!-- Sprint 2 (puedes adelantarla en el sprint 1). Una fila por campo, con los mínimos del requisito 13:
-     marca el campo condicional y el grupo dinámico (con su mínimo y su máximo). -->
-
 | Campo | Control | Obligatorio | Regla de validación | Mensaje si no se cumple |
 |-------|---------|:-----------:|---------------------|-------------------------|
-| | | | | |
+| **Código de registro** | Texto | Sí | Expresión regular `^POKE-[A-Z]{3}-\d{4}$` | Formato inválido. Debe ser POKE- seguido de 3 letras de la edición y 4 dígitos (ej. POKE-HGD-0042) |
+| **Título de la partida** | Texto | Sí | Longitud entre 3 y 40 caracteres | El título debe tener entre 3 y 40 caracteres |
+| **Edición del juego** | Desplegable | Sí | Coincidir con una de las opciones oficiales | Selecciona una edición oficial de la lista |
+| **Fecha de victoria** | Fecha | Sí | No puede ser posterior a la fecha actual (`max` dinámico) | La fecha de victoria no puede estar en el futuro |
+| **Tiempo de juego** | Texto | Sí | Expresión regular `^\d{1,3}:[0-5]\d$` | Introduce el tiempo en formato Horas:Minutos (ej. 45:30) |
+| **Licencia Entrenador (DNI)** | Texto | Sí | Regex `^[XYZ]?\d{7,8}[A-Z]$` + cálculo de control con letra (módulo 23) | La licencia de entrenador (DNI/NIE) o su letra no son válidas |
+| **¿Hubo leyendas caídas?** | Casilla | No | Booleano | - |
+| **Mención de honor** *(Condicional)* | Texto | Sí (si la casilla está activa) | Longitud entre 10 y 120 caracteres | Explica la hazaña de tu héroe caído (entre 10 y 120 caracteres) |
+| **Equipo Pokémon** *(Grupo dinámico)* | Plantilla `<template>` (1 a 6) | Sí | Entre 1 y 6 miembros. Mote (2-20 caracteres), nivel (1-100), estado (Campeón / Leyenda Caída) y movimiento clave | Debes registrar entre 1 y 6 Pokémon en el equipo |
 
 ### El registro de usuarios
 
 | Campo | Control | Regla | Mensaje |
 |-------|---------|-------|---------|
-| | | | |
+| **Nombre de usuario** | Texto | Expresión regular `^[a-zA-Z0-9_]{3,15}$` y no estar ya ocupado | El nombre debe tener entre 3 y 15 letras, números o guiones bajos y estar libre |
+| **Correo electrónico** | Email | Formato de correo electrónico válido (`type="email"`) | Introduce una dirección de correo electrónico válida |
+| **Contraseña** | Contraseña | Mínimo 8 caracteres, al menos una mayúscula (`\p{Lu}`), una minúscula (`\p{Ll}`) y un dígito (`\d`) | Debe tener al menos 8 caracteres, con mayúscula, minúscula y número |
+| **Repetir contraseña** | Contraseña | Coincidir exactamente con el campo de contraseña | Las contraseñas no coinciden |
+| **Aceptación de condiciones** | Casilla | Casilla obligatoria marcada (`required`) | Debes aceptar las condiciones de uso de PokéMemories |
 
 ### Páginas
 
 | Página | Acceso | Qué hace |
 |--------|--------|----------|
-| `index.html` | Pública | |
-| `registro.html` | Pública | |
-| `listado.html` | Usuarios | |
-| `ficha.html` | Usuarios | |
-| `usuarios.html` | Administradores | |
+| `index.html` | Pública | Inicio de sesión de entrenadores con control de doble envío y redirección al listado si ya hay sesión activa |
+| `registro.html` | Pública | Registro de nuevos entrenadores con validación en tiempo real de contraseña y sus requisitos visuales |
+| `listado.html` | Privada (Usuarios) | Vitrina de recuerdos de partidas con buscador sin tildes/mayúsculas (debounce), paginación y borrado con confirmación en `<dialog>` |
+| `ficha.html` | Privada (Usuarios) | Formulario de alta y edición de partidas con campo condicional (leyenda caída) y grupo dinámico de 1 a 6 Pokémon |
+| `usuarios.html` | Privada (Solo Administradores) | Panel de administración de entrenadores con buscador, paginación y asignación o retirada de permisos de administrador |
 
 ## Arquitectura y módulos
 
@@ -68,14 +79,14 @@
 <!-- Una subsección por parte de la aplicación (sesión y registro, listado y paginación, ficha,
      zona de administración): qué hace y cómo lo has resuelto. Incluye:
      - cómo lees los datos (FormData: get, getAll), cómo creas y numeras el grupo dinámico, cómo
-       funciona el campo condicional, qué atributos pones desde el código y cómo rellenas el
-       formulario al editar;
+        funciona el campo condicional, qué atributos pones desde el código y cómo rellenas el
+        formulario al editar;
      - la validación: cuándo validas cada campo, de dónde salen los mensajes (validity,
-       setCustomValidity y tus validadores), qué haces para que los errores sean accesibles y cómo
-       evitas el doble envío;
+        setCustomValidity y tus validadores), qué haces para que los errores sean accesibles y cómo
+        evitas el doble envío;
      - las expresiones regulares: tabla con cada una, en qué validador está, qué acepta (un ejemplo)
-       y qué significan sus partes y sus flags; qué parte de la validación hace la expresión y qué
-       parte el código. -->
+        y qué significan sus partes y sus flags; qué parte de la validación hace la expresión y qué
+        parte el código. -->
 
 ## Eventos
 
@@ -155,7 +166,13 @@
 <!-- Sprint 1. Tu lista de condiciones para dar una tarea por terminada. Cada una tiene que poder
      comprobarse. Si la cambias en algún sprint, di qué cambiaste y por qué. -->
 
-- [ ] <!-- … -->
+- [ ] El código cumple con las reglas configuradas de ESLint sin errores ni avisos (`npm run lint`).
+- [ ] El código pasa la comprobación de formato con Prettier (`npm run format:check`).
+- [ ] La funcionalidad cuenta con pruebas unitarias o de integración según corresponda en la pirámide de pruebas (`npm test`).
+- [ ] Las funciones puras y validadores mantienen el umbral mínimo de cobertura del 90 % (`npm run coverage`).
+- [ ] El código está documentado mediante comentarios JSDoc (`@param`, `@returns`, `@fires`, `@listens`).
+- [ ] Los cambios se han desarrollado en su propia rama y se integran en `main` mediante una *pull request* con el *workflow* de CI en verde.
+- [ ] La tarea asociada en el tablero de Trello se mueve a la columna «Hecho».
 
 ### Sprints
 
@@ -164,9 +181,9 @@
 
 | Sprint | *Tag* | Qué incluye | Reflexión |
 |--------|-------|-------------|-----------|
-| 1 | `v0.1` | | |
-| 2 | `v0.2` | | |
-| 3 | `v1.0` | | |
+| 1 | `v0.1` | Usuarios, sesión y roles, con sus tests y la primera integración continua (Requisitos 1–12) | <!-- Reflexión al cerrar el sprint 1 --> |
+| 2 | `v0.2` | El CRUD, la zona de administración, todas las pruebas y la integración continua completa (Requisitos 13–23) | <!-- Reflexión al cerrar el sprint 2 --> |
+| 3 | `v1.0` | Despliegue continuo completo, vistas previas, release de GitHub y entrega final (Requisitos 24–29) | <!-- Reflexión al cerrar el sprint 3 --> |
 
 **Tablero de Trello:** <!-- enlace (compartido con el profesor) -->
 
