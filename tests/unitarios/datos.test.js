@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach } from 'vitest';
 import { AlmacenFalso } from '../AlmacenFalso.js';
 import {
   obtenerUsuarios,
@@ -85,10 +85,10 @@ describe('Módulo de datos: Usuarios', () => {
   });
 
   it('no falla si los datos de usuarios en el almacenamiento están estropeados (Requisito 3)', () => {
-    almacen.setItem('pokememories_usuarios', '{ datos corruptos que no son json');
+    almacen.setItem('PokeMemories_usuarios', '{ datos corruptos que no son json');
     expect(obtenerUsuarios(almacen)).toEqual([]);
 
-    almacen.setItem('pokememories_usuarios', '12345'); // no es array
+    almacen.setItem('PokeMemories_usuarios', '12345'); // no es array
     expect(obtenerUsuarios(almacen)).toEqual([]);
   });
 });
@@ -114,12 +114,12 @@ describe('Módulo de datos: Sesión', () => {
   });
 
   it('no falla si los datos de sesión están estropeados (Requisito 3)', () => {
-    almacen.setItem('pokememories_sesion', '<<<basura>>>');
+    almacen.setItem('PokeMemories_sesion', '<<<basura>>>');
     expect(obtenerSesion(almacen)).toBeNull();
     expect(haySesion(almacen)).toBe(false);
 
     // Objeto con rol inválido
-    almacen.setItem('pokememories_sesion', JSON.stringify({ nombreUsuario: 'Hacker', rol: 'superadmin' }));
+    almacen.setItem('PokeMemories_sesion', JSON.stringify({ nombreUsuario: 'Hacker', rol: 'superadmin' }));
     expect(obtenerSesion(almacen)).toBeNull();
   });
 });

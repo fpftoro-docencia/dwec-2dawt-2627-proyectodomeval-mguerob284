@@ -75,7 +75,8 @@ export function renderizarCabecera(
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div class="container-fluid">
         <a class="navbar-brand navbar-brand-poke d-flex align-items-center gap-2" href="listado.html">
-          <span>⚡ PokéMemories</span>
+          <img src="img/logo.png" alt="Logo PokeMemories" width="34" height="34" class="rounded-circle shadow-sm" />
+          <span class="fw-bold">PokeMemories</span>
         </a>
         <div class="d-flex align-items-center">
           <ul class="navbar-nav flex-row gap-3 me-auto">

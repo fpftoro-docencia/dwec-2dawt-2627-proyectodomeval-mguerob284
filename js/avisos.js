@@ -1,9 +1,9 @@
-/**
+﻿/**
  * Sistema de gestión y emisión de avisos mediante eventos del DOM.
  * @module avisos
  */
 
-const CLAVE_AVISO_PENDIENTE = 'pokememories_aviso_pendiente';
+const CLAVE_AVISO_PENDIENTE = 'PokeMemories_aviso_pendiente';
 
 /**
  * Emite un evento personalizado 'aviso' que burbujea hasta document.

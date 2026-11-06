@@ -1,4 +1,4 @@
-# PokéMemories · Salón de la Fama y Álbum de Recuerdos Pokémon
+﻿# PokeMemories · Salón de la Fama y Álbum de Recuerdos Pokémon
 
 <!-- Sprint 2: la insignia de tu workflow, con tu organización y tu repositorio. -->
 ![Integración continua](https://github.com/<organización>/<repositorio>/actions/workflows/ci.yml/badge.svg)
@@ -9,7 +9,7 @@
 
 ## Mi proyecto
 
-**PokéMemories** es una aplicación web pensada para entrenadores y aficionados a Pokémon que quieren inmortalizar, registrar y rememorar sus partidas y desafíos completados (ediciones como *HeartGold*, *Esmeralda*, *Platino*, *Rojo Fuego*, etc.).
+**PokeMemories** es una aplicación web pensada para entrenadores y aficionados a Pokémon que quieren inmortalizar, registrar y rememorar sus partidas y desafíos completados (ediciones como *HeartGold*, *Esmeralda*, *Platino*, *Rojo Fuego*, etc.).
 
 La aplicación permite registrar cada aventura en el navegador vinculando las horas de juego, la fecha de victoria en la Liga, la licencia oficial de entrenador y el equipo titular de 1 a 6 Pokémon (con sus motes, niveles y ataques insignia). Además, rinde homenaje especial a las **«Leyendas Caídas»**: aquellos Pokémon que no llegaron a la cima de la Liga porque cayeron en batallas épicas a lo largo del camino, pero cuya hazaña merece un lugar de honor en el recuerdo de la partida.
 
@@ -37,7 +37,7 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 | **Correo electrónico** | Email | Formato de correo electrónico válido (`type="email"`) | Introduce una dirección de correo electrónico válida |
 | **Contraseña** | Contraseña | Mínimo 8 caracteres, al menos una mayúscula (`\p{Lu}`), una minúscula (`\p{Ll}`) y un dígito (`\d`) | Debe tener al menos 8 caracteres, con mayúscula, minúscula y número |
 | **Repetir contraseña** | Contraseña | Coincidir exactamente con el campo de contraseña | Las contraseñas no coinciden |
-| **Aceptación de condiciones** | Casilla | Casilla obligatoria marcada (`required`) | Debes aceptar las condiciones de uso de PokéMemories |
+| **Aceptación de condiciones** | Casilla | Casilla obligatoria marcada (`required`) | Debes aceptar las condiciones de uso de PokeMemories |
 
 ### Páginas
 
@@ -185,7 +185,7 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 | 2 | `v0.2` | El CRUD, la zona de administración, todas las pruebas y la integración continua completa (Requisitos 13–23) | <!-- Reflexión al cerrar el sprint 2 --> |
 | 3 | `v1.0` | Despliegue continuo completo, vistas previas, release de GitHub y entrega final (Requisitos 24–29) | <!-- Reflexión al cerrar el sprint 3 --> |
 
-**Tablero de Trello:** [PokéMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories) <!-- compartido con el profesor -->
+**Tablero de Trello:** [PokeMemories en Trello](https://trello.com/b/XHNkmnw1/PokeMemories) <!-- compartido con el profesor -->
 
 **Blog del proyecto:** [blog/README.md](blog/README.md) <!-- dificultades y problemas conceptuales de cada sprint -->
 

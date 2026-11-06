@@ -1,9 +1,9 @@
-/**
+﻿/**
  * Módulo de gestión de la sesión activa en el navegador.
  * @module datos/sesion
  */
 
-const CLAVE_SESION = 'pokememories_sesion';
+const CLAVE_SESION = 'PokeMemories_sesion';
 
 /**
  * Guarda la sesión del usuario actual en sessionStorage.

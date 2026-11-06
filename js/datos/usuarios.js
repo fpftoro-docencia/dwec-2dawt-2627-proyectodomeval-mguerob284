@@ -1,9 +1,9 @@
-/**
+﻿/**
  * Módulo de almacenamiento y gestión de usuarios en el navegador.
  * @module datos/usuarios
  */
 
-const CLAVE_USUARIOS = 'pokememories_usuarios';
+const CLAVE_USUARIOS = 'PokeMemories_usuarios';
 
 /**
  * @typedef {Object} Usuario

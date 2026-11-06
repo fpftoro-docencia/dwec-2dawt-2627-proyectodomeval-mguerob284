@@ -1,4 +1,4 @@
-/* Estilos propios de PokéMemories */
+/* Estilos propios de PokeMemories */
 
 :root {
   --poke-red: #ee1515;
@@ -19,10 +19,26 @@ main {
   flex: 1;
 }
 
-/* Cabecera y navegación */
+/* Cabecera, logo y navegación */
 .navbar-brand-poke {
   font-weight: 700;
   letter-spacing: -0.5px;
+}
+
+.navbar-brand-poke img {
+  transition: transform 0.25s ease;
+}
+
+.navbar-brand-poke:hover img {
+  transform: rotate(15deg) scale(1.08);
+}
+
+.logo-header {
+  transition: transform 0.25s ease;
+}
+
+.logo-header:hover {
+  transform: rotate(-10deg) scale(1.05);
 }
 
 .badge-role {

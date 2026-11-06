@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Lógica del formulario de registro de entrenadores (registro.html).
  * @module paginas/registro
  */
@@ -149,7 +149,7 @@ export function iniciarRegistro({
     if (!campoAceptar.checked) {
       lanzarAviso(
         formulario,
-        'Debes aceptar las condiciones de PokéMemories para continuar',
+        'Debes aceptar las condiciones de PokeMemories para continuar',
         'warning'
       );
       campoAceptar.focus();
@@ -187,7 +187,7 @@ export function iniciarRegistro({
       const mensajeBienvenida =
         nuevoUsuario.rol === 'administrador'
           ? `¡Bienvenido, Profesor ${nuevoUsuario.nombreUsuario}! Eres el primer usuario registrado y tienes rol de Administrador`
-          : `¡Registro completado con éxito! Bienvenido a PokéMemories, ${nuevoUsuario.nombreUsuario}`;
+          : `¡Registro completado con éxito! Bienvenido a PokeMemories, ${nuevoUsuario.nombreUsuario}`;
 
       guardarAvisoPendiente(mensajeBienvenida, 'success');
       localizacion.replace('listado.html');
