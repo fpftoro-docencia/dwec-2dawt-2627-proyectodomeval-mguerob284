@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokéMemories · Registro de Entrenador</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body class="bg-light">
+    <header class="bg-dark text-white py-3 shadow-sm">
+      <div class="container text-center">
+        <h1 class="h3 mb-0 fw-bold">⚡ PokéMemories</h1>
+        <p class="small text-secondary mb-0">Salón de la Fama y Álbum de Recuerdos Pokémon</p>
+      </div>
+    </header>
+
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <div id="zona-avisos" role="status" aria-live="polite" class="mb-3"></div>
+
+          <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4">
+              <h2 class="card-title h4 mb-3 fw-bold text-center">Registro de Entrenador</h2>
+              <form id="form-registro" novalidate>
+                <div class="mb-3">
+                  <label for="usuario" class="form-label">Nombre de Entrenador</label>
+                  <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    class="form-control"
+                    placeholder="De 3 a 15 caracteres (ej. Red_Champion)"
+                    required
+                    autocomplete="username"
+                  />
+                  <div class="form-text small">Solo letras, números y guiones bajos (_).</div>
+                  <div class="invalid-feedback" id="error-usuario"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Correo electrónico</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="entrenador@liga.pkm"
+                    required
+                    autocomplete="email"
+                  />
+                  <div class="invalid-feedback" id="error-email"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="clave" class="form-label">Contraseña</label>
+                  <input
+                    type="password"
+                    id="clave"
+                    name="clave"
+                    class="form-control"
+                    placeholder="Mínimo 8 caracteres"
+                    required
+                    autocomplete="new-password"
+                  />
+                  <div class="invalid-feedback" id="error-clave"></div>
+
+                  <!-- Indicadores de requisitos de contraseña en tiempo real (Requisito 5) -->
+                  <div class="mt-2 p-2 bg-light border rounded small" id="indicadores-clave">
+                    <div class="fw-semibold mb-1 text-muted">Requisitos de seguridad:</div>
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
+                      <li id="req-longitud" class="requisito-clave pendiente" data-texto="Mínimo 8 caracteres">• Mínimo 8 caracteres</li>
+                      <li id="req-minuscula" class="requisito-clave pendiente" data-texto="Al menos una letra minúscula">• Al menos una letra minúscula</li>
+                      <li id="req-mayuscula" class="requisito-clave pendiente" data-texto="Al menos una letra mayúscula">• Al menos una letra mayúscula</li>
+                      <li id="req-cifra" class="requisito-clave pendiente" data-texto="Al menos un número">• Al menos un número</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="repetir-clave" class="form-label">Repetir contraseña</label>
+                  <input
+                    type="password"
+                    id="repetir-clave"
+                    name="repetir-clave"
+                    class="form-control"
+                    placeholder="Repite tu contraseña exactamente"
+                    required
+                    autocomplete="new-password"
+                  />
+                  <div class="invalid-feedback" id="error-repetir-clave"></div>
+                </div>
+
+                <div class="mb-4 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="aceptar-terminos"
+                    required
+                  />
+                  <label class="form-check-label small" for="aceptar-terminos">
+                    Acepto las normas y términos del Salón de la Fama PokéMemories.
+                  </label>
+                  <div class="invalid-feedback" id="error-terminos"></div>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                  <button type="submit" id="btn-registrarse" class="btn btn-success fw-bold">
+                    Crear cuenta de Entrenador
+                  </button>
+                </div>
+              </form>
+
+              <hr />
+              <div class="text-center">
+                <span class="text-muted small">¿Ya tienes cuenta?</span>
+                <a href="index.html" class="ms-1 fw-bold text-decoration-none">
+                  Inicia sesión aquí
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-3 text-center text-muted small mt-auto border-top">
+      PokéMemories · Proyecto DWEC DOM
+    </footer>
+
+    <script type="module">
+      import { iniciarRegistro } from './js/paginas/registro.js';
+      iniciarRegistro();
+    </script>
+  </body>
+</html>

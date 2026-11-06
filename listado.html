@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokéMemories · Salón de la Fama</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body>
+    <header id="cabecera-principal"></header>
+
+    <main class="container py-4">
+      <div id="zona-avisos" role="status" aria-live="polite" class="mb-3"></div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+          <h1 class="h3 fw-bold mb-1">🏆 Vitrina de Recuerdos</h1>
+          <p class="text-muted small mb-0">Partidas, victorias y hazañas de tus aventuras Pokémon.</p>
+        </div>
+        <a href="ficha.html" class="btn btn-primary fw-bold" id="btn-nueva-partida">
+          ➕ Inmortalizar Partida
+        </a>
+      </div>
+
+      <!-- Contenedor del listado para el Sprint 2 -->
+      <section id="seccion-listado" class="card shadow-sm border-0 p-4">
+        <div class="text-center py-5 text-muted">
+          <p class="fs-5 mb-1">🎮 Aún no has registrado ninguna partida en tu vitrina.</p>
+          <p class="small">Usa el botón de arriba para registrar tu primera partida en PokéMemories.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-3 text-center text-muted small mt-auto border-top">
+      PokéMemories · Proyecto DWEC DOM
+    </footer>
+
+    <script type="module">
+      import { protegerPagina, renderizarCabecera } from './js/componentes/cabecera.js';
+      import { inicializarAvisos } from './js/avisos.js';
+
+      inicializarAvisos();
+      const sesion = protegerPagina();
+      if (sesion) {
+        renderizarCabecera(document.getElementById('cabecera-principal'), sesion, 'listado.html');
+      }
+    </script>
+  </body>
+</html>

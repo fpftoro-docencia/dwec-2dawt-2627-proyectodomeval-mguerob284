@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokéMemories · Iniciar Sesión</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body class="bg-light">
+    <header class="bg-dark text-white py-3 shadow-sm">
+      <div class="container text-center">
+        <h1 class="h3 mb-0 fw-bold">⚡ PokéMemories</h1>
+        <p class="small text-secondary mb-0">Salón de la Fama y Álbum de Recuerdos Pokémon</p>
+      </div>
+    </header>
+
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+          <div id="zona-avisos" role="status" aria-live="polite" class="mb-3"></div>
+
+          <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4">
+              <h2 class="card-title h4 mb-3 fw-bold text-center">Acceso de Entrenadores</h2>
+              <form id="form-login" novalidate>
+                <div class="mb-3">
+                  <label for="usuario" class="form-label">Nombre de Entrenador</label>
+                  <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    class="form-control"
+                    placeholder="Ej. AshKetchum"
+                    required
+                    autocomplete="username"
+                  />
+                  <div class="invalid-feedback" id="error-usuario"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="clave" class="form-label">Contraseña</label>
+                  <input
+                    type="password"
+                    id="clave"
+                    name="clave"
+                    class="form-control"
+                    placeholder="Tu contraseña secreta"
+                    required
+                    autocomplete="current-password"
+                  />
+                  <div class="invalid-feedback" id="error-clave"></div>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                  <button type="submit" id="btn-entrar" class="btn btn-primary fw-bold">
+                    Iniciar Sesión
+                  </button>
+                </div>
+              </form>
+
+              <hr />
+              <div class="text-center">
+                <span class="text-muted small">¿Eres un nuevo entrenador?</span>
+                <a href="registro.html" class="ms-1 fw-bold text-decoration-none">
+                  Crear una cuenta
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-3 text-center text-muted small mt-auto border-top">
+      PokéMemories · Proyecto DWEC DOM
+    </footer>
+
+    <script type="module">
+      import { iniciarLogin } from './js/paginas/login.js';
+      iniciarLogin();
+    </script>
+  </body>
+</html>
