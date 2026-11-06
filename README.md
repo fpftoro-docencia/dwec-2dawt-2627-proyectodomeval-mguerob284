@@ -185,7 +185,7 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 | 2 | `v0.2` | El CRUD, la zona de administración, todas las pruebas y la integración continua completa (Requisitos 13–23) | <!-- Reflexión al cerrar el sprint 2 --> |
 | 3 | `v1.0` | Despliegue continuo completo, vistas previas, release de GitHub y entrega final (Requisitos 24–29) | <!-- Reflexión al cerrar el sprint 3 --> |
 
-**Tablero de Trello:** <!-- enlace (compartido con el profesor) -->
+**Tablero de Trello:** [PokéMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories) <!-- compartido con el profesor -->
 
 **Blog del proyecto:** [blog/README.md](blog/README.md) <!-- dificultades y problemas conceptuales de cada sprint -->
 

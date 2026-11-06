@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Entornos y secretos
+.env
+.env.local
+
+# Compilación y distribución
+dist/
+
+# Informes de pruebas y cobertura
+coverage/
+playwright-report/
+test-results/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
