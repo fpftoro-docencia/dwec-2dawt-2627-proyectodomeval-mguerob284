@@ -51,7 +51,7 @@ export function iniciarLogin({
     const clave = campoClave.value;
 
     if (!nombreUsuario || !clave) {
-      lanzarAviso(formulario, 'Por favor, introduce tu usuario y contraseña.', 'warning');
+      lanzarAviso(formulario, 'Por favor, introduce tu usuario y contraseña', 'warning');
       return;
     }
 
@@ -70,7 +70,7 @@ export function iniciarLogin({
         // Requisito 6: con contraseña o usuario incorrecto, avisa, vacía la clave y le da el foco
         lanzarAviso(
           formulario,
-          'Nombre de usuario o contraseña incorrectos.',
+          'Nombre de usuario o contraseña incorrectos',
           'danger'
         );
         campoClave.value = '';
@@ -88,7 +88,7 @@ export function iniciarLogin({
     } catch {
       lanzarAviso(
         formulario,
-        'Ocurrió un error inesperado al procesar el inicio de sesión.',
+        'Ocurrió un error inesperado al procesar el inicio de sesión',
         'danger'
       );
     } finally {

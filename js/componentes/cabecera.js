@@ -23,14 +23,14 @@ export function protegerPagina({
   const sesion = obtenerSesion(almacen);
 
   if (!sesion) {
-    guardarAvisoPendiente('Debes iniciar sesión para acceder.', 'warning');
+    guardarAvisoPendiente('Debes iniciar sesión para acceder', 'warning');
     localizacion.replace('index.html');
     return null;
   }
 
   if (soloAdmin && sesion.rol !== 'administrador') {
     guardarAvisoPendiente(
-      'Acceso denegado: solo administradores pueden ver esa página.',
+      'Acceso denegado: solo administradores pueden ver esa página',
       'danger'
     );
     localizacion.replace('listado.html');
@@ -110,7 +110,7 @@ export function renderizarCabecera(
   if (btnCerrar) {
     btnCerrar.addEventListener('click', () => {
       cerrarSesion(almacen);
-      guardarAvisoPendiente('Sesión cerrada correctamente.', 'info');
+      guardarAvisoPendiente('Sesión cerrada correctamente', 'info');
       localizacion.replace('index.html');
     });
   }

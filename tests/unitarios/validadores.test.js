@@ -20,11 +20,11 @@ describe('Validador de nombre de usuario (validarNombreUsuario)', () => {
 
   // Casos no válidos por cada regla con su motivo
   it.each([
-    ['', 'El nombre de usuario es obligatorio.'],
-    ['ab', 'Debe tener al menos 3 caracteres.'],
-    ['nombreDemasiadoLargoQueSuperaQuince', 'No puede superar los 15 caracteres.'],
-    ['ash ketchum', 'Solo puede contener letras, números y guiones bajos (_).'],
-    ['pikachu@pkm', 'Solo puede contener letras, números y guiones bajos (_).']
+    ['', 'El nombre de usuario es obligatorio'],
+    ['ab', 'Debe tener al menos 3 caracteres'],
+    ['nombreDemasiadoLargoQueSuperaQuince', 'No puede superar los 15 caracteres'],
+    ['ash ketchum', 'Solo puede contener letras, números y guiones bajos (_)'],
+    ['pikachu@pkm', 'Solo puede contener letras, números y guiones bajos (_)']
   ])('rechaza «%s» con motivo: %s', (nombre, motivoEsperado) => {
     const resultado = validarNombreUsuario(nombre);
     expect(resultado.valido).toBe(false);
@@ -42,10 +42,10 @@ describe('Validador de correo electrónico (validarEmail)', () => {
   });
 
   it.each([
-    ['', 'El correo electrónico es obligatorio.'],
-    ['correoSinArroba.com', 'El formato de correo no es válido.'],
-    ['sinDominio@', 'El formato de correo no es válido.'],
-    ['@sinUsuario.com', 'El formato de correo no es válido.']
+    ['', 'El correo electrónico es obligatorio'],
+    ['correoSinArroba.com', 'El formato de correo no es válido'],
+    ['sinDominio@', 'El formato de correo no es válido'],
+    ['@sinUsuario.com', 'El formato de correo no es válido']
   ])('rechaza «%s» con motivo: %s', (email, motivoEsperado) => {
     const resultado = validarEmail(email);
     expect(resultado.valido).toBe(false);

@@ -107,7 +107,7 @@ export function iniciarRegistro({
     if (existeUsuario(campoUsuario.value, almacenUsuarios)) {
       lanzarAviso(
         formulario,
-        'El nombre de entrenador ya está en uso. Elige otro.',
+        'El nombre de entrenador ya está en uso, elige otro',
         'warning'
       );
       campoUsuario.focus();
@@ -127,7 +127,7 @@ export function iniciarRegistro({
     if (!analisisClave.esValida) {
       lanzarAviso(
         formulario,
-        'La contraseña no cumple todos los requisitos de seguridad.',
+        'La contraseña no cumple todos los requisitos de seguridad',
         'warning'
       );
       campoClave.focus();
@@ -149,7 +149,7 @@ export function iniciarRegistro({
     if (!campoAceptar.checked) {
       lanzarAviso(
         formulario,
-        'Debes aceptar las condiciones de la PokéMemories para continuar.',
+        'Debes aceptar las condiciones de PokéMemories para continuar',
         'warning'
       );
       campoAceptar.focus();
@@ -186,15 +186,15 @@ export function iniciarRegistro({
 
       const mensajeBienvenida =
         nuevoUsuario.rol === 'administrador'
-          ? `¡Bienvenido, Profesor ${nuevoUsuario.nombreUsuario}! Eres el primer usuario registrado y tienes rol de Administrador.`
-          : `¡Registro completado con éxito! Bienvenido a PokéMemories, ${nuevoUsuario.nombreUsuario}.`;
+          ? `¡Bienvenido, Profesor ${nuevoUsuario.nombreUsuario}! Eres el primer usuario registrado y tienes rol de Administrador`
+          : `¡Registro completado con éxito! Bienvenido a PokéMemories, ${nuevoUsuario.nombreUsuario}`;
 
       guardarAvisoPendiente(mensajeBienvenida, 'success');
       localizacion.replace('listado.html');
     } catch (error) {
       lanzarAviso(
         formulario,
-        error.message || 'Error al procesar el registro.',
+        error.message || 'Error al procesar el registro',
         'danger'
       );
     } finally {
