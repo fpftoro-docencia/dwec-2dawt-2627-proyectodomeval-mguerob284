@@ -29,10 +29,7 @@ export function protegerPagina({
   }
 
   if (soloAdmin && sesion.rol !== 'administrador') {
-    guardarAvisoPendiente(
-      'Acceso denegado: solo administradores pueden ver esa página',
-      'danger',
-    );
+    guardarAvisoPendiente('Acceso denegado: solo administradores pueden ver esa página', 'danger');
     localizacion.replace('listado.html');
     return null;
   }

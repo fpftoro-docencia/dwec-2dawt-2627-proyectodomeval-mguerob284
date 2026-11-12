@@ -8,12 +8,7 @@ import {
   registrarUsuario,
   verificarCredenciales,
 } from '../../js/datos/usuarios.js';
-import {
-  guardarSesion,
-  obtenerSesion,
-  cerrarSesion,
-  haySesion,
-} from '../../js/datos/sesion.js';
+import { guardarSesion, obtenerSesion, cerrarSesion, haySesion } from '../../js/datos/sesion.js';
 
 describe('Módulo de datos: Usuarios', () => {
   let almacen;
