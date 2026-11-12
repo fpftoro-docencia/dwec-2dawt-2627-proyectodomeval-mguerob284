@@ -18,7 +18,7 @@ import { guardarAvisoPendiente } from '../avisos.js';
 export function protegerPagina({
   soloAdmin = false,
   almacen = sessionStorage,
-  localizacion = window.location
+  localizacion = window.location,
 } = {}) {
   const sesion = obtenerSesion(almacen);
 
@@ -31,7 +31,7 @@ export function protegerPagina({
   if (soloAdmin && sesion.rol !== 'administrador') {
     guardarAvisoPendiente(
       'Acceso denegado: solo administradores pueden ver esa página',
-      'danger'
+      'danger',
     );
     localizacion.replace('listado.html');
     return null;
@@ -53,7 +53,7 @@ export function renderizarCabecera(
   sesion,
   paginaActual,
   almacen = sessionStorage,
-  localizacion = window.location
+  localizacion = window.location,
 ) {
   if (!contenedor || !sesion) return;
 

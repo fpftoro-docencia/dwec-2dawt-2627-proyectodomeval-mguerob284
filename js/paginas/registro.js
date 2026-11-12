@@ -10,7 +10,7 @@ import {
   validarNombreUsuario,
   validarEmail,
   analizarRequisitosClave,
-  validarRepeticionClave
+  validarRepeticionClave,
 } from '../validadores.js';
 import { lanzarAviso, guardarAvisoPendiente, inicializarAvisos } from '../avisos.js';
 
@@ -28,7 +28,7 @@ export function iniciarRegistro({
   almacenUsuarios = localStorage,
   almacenSesion = sessionStorage,
   localizacion = window.location,
-  resumidor = resumirClave
+  resumidor = resumirClave,
 } = {}) {
   inicializarAvisos(doc);
 
@@ -105,11 +105,7 @@ export function iniciarRegistro({
     }
 
     if (existeUsuario(campoUsuario.value, almacenUsuarios)) {
-      lanzarAviso(
-        formulario,
-        'El nombre de entrenador ya está en uso, elige otro',
-        'warning'
-      );
+      lanzarAviso(formulario, 'El nombre de entrenador ya está en uso, elige otro', 'warning');
       campoUsuario.focus();
       return;
     }
@@ -128,17 +124,14 @@ export function iniciarRegistro({
       lanzarAviso(
         formulario,
         'La contraseña no cumple todos los requisitos de seguridad',
-        'warning'
+        'warning',
       );
       campoClave.focus();
       return;
     }
 
     // 4. Validar repetición de contraseña
-    const valRepetir = validarRepeticionClave(
-      campoClave.value,
-      campoRepetir.value
-    );
+    const valRepetir = validarRepeticionClave(campoClave.value, campoRepetir.value);
     if (!valRepetir.valido) {
       lanzarAviso(formulario, valRepetir.motivo, 'warning');
       campoRepetir.focus();
@@ -150,7 +143,7 @@ export function iniciarRegistro({
       lanzarAviso(
         formulario,
         'Debes aceptar las condiciones de PokeMemories para continuar',
-        'warning'
+        'warning',
       );
       campoAceptar.focus();
       return;
@@ -170,18 +163,18 @@ export function iniciarRegistro({
         {
           nombreUsuario: campoUsuario.value,
           email: campoEmail.value,
-          resumenClave: resumen
+          resumenClave: resumen,
         },
-        almacenUsuarios
+        almacenUsuarios,
       );
 
       // Inicia sesión automáticamente tras el registro
       guardarSesion(
         {
           nombreUsuario: nuevoUsuario.nombreUsuario,
-          rol: nuevoUsuario.rol
+          rol: nuevoUsuario.rol,
         },
-        almacenSesion
+        almacenSesion,
       );
 
       const mensajeBienvenida =
@@ -192,11 +185,7 @@ export function iniciarRegistro({
       guardarAvisoPendiente(mensajeBienvenida, 'success');
       localizacion.replace('listado.html');
     } catch (error) {
-      lanzarAviso(
-        formulario,
-        error.message || 'Error al procesar el registro',
-        'danger'
-      );
+      lanzarAviso(formulario, error.message || 'Error al procesar el registro', 'danger');
     } finally {
       procesandoEnvio = false;
       if (botonRegistro) {

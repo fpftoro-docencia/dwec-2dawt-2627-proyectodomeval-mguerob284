@@ -15,7 +15,7 @@ const CLAVE_AVISO_PENDIENTE = 'PokeMemories_aviso_pendiente';
 export function lanzarAviso(emisor, mensaje, tipo = 'info') {
   const evento = new CustomEvent('aviso', {
     bubbles: true,
-    detail: { mensaje, tipo }
+    detail: { mensaje, tipo },
   });
   emisor.dispatchEvent(evento);
 }
@@ -27,10 +27,7 @@ export function lanzarAviso(emisor, mensaje, tipo = 'info') {
  */
 export function guardarAvisoPendiente(mensaje, tipo = 'info') {
   try {
-    sessionStorage.setItem(
-      CLAVE_AVISO_PENDIENTE,
-      JSON.stringify({ mensaje, tipo })
-    );
+    sessionStorage.setItem(CLAVE_AVISO_PENDIENTE, JSON.stringify({ mensaje, tipo }));
   } catch {
     // Si sessionStorage no está disponible, se ignora silenciosamente
   }

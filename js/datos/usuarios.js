@@ -51,9 +51,7 @@ export function buscarUsuario(nombreUsuario, almacen = localStorage) {
   const usuarios = obtenerUsuarios(almacen);
   const normalizado = nombreUsuario.trim().toLowerCase();
   return (
-    usuarios.find(
-      (u) => u.nombreUsuario && u.nombreUsuario.toLowerCase() === normalizado
-    ) || null
+    usuarios.find((u) => u.nombreUsuario && u.nombreUsuario.toLowerCase() === normalizado) || null
   );
 }
 
@@ -79,10 +77,7 @@ export function existeUsuario(nombreUsuario, almacen = localStorage) {
  * @returns {Usuario}
  * @throws {Error} Si el nombre de usuario ya existe o faltan datos obligatorios.
  */
-export function registrarUsuario(
-  { nombreUsuario, email, resumenClave },
-  almacen = localStorage
-) {
+export function registrarUsuario({ nombreUsuario, email, resumenClave }, almacen = localStorage) {
   if (!nombreUsuario || !email || !resumenClave) {
     throw new Error('Faltan campos obligatorios para registrar el usuario');
   }
@@ -101,7 +96,7 @@ export function registrarUsuario(
     email: email.trim().toLowerCase(),
     resumenClave,
     rol,
-    fechaRegistro: new Date().toISOString()
+    fechaRegistro: new Date().toISOString(),
   };
 
   usuarios.push(nuevoUsuario);
@@ -117,11 +112,7 @@ export function registrarUsuario(
  * @param {Storage|{getItem: Function}} [almacen=localStorage]
  * @returns {Usuario|null} Devuelve el usuario si coincide, o null en caso contrario.
  */
-export function verificarCredenciales(
-  nombreUsuario,
-  resumenClave,
-  almacen = localStorage
-) {
+export function verificarCredenciales(nombreUsuario, resumenClave, almacen = localStorage) {
   const usuario = buscarUsuario(nombreUsuario, almacen);
   if (!usuario) return null;
   if (usuario.resumenClave === resumenClave) {
@@ -137,16 +128,10 @@ export function verificarCredenciales(
  * @param {Storage|{getItem: Function, setItem: Function}} [almacen=localStorage]
  * @returns {Usuario}
  */
-export function cambiarRolUsuario(
-  nombreUsuario,
-  nuevoRol,
-  almacen = localStorage
-) {
+export function cambiarRolUsuario(nombreUsuario, nuevoRol, almacen = localStorage) {
   const usuarios = obtenerUsuarios(almacen);
   const normalizado = nombreUsuario.trim().toLowerCase();
-  const usuario = usuarios.find(
-    (u) => u.nombreUsuario.toLowerCase() === normalizado
-  );
+  const usuario = usuarios.find((u) => u.nombreUsuario.toLowerCase() === normalizado);
 
   if (!usuario) {
     throw new Error('Usuario no encontrado');

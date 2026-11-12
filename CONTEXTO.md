@@ -35,7 +35,7 @@
 ## 3. Planificación, Fechas y Gestión
 
 * **Repositorio:** `https://github.com/fpftoro-docencia/dwec-2dawt-2627-proyectodomeval-mguerob284`
-* **Tablero de Trello:** [PokéMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories)
+* **Tablero de Trello:** [PokeMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories)
   * Columnas: `Por hacer`, `Haciendo`, `Hecho`
   * Etiquetas: `Sprint 1` (azul), `Sprint 2` (naranja), `Sprint 3` (morado)
   * *Nota:* Las credenciales de conexión a la API de Trello están guardadas localmente en `.env` (archivo ignorado por `.gitignore`, nunca subir a Git).
@@ -60,40 +60,38 @@
   * `img/logo.png`: Logo oficial de PokeMemories.
 * **Módulos JS (`js/`):**
   * `js/clave.js`: Hash SHA-256 asíncrono `resumirClave` (archivo original del profesor, **no modificar**).
-  * `js/datos/usuarios.js`: CRUD básico de usuarios en `localStorage` (`pokememories_usuarios`). El primer usuario registrado es `administrador`, los siguientes `usuario`. Lecturas tolerantes a JSON corrupto.
-  * `js/datos/sesion.js`: Gestión de sesión activa en `sessionStorage` (`pokememories_sesion`). Tolerante a datos corruptos.
-  * `js/avisos.js`: Emisión de evento propio `CustomEvent('aviso', { bubbles: true, detail })`, oyente único en `document` con alertas Bootstrap y soporte de avisos diferidos entre páginas (`pokememories_aviso_pendiente`).
+  * `js/datos/usuarios.js`: CRUD básico de usuarios en `localStorage` (`PokeMemories_usuarios`). El primer usuario registrado es `administrador`, los siguientes `usuario`. Lecturas tolerantes a JSON corrupto.
+  * `js/datos/sesion.js`: Gestión de sesión activa en `sessionStorage` (`PokeMemories_sesion`). Tolerante a datos corruptos.
+  * `js/avisos.js`: Emisión de evento propio `CustomEvent('aviso', { bubbles: true, detail })`, oyente único en `document` con alertas Bootstrap y soporte de avisos diferidos entre páginas (`PokeMemories_aviso_pendiente`).
   * `js/validadores.js`: Funciones puras para validar nombre de usuario (`^[a-zA-Z0-9_]{3,15}$`), correo electrónico, análisis de requisitos de contraseña y repetición de contraseña.
   * `js/componentes/cabecera.js`: `protegerPagina()` (redirección con `location.replace`) y `renderizarCabecera()` con menú condicional para administradores y botón «Cerrar sesión».
   * `js/paginas/login.js` y `js/paginas/registro.js`: Controladores con inyección de dependencias para facilitar testing.
-* **Calidad y Pruebas:**
+* **Calidad, CI y Pruebas:**
   * `eslint.config.js`: Reglas añadidas (`no-var`, `prefer-const`, `eqeqeq`, `camelcase`, `no-console`, `no-duplicate-imports`).
   * `tests/unitarios/datos.test.js`: Pruebas de usuarios y sesión usando `AlmacenFalso`.
   * `tests/unitarios/validadores.test.js`: Pruebas unitarias con tablas `it.each` (límites y casos inválidos).
-* **Infraestructura local:**
+  * `.github/workflows/ci.yml`: Workflow de GitHub Actions (Paso 1) con los trabajos encadenados `Calidad` (ESLint + Prettier) y `Tests` (`npm test`).
+* **Documentación y Bitácora:**
   * `.gitignore`: Ignora `node_modules/`, `.env`, `dist/`, `coverage/`, `playwright-report/`, etc.
-  * `README.md`: Completada la sección `## Mi proyecto`, tablas de la entidad/usuarios/páginas, Definición de Hecho y enlace a Trello.
+  * `README.md`: Completadas secciones de Sprint 1 (`## Mi proyecto`, reglas ESLint, tabla workflow Paso 1, reflexión del Sprint 1 y gestión de ramas).
+  * `blog/README.md`: Entrada 1 del Sprint 1 con dificultades reales y conceptos explicados.
 
 ---
 
 ## 5. Estado Actual y Próximos Pasos
 
 * **Rama activa:** `feature/sprint-1-autenticacion`
-* **Progreso en Trello (a fecha 10 Nov):**
-  * ✅ **Hecho (Tarjetas 1–8):** Organización inicial, estructura de las 5 páginas, módulos de datos/roles, login, registro, protección de páginas y sistema de avisos.
-  * 🔄 **Haciendo (Tarjeta 9):** Calidad (`eslint.config.js` configurado; falta documentar las reglas en `README.md` y verificar `npm run lint` / `format:check`).
-  * 📋 **Por hacer para cerrar Sprint 1 (Tarjetas 10–12):**
-    1. Verificar los tests unitarios en el contenedor (`npm test`) y completar documentación de ESLint en README.
-    2. Crear `.github/workflows/ci.yml` (Paso 1: trabajos `Calidad` y `Tests`).
-    3. Escribir la entrada del Sprint 1 en `blog/README.md`, completar reflexión en `README.md`, abrir PR, fusionar en `main` y crear el tag `v0.1`.
-
-### Diseño pendiente de la entidad para Sprint 2 (`RegistroPartida`)
-* **Campos mínimos:** Código de registro (`^POKE-[A-Z]{3}-\d{4}$`), Título de partida (3–40 chars), Edición del juego (select), Fecha de victoria (date con `max` hoy), Tiempo de juego (`^\d{1,3}:[0-5]\d$`), Licencia Entrenador DNI/NIE (`^[XYZ]?\d{7,8}[A-Z]$` + validación matemática módulo 23).
-* **Campo condicional:** Checkbox *«¿Hubo leyendas caídas?»* -> habilita/muestra (`hidden` + `disabled`) *«Mención de honor»* (10–120 chars).
-* **Grupo dinámico (`<template>`, 1 a 6 miembros):** Mote/Especie, Nivel (1–100), Estado (`Campeón` / `Leyenda Caída`), Movimiento clave.
+* **Progreso en Trello (12 Nov):**
+  * ✅ **Sprint 1 completo (Tarjetas 1–12 en «Hecho»):** Organización, 5 páginas, módulos de datos/roles, login, registro, protección, avisos, ESLint/Prettier, tests unitarios, CI paso 1, blog y reflexión.
+  * ⚠️ **Nota operativa importante para GitHub Actions:** Falta generar y subir `package-lock.json` abriendo el proyecto en el Dev Container de VS Code (`npm install`) para que `npm ci` pase en verde en la Pull Request hacia `main` y crear el tag `v0.1`.
+  * 📋 **Siguiente fase (Sprint 2 · 19 Nov · Tarjetas 13–23):**
+    * Entidad `RegistroPartida` completa (códigos regex, DNI mod 23, campo condicional Leyendas Caídas, grupo dinámico 1-6 Pokémon).
+    * `listado.html` con `<template>`, buscador con debounce, paginación pura `paginar`, `<dialog>` de borrado.
+    * `usuarios.html` completo, tests de integración + E2E Playwright, cobertura ≥ 90%, CI paso 2.
 
 ---
 
 ## 6. Historial de Actualizaciones de Contexto
 
 * **10 Nov 2026:** Creación inicial de `CONTEXTO.md` recogiendo la arquitectura del Sprint 1 hasta la Tarjeta 9, cambio de nombre definitivo a `PokeMemories`, integración del logo `img/logo.png`, unificación de placeholders (`AshKetchum`) y regla de estilo sin puntos finales en frases cortas de la UI.
+* **12 Nov 2026:** Cierre de implementación del Sprint 1: limpieza de formato Prettier/ESLint en módulos y tests, creación de `.github/workflows/ci.yml` (Paso 1), entrada del Sprint 1 en `blog/README.md`, actualización de documentación y reflexión en `README.md`, y tarjetas 9–12 movidas a «Hecho» en Trello.

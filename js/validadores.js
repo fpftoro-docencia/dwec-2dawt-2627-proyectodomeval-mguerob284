@@ -24,7 +24,7 @@ export function validarNombreUsuario(valor) {
   if (!regex.test(limpio)) {
     return {
       valido: false,
-      motivo: 'Solo puede contener letras, números y guiones bajos (_)'
+      motivo: 'Solo puede contener letras, números y guiones bajos (_)',
     };
   }
   return { valido: true };
@@ -70,7 +70,7 @@ export function analizarRequisitosClave(clave = '') {
     minuscula,
     mayuscula,
     cifra,
-    esValida: longitud && minuscula && mayuscula && cifra
+    esValida: longitud && minuscula && mayuscula && cifra,
   };
 }
 
@@ -85,7 +85,7 @@ export function validarClave(clave) {
     return {
       valido: false,
       motivo:
-        'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula y un número'
+        'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula y un número',
     };
   }
   return { valido: true };

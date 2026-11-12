@@ -6,13 +6,13 @@ import {
   buscarUsuario,
   existeUsuario,
   registrarUsuario,
-  verificarCredenciales
+  verificarCredenciales,
 } from '../../js/datos/usuarios.js';
 import {
   guardarSesion,
   obtenerSesion,
   cerrarSesion,
-  haySesion
+  haySesion,
 } from '../../js/datos/sesion.js';
 
 describe('Módulo de datos: Usuarios', () => {
@@ -30,25 +30,27 @@ describe('Módulo de datos: Usuarios', () => {
       email: 'ash@pueblopaleta.es',
       resumenClave: 'hash123',
       rol: 'administrador',
-      fechaRegistro: new Date().toISOString()
+      fechaRegistro: new Date().toISOString(),
     };
 
     guardarUsuarios([usuario], almacen);
     const leidos = obtenerUsuarios(almacen);
     expect(leidos).toHaveLength(1);
     expect(leidos[0].nombreUsuario).toBe('Ash');
+    expect(existeUsuario('Ash', almacen)).toBe(true);
+    expect(buscarUsuario('Ash', almacen).email).toBe('ash@pueblopaleta.es');
   });
 
   it('el primer usuario registrado es automáticamente administrador (Requisito 4)', () => {
     const primer = registrarUsuario(
       { nombreUsuario: 'ProfesorOak', email: 'oak@lab.es', resumenClave: 'oakHash' },
-      almacen
+      almacen,
     );
     expect(primer.rol).toBe('administrador');
 
     const segundo = registrarUsuario(
       { nombreUsuario: 'Red', email: 'red@kanto.es', resumenClave: 'redHash' },
-      almacen
+      almacen,
     );
     expect(segundo.rol).toBe('usuario');
   });
@@ -56,21 +58,21 @@ describe('Módulo de datos: Usuarios', () => {
   it('no permite registrar un nombre de usuario repetido', () => {
     registrarUsuario(
       { nombreUsuario: 'Misty', email: 'misty@cerulean.es', resumenClave: 'clave1' },
-      almacen
+      almacen,
     );
 
     expect(() =>
       registrarUsuario(
         { nombreUsuario: 'misty', email: 'misty2@cerulean.es', resumenClave: 'clave2' },
-        almacen
-      )
+        almacen,
+      ),
     ).toThrow('El nombre de usuario ya está registrado');
   });
 
   it('verifica credenciales correctamente (correcta e incorrecta)', () => {
     registrarUsuario(
       { nombreUsuario: 'Brock', email: 'brock@pewter.es', resumenClave: 'rocaSolida' },
-      almacen
+      almacen,
     );
 
     const correcto = verificarCredenciales('Brock', 'rocaSolida', almacen);
@@ -119,7 +121,10 @@ describe('Módulo de datos: Sesión', () => {
     expect(haySesion(almacen)).toBe(false);
 
     // Objeto con rol inválido
-    almacen.setItem('PokeMemories_sesion', JSON.stringify({ nombreUsuario: 'Hacker', rol: 'superadmin' }));
+    almacen.setItem(
+      'PokeMemories_sesion',
+      JSON.stringify({ nombreUsuario: 'Hacker', rol: 'superadmin' }),
+    );
     expect(obtenerSesion(almacen)).toBeNull();
   });
 });

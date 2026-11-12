@@ -22,7 +22,7 @@ export function iniciarLogin({
   almacenUsuarios = localStorage,
   almacenSesion = sessionStorage,
   localizacion = window.location,
-  resumidor = resumirClave
+  resumidor = resumirClave,
 } = {}) {
   inicializarAvisos(doc);
 
@@ -68,28 +68,21 @@ export function iniciarLogin({
 
       if (!usuario) {
         // Requisito 6: con contraseña o usuario incorrecto, avisa, vacía la clave y le da el foco
-        lanzarAviso(
-          formulario,
-          'Nombre de usuario o contraseña incorrectos',
-          'danger'
-        );
+        lanzarAviso(formulario, 'Nombre de usuario o contraseña incorrectos', 'danger');
         campoClave.value = '';
         campoClave.focus();
         return;
       }
 
       // Inicio de sesión exitoso
-      guardarSesion(
-        { nombreUsuario: usuario.nombreUsuario, rol: usuario.rol },
-        almacenSesion
-      );
+      guardarSesion({ nombreUsuario: usuario.nombreUsuario, rol: usuario.rol }, almacenSesion);
       guardarAvisoPendiente(`¡Bienvenido de nuevo, ${usuario.nombreUsuario}!`, 'success');
       localizacion.replace('listado.html');
     } catch {
       lanzarAviso(
         formulario,
         'Ocurrió un error inesperado al procesar el inicio de sesión',
-        'danger'
+        'danger',
       );
     } finally {
       procesandoEnvio = false;
