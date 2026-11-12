@@ -141,7 +141,7 @@ El flujo de trabajo `.github/workflows/ci.yml` se ejecuta automáticamente en ca
 | `Tests` | `Calidad` | Checkout (`@v7`), Node 24 con caché npm, `npm ci`, `npm test` | — |
 | `E2E` | <!-- Sprint 2 --> | <!-- Sprint 2 --> | <!-- Sprint 2 --> |
 
-**Ejecución en verde con sus artefactos:** <!-- enlace tras abrir la PR con package-lock.json -->
+**Ejecución en verde con sus artefactos:** [PR #2 · Comprobaciones de CI (Paso 1)](https://github.com/fpftoro-docencia/dwec-2dawt-2627-proyectodomeval-mguerob284/pull/2/checks) *(artefactos pendientes del Paso 2 en Sprint 2)*
 
 ## Despliegue continuo
 
@@ -192,6 +192,6 @@ Se utiliza integración mediante ***merge* en Pull Request** para conservar ínt
 
 | Rama | Funcionalidad | *Pull request* |
 |------|---------------|----------------|
-| `feature/sprint-1-autenticacion` | Páginas base, usuarios, sesión, roles, login, registro, avisos, tests unitarios y CI paso 1 | <!-- Enlace tras abrir PR en GitHub --> |
+| `feature/sprint-1-autenticacion` | Páginas base, usuarios, sesión, roles, login, registro, avisos, tests unitarios y CI paso 1 | [PR #2](https://github.com/fpftoro-docencia/dwec-2dawt-2627-proyectodomeval-mguerob284/pull/2) |
 
 **Versión de entrega:** `v1.0`

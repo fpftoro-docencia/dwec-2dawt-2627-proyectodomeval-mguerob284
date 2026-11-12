@@ -80,10 +80,9 @@
 
 ## 5. Estado Actual y Próximos Pasos
 
-* **Rama activa:** `feature/sprint-1-autenticacion`
+* **Rama activa:** `main` (PR `#2` de `feature/sprint-1-autenticacion` fusionada; tag `v0.1` actualizado)
 * **Progreso en Trello (12 Nov):**
-  * ✅ **Sprint 1 completo (Tarjetas 1–12 en «Hecho»):** Organización, 5 páginas, módulos de datos/roles, login, registro, protección, avisos, ESLint/Prettier, tests unitarios, CI paso 1, blog y reflexión.
-  * ⚠️ **Nota operativa importante para GitHub Actions:** Falta generar y subir `package-lock.json` abriendo el proyecto en el Dev Container de VS Code (`npm install`) para que `npm ci` pase en verde en la Pull Request hacia `main` y crear el tag `v0.1`.
+  * ✅ **Sprint 1 cerrado (Tarjetas 1–12 en «Hecho», PR `#2` fusionada en `main` y tag `v0.1`):** Organización, 5 páginas, módulos de datos/roles, login, registro, protección, avisos, ESLint/Prettier, `package-lock.json`, tests unitarios, CI paso 1 en verde, blog y reflexión.
   * 📋 **Siguiente fase (Sprint 2 · 19 Nov · Tarjetas 13–23):**
     * Entidad `RegistroPartida` completa (códigos regex, DNI mod 23, campo condicional Leyendas Caídas, grupo dinámico 1-6 Pokémon).
     * `listado.html` con `<template>`, buscador con debounce, paginación pura `paginar`, `<dialog>` de borrado.
@@ -95,3 +94,4 @@
 
 * **10 Nov 2026:** Creación inicial de `CONTEXTO.md` recogiendo la arquitectura del Sprint 1 hasta la Tarjeta 9, cambio de nombre definitivo a `PokeMemories`, integración del logo `img/logo.png`, unificación de placeholders (`AshKetchum`) y regla de estilo sin puntos finales en frases cortas de la UI.
 * **12 Nov 2026:** Cierre de implementación del Sprint 1: limpieza de formato Prettier/ESLint en módulos y tests, creación de `.github/workflows/ci.yml` (Paso 1), entrada del Sprint 1 en `blog/README.md`, actualización de documentación y reflexión en `README.md`, y tarjetas 9–12 movidas a «Hecho» en Trello.
+* **12 Nov 2026 (cierre):** Pull Request `#2` (`feature/sprint-1-autenticacion` -> `main`) fusionada con CI en verde, enlace de PR registrado en `README.md` y tag `v0.1` recolocado sobre el cierre real del Sprint 1 en `main`.
