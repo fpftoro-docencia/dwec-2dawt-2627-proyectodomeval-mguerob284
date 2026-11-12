@@ -1,4 +1,4 @@
-# PokéMemories · Salón de la Fama y Álbum de Recuerdos Pokémon
+﻿# PokeMemories · Salón de la Fama y Álbum de Recuerdos Pokémon
 
 <!-- Sprint 2: la insignia de tu workflow, con tu organización y tu repositorio. -->
 ![Integración continua](https://github.com/<organización>/<repositorio>/actions/workflows/ci.yml/badge.svg)
@@ -9,7 +9,7 @@
 
 ## Mi proyecto
 
-**PokéMemories** es una aplicación web pensada para entrenadores y aficionados a Pokémon que quieren inmortalizar, registrar y rememorar sus partidas y desafíos completados (ediciones como *HeartGold*, *Esmeralda*, *Platino*, *Rojo Fuego*, etc.).
+**PokeMemories** es una aplicación web pensada para entrenadores y aficionados a Pokémon que quieren inmortalizar, registrar y rememorar sus partidas y desafíos completados (ediciones como *HeartGold*, *Esmeralda*, *Platino*, *Rojo Fuego*, etc.).
 
 La aplicación permite registrar cada aventura en el navegador vinculando las horas de juego, la fecha de victoria en la Liga, la licencia oficial de entrenador y el equipo titular de 1 a 6 Pokémon (con sus motes, niveles y ataques insignia). Además, rinde homenaje especial a las **«Leyendas Caídas»**: aquellos Pokémon que no llegaron a la cima de la Liga porque cayeron en batallas épicas a lo largo del camino, pero cuya hazaña merece un lugar de honor en el recuerdo de la partida.
 
@@ -37,7 +37,7 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 | **Correo electrónico** | Email | Formato de correo electrónico válido (`type="email"`) | Introduce una dirección de correo electrónico válida |
 | **Contraseña** | Contraseña | Mínimo 8 caracteres, al menos una mayúscula (`\p{Lu}`), una minúscula (`\p{Ll}`) y un dígito (`\d`) | Debe tener al menos 8 caracteres, con mayúscula, minúscula y número |
 | **Repetir contraseña** | Contraseña | Coincidir exactamente con el campo de contraseña | Las contraseñas no coinciden |
-| **Aceptación de condiciones** | Casilla | Casilla obligatoria marcada (`required`) | Debes aceptar las condiciones de uso de PokéMemories |
+| **Aceptación de condiciones** | Casilla | Casilla obligatoria marcada (`required`) | Debes aceptar las condiciones de uso de PokeMemories |
 
 ### Páginas
 
@@ -123,22 +123,25 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 
 ### ESLint y Prettier
 
-<!-- Sprint 1. Las reglas que has añadido a eslint.config.js (al menos tres): qué comprueba cada una
-     y por qué la quieres. Pega la salida de `npm run lint` y de `npm run format:check`. Cuenta un
-     problema real que encontraras con el depurador de las DevTools y cómo lo resolviste. -->
+En `eslint.config.js` se han añadido **tres reglas adicionales** a las que ya venían configuradas:
+
+1. **`camelcase` (`['error', { properties: 'never' }]`):** Comprueba que todos los identificadores de variables y funciones sigan la convención estándar *camelCase* en JavaScript, evitando mezclar estilos como *snake_case* y manteniendo el código homogéneo.
+2. **`no-console` (`['warn', { allow: ['warn', 'error'] }]`):** Advierte si se dejan llamadas a `console.log` olvidadas tras depurar, permitiendo únicamente `console.warn` y `console.error` para avisos reales en consola.
+3. **`no-duplicate-imports` (`'error'`):** Impide importar varias veces el mismo módulo en sentencias separadas dentro de un mismo fichero, manteniendo la cabecera de importaciones limpia y agrupada.
+
+*Ejemplo de depuración con DevTools:* Al probar la asignación automática del rol de administrador en una ventana de incógnito, vimos con las DevTools (pestaña **Aplicación -> Almacenamiento local**) que el modo incógnito aísla y vacía `localStorage` por completo; esto aclaró que para verificar el rol normal de usuario debía cerrarse sesión y registrarse un segundo entrenador dentro de la misma sesión de almacenamiento.
 
 ### El workflow
 
-<!-- Sprints 1 y 2. Qué hace ci.yml: cuándo se ejecuta, la tabla de sus trabajos y por qué están en
-     ese orden, qué artefactos sube y para qué sirven, y qué hace concurrency. -->
+El flujo de trabajo `.github/workflows/ci.yml` se ejecuta automáticamente en cada `push` a `main` y en cada *pull request* hacia `main` con permisos de solo lectura (`contents: read`). Los trabajos se encadenan con `needs` para fallar rápido: primero se valida la sintaxis y el formato en `Calidad`; solo si ese trabajo termina en verde se instalan de nuevo las dependencias y se lanzan los tests en `Tests`.
 
 | Trabajo | Espera a | Pasos | Artefacto |
 |---------|----------|-------|-----------|
-| `Calidad` | — | | — |
-| `Tests` | | | |
-| `E2E` | | | |
+| `Calidad` | — | Checkout (`@v7`), Node 24 con caché npm, `npm ci`, `npm run lint`, `npm run format:check` | — |
+| `Tests` | `Calidad` | Checkout (`@v7`), Node 24 con caché npm, `npm ci`, `npm test` | — |
+| `E2E` | <!-- Sprint 2 --> | <!-- Sprint 2 --> | <!-- Sprint 2 --> |
 
-**Ejecución en verde con sus artefactos:** <!-- enlace -->
+**Ejecución en verde con sus artefactos:** <!-- enlace tras abrir la PR con package-lock.json -->
 
 ## Despliegue continuo
 
@@ -163,40 +166,32 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 
 ### Definición de Hecho
 
-<!-- Sprint 1. Tu lista de condiciones para dar una tarea por terminada. Cada una tiene que poder
-     comprobarse. Si la cambias en algún sprint, di qué cambiaste y por qué. -->
-
-- [ ] El código cumple con las reglas configuradas de ESLint sin errores ni avisos (`npm run lint`).
-- [ ] El código pasa la comprobación de formato con Prettier (`npm run format:check`).
-- [ ] La funcionalidad cuenta con pruebas unitarias o de integración según corresponda en la pirámide de pruebas (`npm test`).
+- [x] El código cumple con las reglas configuradas de ESLint sin errores ni avisos (`npm run lint`).
+- [x] El código pasa la comprobación de formato con Prettier (`npm run format:check`).
+- [x] La funcionalidad cuenta con pruebas unitarias o de integración según corresponda en la pirámide de pruebas (`npm test`).
 - [ ] Las funciones puras y validadores mantienen el umbral mínimo de cobertura del 90 % (`npm run coverage`).
-- [ ] El código está documentado mediante comentarios JSDoc (`@param`, `@returns`, `@fires`, `@listens`).
-- [ ] Los cambios se han desarrollado en su propia rama y se integran en `main` mediante una *pull request* con el *workflow* de CI en verde.
-- [ ] La tarea asociada en el tablero de Trello se mueve a la columna «Hecho».
+- [x] El código está documentado mediante comentarios JSDoc (`@param`, `@returns`, `@fires`, `@listens`).
+- [x] Los cambios se han desarrollado en su propia rama y se integran en `main` mediante una *pull request* con el *workflow* de CI en verde.
+- [x] La tarea asociada en el tablero de Trello se mueve a la columna «Hecho».
 
 ### Sprints
 
-<!-- Una fila por sprint. La reflexión: qué salió bien, qué no, qué cambias para el siguiente
-     (cuatro o cinco líneas, sobre tu trabajo y no sobre el enunciado). -->
-
 | Sprint | *Tag* | Qué incluye | Reflexión |
 |--------|-------|-------------|-----------|
-| 1 | `v0.1` | Usuarios, sesión y roles, con sus tests y la primera integración continua (Requisitos 1–12) | <!-- Reflexión al cerrar el sprint 1 --> |
+| 1 | `v0.1` | Usuarios, sesión y roles, con sus tests y la primera integración continua (Requisitos 1–12) | El arranque del proyecto fue muy ágil gracias a definir primero la temática de PokeMemories, el logo propio y toda la planificación en Trello. Separar los módulos de datos con inyección del almacenamiento facilitó mucho el diseño de pruebas unitarias limpias. Para el Sprint 2 el objetivo será trabajar directamente dentro del Dev Container desde el primer minuto para ejecutar localmente `npm test`, cobertura y E2E antes de cada subida. |
 | 2 | `v0.2` | El CRUD, la zona de administración, todas las pruebas y la integración continua completa (Requisitos 13–23) | <!-- Reflexión al cerrar el sprint 2 --> |
 | 3 | `v1.0` | Despliegue continuo completo, vistas previas, release de GitHub y entrega final (Requisitos 24–29) | <!-- Reflexión al cerrar el sprint 3 --> |
 
-**Tablero de Trello:** [PokéMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories) <!-- compartido con el profesor -->
+**Tablero de Trello:** [PokeMemories en Trello](https://trello.com/b/XHNkmnw1/pokememories)
 
-**Blog del proyecto:** [blog/README.md](blog/README.md) <!-- dificultades y problemas conceptuales de cada sprint -->
+**Blog del proyecto:** [blog/README.md](blog/README.md)
 
 ### Ramas y versiones
 
-<!-- 1. Tabla con tus ramas: nombre, qué funcionalidad y enlace a su pull request.
-     2. Si integras con merge o con rebase, y por qué.
-     3. Qué deja fuera tu .gitignore y por qué. -->
+Se utiliza integración mediante ***merge* en Pull Request** para conservar íntegro el historial de commits de cada rama funcional (como exige el enunciado al no borrar las ramas fusionadas). El fichero `.gitignore` deja fuera `node_modules/` (dependencias instalables), `.env` (credenciales locales privadas de la API de Trello), `dist/`, `coverage/` y `playwright-report/` (artefactos generados automáticamente en build o en pruebas).
 
 | Rama | Funcionalidad | *Pull request* |
 |------|---------------|----------------|
-| | | |
+| `feature/sprint-1-autenticacion` | Páginas base, usuarios, sesión, roles, login, registro, avisos, tests unitarios y CI paso 1 | <!-- Enlace tras abrir PR en GitHub --> |
 
 **Versión de entrega:** `v1.0`
