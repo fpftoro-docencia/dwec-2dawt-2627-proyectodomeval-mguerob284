@@ -14,6 +14,7 @@
 import { protegerPagina, renderizarCabecera } from '../componentes/cabecera.js';
 import { inicializarAvisos, lanzarAviso } from '../avisos.js';
 import { obtenerPartidas, eliminarPartida } from '../datos/partidas.js';
+import { obtenerCaratulaEdicion } from '../datos/ediciones.js';
 import { filtrarLista, paginar } from '../paginacion.js';
 import {
   leerPaginaDeUrl,
@@ -71,6 +72,12 @@ function crearTarjetaPartida(plantilla, partida, doc) {
   ponerTexto('codigoRegistro', partida.codigoRegistro);
   ponerTexto('edicion', partida.edicion);
   ponerTexto('titulo', partida.titulo);
+
+  const imgCaratula = fragmento.querySelector('[data-campo="caratula"]');
+  if (imgCaratula) {
+    imgCaratula.setAttribute('src', obtenerCaratulaEdicion(partida.edicion));
+    imgCaratula.setAttribute('alt', `Carátula de Pokémon ${partida.edicion}`);
+  }
 
   const badgeModalidad = fragmento.querySelector('[data-campo="modalidad"]');
   if (badgeModalidad) {

@@ -60,15 +60,19 @@
       <div class="col-12 col-md-6 col-lg-4">
         <article class="card h-100 shadow-sm border-0 tarjeta-partida">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <span class="badge bg-dark" data-campo="codigoRegistro"></span>
-              <span class="badge bg-primary" data-campo="edicion"></span>
+            <div class="d-flex gap-3 align-items-start mb-3">
+              <img class="caratula-tarjeta rounded border shadow-sm" data-campo="caratula" alt="" />
+              <div class="flex-grow-1 min-w-0">
+                <div class="d-flex justify-content-between align-items-start gap-1 flex-wrap mb-1">
+                  <span class="badge bg-dark" data-campo="codigoRegistro"></span>
+                  <span class="badge bg-primary" data-campo="edicion"></span>
+                </div>
+                <h2 class="h5 card-title fw-bold mb-1" data-campo="titulo"></h2>
+                <p class="mb-0">
+                  <span class="badge" data-campo="modalidad"></span>
+                </p>
+              </div>
             </div>
-
-            <h2 class="h5 card-title fw-bold mb-1" data-campo="titulo"></h2>
-            <p class="mb-2">
-              <span class="badge" data-campo="modalidad"></span>
-            </p>
 
             <dl class="row small text-muted mb-3">
               <dt class="col-5">Victoria</dt>

@@ -21,6 +21,7 @@ import {
   validarModalidadesLocke,
 } from '../validadores.js';
 import { buscarPartidaPorId, crearPartida, actualizarPartida } from '../datos/partidas.js';
+import { obtenerCaratulaEdicion } from '../datos/ediciones.js';
 
 export const MIN_POKEMON_EQUIPO = 1;
 export const MAX_POKEMON_EQUIPO = 6;
@@ -45,6 +46,37 @@ function poblarEdiciones(selectorEdicion, doc) {
   });
 
   selectorEdicion.replaceChildren(primera, ...opciones);
+}
+
+/**
+ * Crea la galería visual de carátulas clicables sincronizada con el desplegable de edición.
+ * @param {HTMLElement|null} contenedor
+ * @param {Document} doc
+ */
+function poblarSelectorCaratulas(contenedor, doc) {
+  if (!contenedor) return;
+
+  const botones = EDICIONES_OFICIALES.map((edicion) => {
+    const boton = doc.createElement('button');
+    boton.type = 'button';
+    boton.className = 'btn-caratula';
+    boton.dataset.edicion = edicion;
+    boton.setAttribute('aria-pressed', 'false');
+    boton.title = `Elegir Pokémon ${edicion}`;
+
+    const imagen = doc.createElement('img');
+    imagen.src = obtenerCaratulaEdicion(edicion);
+    imagen.alt = `Carátula de Pokémon ${edicion}`;
+    imagen.loading = 'lazy';
+
+    const etiqueta = doc.createElement('span');
+    etiqueta.textContent = edicion;
+
+    boton.append(imagen, etiqueta);
+    return boton;
+  });
+
+  contenedor.replaceChildren(...botones);
 }
 
 /**
@@ -82,6 +114,7 @@ export function iniciarFicha({
   const campoCodigo = doc.getElementById('codigo-registro');
   const campoTitulo = doc.getElementById('titulo');
   const campoEdicion = doc.getElementById('edicion');
+  const selectorCaratulas = doc.getElementById('selector-caratulas');
   const campoFecha = doc.getElementById('fecha-victoria');
   const campoTiempo = doc.getElementById('tiempo-juego');
   const campoIdEntrenador = doc.getElementById('id-entrenador');
@@ -104,6 +137,25 @@ export function iniciarFicha({
   if (!formulario || !listaEquipo || !plantillaPokemon) return;
 
   poblarEdiciones(campoEdicion, doc);
+  poblarSelectorCaratulas(selectorCaratulas, doc);
+
+  /**
+   * Marca visualmente en el selector de carátulas la edición actualmente elegida.
+   * @param {string} edicionActiva
+   * @param {boolean} [desplazar=false]
+   */
+  function sincronizarCaratulaActiva(edicionActiva, desplazar = false) {
+    if (!selectorCaratulas) return;
+    const botones = selectorCaratulas.querySelectorAll('button[data-edicion]');
+    botones.forEach((boton) => {
+      const esActiva = boton.dataset.edicion === edicionActiva;
+      boton.classList.toggle('activa', esActiva);
+      boton.setAttribute('aria-pressed', String(esActiva));
+      if (esActiva && desplazar && typeof boton.scrollIntoView === 'function') {
+        boton.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    });
+  }
 
   // Requisito 17: atributo `max` dinámico calculado desde el código según la fecha actual
   campoFecha.max = obtenerFechaHoyIso(fechaReferencia);
@@ -361,6 +413,7 @@ export function iniciarFicha({
     campoCodigo.value = partidaEditada.codigoRegistro;
     campoTitulo.value = partidaEditada.titulo;
     campoEdicion.value = partidaEditada.edicion;
+    sincronizarCaratulaActiva(partidaEditada.edicion, false);
     campoFecha.value = partidaEditada.fechaVictoria;
     campoTiempo.value = partidaEditada.tiempoJuego;
     campoIdEntrenador.value =
@@ -396,6 +449,21 @@ export function iniciarFicha({
     actualizarBloqueLocke(false);
     anadirFilaPokemon();
     actualizarBloqueLeyendas(false);
+  }
+
+  // Sincronización bidireccional entre el desplegable y la galería visual de carátulas
+  campoEdicion.addEventListener('change', () => {
+    sincronizarCaratulaActiva(campoEdicion.value, true);
+  });
+
+  if (selectorCaratulas) {
+    selectorCaratulas.addEventListener('click', (evento) => {
+      const boton = evento.target.closest('button[data-edicion]');
+      if (!boton) return;
+      campoEdicion.value = boton.dataset.edicion;
+      sincronizarCaratulaActiva(campoEdicion.value, false);
+      campoEdicion.dispatchEvent(new Event('change', { bubbles: true }));
+    });
   }
 
   // Radio excluyente Clásica / Locke y revalidación de submodalidades
