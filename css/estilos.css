@@ -1,10 +1,11 @@
 /* Estilos propios de PokeMemories */
 
 :root {
-  --poke-red: #ee1515;
-  --poke-dark: #222224;
+  --poke-red: #f02a2a;
+  --poke-dark: #252527;
   --poke-gold: #ffcb05;
   --poke-blue: #2a75bb;
+  --poke-white: #ffffff;
 }
 
 html {
@@ -15,13 +16,42 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background-color: var(--poke-white);
+  background-image: linear-gradient(
+    to bottom,
+    var(--poke-red) 0%,
+    var(--poke-red) 43%,
+    var(--poke-dark) 43%,
+    var(--poke-dark) 56%,
+    var(--poke-white) 56%,
+    var(--poke-white) 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: #212529;
   line-height: 1.55;
 }
 
 main {
   flex: 1;
+}
+
+footer {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+/* Encabezado de secciones privadas sobre la franja roja superior */
+.encabezado-pagina h1 {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.encabezado-pagina p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.card {
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.14) !important;
 }
 
 /* Cabecera, logo y navegación */
