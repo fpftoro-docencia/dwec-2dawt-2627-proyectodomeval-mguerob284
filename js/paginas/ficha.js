@@ -22,7 +22,7 @@ import {
   validarModalidadesLocke,
 } from '../validadores.js';
 import { buscarPartidaPorId, crearPartida, actualizarPartida } from '../datos/partidas.js';
-import { obtenerCaratulaEdicion } from '../datos/ediciones.js';
+import { obtenerCaratulaEdicion, obtenerSiglasEdicion } from '../datos/ediciones.js';
 
 export const MIN_POKEMON_EQUIPO = 1;
 export const MAX_POKEMON_EQUIPO = 6;
@@ -100,6 +100,8 @@ export function iniciarFicha({
   const formulario = doc.getElementById('form-partida');
   const tituloFicha = doc.getElementById('titulo-ficha');
   const campoCodigo = doc.getElementById('codigo-registro');
+  const campoCodigoNumero = doc.getElementById('codigo-numero');
+  const prefijoCodigo = doc.getElementById('prefijo-codigo');
   const campoTitulo = doc.getElementById('titulo');
   const selectorCaratulas = doc.getElementById('selector-caratulas');
   const badgeEdicion = doc.getElementById('edicion-seleccionada');
@@ -146,6 +148,24 @@ export function iniciarFicha({
   }
 
   /**
+   * Actualiza el prefijo `POKE-XXX-` y el valor completo normalizado `POKE-XXX-0000`.
+   * @param {string} edicionActiva
+   */
+  function sincronizarCodigoRegistro(edicionActiva) {
+    const siglas = obtenerSiglasEdicion(edicionActiva);
+    if (prefijoCodigo) {
+      prefijoCodigo.textContent = `POKE-${siglas}-`;
+    }
+    if (campoCodigo && campoCodigoNumero) {
+      const numeroLimpio = campoCodigoNumero.value.trim();
+      const numeroNormalizado = /^\d{1,4}$/.test(numeroLimpio)
+        ? numeroLimpio.padStart(4, '0')
+        : numeroLimpio;
+      campoCodigo.value = numeroNormalizado ? `POKE-${siglas}-${numeroNormalizado}` : '';
+    }
+  }
+
+  /**
    * Marca visualmente la carátula activa y actualiza la insignia de edición seleccionada.
    * @param {string} edicionActiva
    */
@@ -165,6 +185,7 @@ export function iniciarFicha({
         : 'Ninguna edición seleccionada';
       badgeEdicion.className = edicionActiva ? 'badge bg-primary' : 'badge bg-secondary';
     }
+    sincronizarCodigoRegistro(edicionActiva);
   }
 
   /**
@@ -445,7 +466,10 @@ export function iniciarFicha({
       btnGuardar.textContent = 'Guardar cambios';
     }
 
-    campoCodigo.value = partidaEditada.codigoRegistro;
+    const coincidenciaNumero = /-(\d{1,4})$/.exec(partidaEditada.codigoRegistro || '');
+    if (campoCodigoNumero) {
+      campoCodigoNumero.value = coincidenciaNumero ? coincidenciaNumero[1] : '';
+    }
     campoTitulo.value = partidaEditada.titulo;
     sincronizarCaratulaActiva(partidaEditada.edicion);
     campoFecha.value = partidaEditada.fechaVictoria;
@@ -492,6 +516,13 @@ export function iniciarFicha({
         sincronizarCaratulaActiva(evento.target.value);
         comprobarEdicion();
       }
+    });
+  }
+
+  // Sincronizar el código completo al escribir el número de partida
+  if (campoCodigoNumero) {
+    campoCodigoNumero.addEventListener('input', () => {
+      sincronizarCodigoRegistro(obtenerEdicionSeleccionada());
     });
   }
 
@@ -587,6 +618,7 @@ export function iniciarFicha({
     }
 
     try {
+      sincronizarCodigoRegistro(obtenerEdicionSeleccionada());
       // Requisito 17: lectura con FormData (`get` y `getAll` para los grupos dinámicos)
       const datosFormulario = new FormData(formulario);
       const motes = datosFormulario.getAll('pokemonMote');

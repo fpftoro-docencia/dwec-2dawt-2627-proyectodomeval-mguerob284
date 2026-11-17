@@ -27,22 +27,48 @@
       <section class="card shadow-sm border-0 p-4">
         <form id="form-partida" novalidate>
           <div class="row g-3">
+            <div class="col-12">
+              <fieldset aria-describedby="error-edicion">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
+                  <legend class="form-label fw-semibold fs-6 mb-0">Edición del juego</legend>
+                  <span class="badge bg-secondary" id="edicion-seleccionada">
+                    Ninguna edición seleccionada
+                  </span>
+                </div>
+                <div
+                  id="selector-caratulas"
+                  class="selector-caratulas border rounded bg-light"
+                  role="radiogroup"
+                  aria-label="Edición del juego"
+                ></div>
+                <div class="invalid-feedback d-block" id="error-edicion"></div>
+              </fieldset>
+            </div>
+
             <div class="col-12 col-md-4">
-              <label for="codigo-registro" class="form-label fw-semibold">Código de registro</label>
-              <input
-                type="text"
-                id="codigo-registro"
-                name="codigoRegistro"
-                class="form-control"
-                placeholder="Ej. POKE-HGD-0042"
-                data-validar="codigoRegistro"
-                aria-describedby="ayuda-codigo error-codigo-registro"
-                required
-              />
-              <div class="form-text small" id="ayuda-codigo">
-                Formato POKE-XXX-0000 (3 letras mayúsculas y 4 dígitos)
+              <label for="codigo-numero" class="form-label fw-semibold">Código de registro</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text fw-semibold font-monospace" id="prefijo-codigo">
+                  POKE-???-
+                </span>
+                <input
+                  type="text"
+                  id="codigo-numero"
+                  name="codigoNumero"
+                  class="form-control font-monospace"
+                  placeholder="Ej. 001"
+                  inputmode="numeric"
+                  maxlength="4"
+                  data-validar="numeroRegistro"
+                  aria-describedby="prefijo-codigo ayuda-codigo error-codigo-numero"
+                  required
+                />
+                <div class="invalid-feedback" id="error-codigo-numero"></div>
               </div>
-              <div class="invalid-feedback" id="error-codigo-registro"></div>
+              <input type="hidden" id="codigo-registro" name="codigoRegistro" value="" />
+              <div class="form-text small" id="ayuda-codigo">
+                El prefijo y las siglas cambian solos al elegir juego; escribe solo el número
+              </div>
             </div>
 
             <div class="col-12 col-md-8">
@@ -60,24 +86,6 @@
                 required
               />
               <div class="invalid-feedback" id="error-titulo"></div>
-            </div>
-
-            <div class="col-12">
-              <fieldset aria-describedby="error-edicion">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
-                  <legend class="form-label fw-semibold fs-6 mb-0">Edición del juego</legend>
-                  <span class="badge bg-secondary" id="edicion-seleccionada">
-                    Ninguna edición seleccionada
-                  </span>
-                </div>
-                <div
-                  id="selector-caratulas"
-                  class="selector-caratulas border rounded bg-light"
-                  role="radiogroup"
-                  aria-label="Edición del juego"
-                ></div>
-                <div class="invalid-feedback d-block" id="error-edicion"></div>
-              </fieldset>
             </div>
 
             <div class="col-12 col-md-4">

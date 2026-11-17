@@ -36,6 +36,37 @@ export const CARATULAS_EDICIONES = Object.freeze({
 });
 
 /**
+ * Mapa de nombre oficial de edición -> abreviatura de 3 letras mayúsculas para el código POKE-XXX-0000.
+ * @type {Readonly<Record<string, string>>}
+ */
+export const SIGLAS_EDICIONES = Object.freeze({
+  'Rojo Fuego': 'RFG',
+  'Verde Hoja': 'VHJ',
+  Esmeralda: 'ESM',
+  Diamante: 'DIA',
+  Perla: 'PRL',
+  Platino: 'PLT',
+  HeartGold: 'HGD',
+  SoulSilver: 'SSV',
+  Negro: 'NGR',
+  Blanco: 'BLC',
+  'Negro 2': 'NGD',
+  'Blanco 2': 'BLD',
+  X: 'PKX',
+  Y: 'PKY',
+  'Rubí Omega': 'ROM',
+  'Zafiro Alfa': 'ZAF',
+  Sol: 'SOL',
+  Luna: 'LUN',
+  Espada: 'ESP',
+  Escudo: 'ESC',
+  'Leyendas: Arceus': 'ARC',
+  Escarlata: 'ECL',
+  Púrpura: 'PRP',
+  'Leyendas: Z-A': 'LZA',
+});
+
+/**
  * Devuelve la ruta local de la carátula correspondiente a una edición oficial.
  * @param {string} edicion
  * @returns {string} Ruta de la imagen o logo por defecto si no coincide.
@@ -45,4 +76,16 @@ export function obtenerCaratulaEdicion(edicion) {
     return CARATULAS_EDICIONES[edicion];
   }
   return 'img/logo.png';
+}
+
+/**
+ * Devuelve la abreviatura oficial de 3 letras de una edición o '???' si aún no hay edición elegida.
+ * @param {string} edicion
+ * @returns {string}
+ */
+export function obtenerSiglasEdicion(edicion) {
+  if (edicion && Object.hasOwn(SIGLAS_EDICIONES, edicion)) {
+    return SIGLAS_EDICIONES[edicion];
+  }
+  return '???';
 }

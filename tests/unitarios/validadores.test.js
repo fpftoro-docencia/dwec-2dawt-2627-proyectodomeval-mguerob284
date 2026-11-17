@@ -7,6 +7,7 @@ import {
   validarClave,
   validarRepeticionClave,
   validarCodigoRegistro,
+  validarNumeroRegistro,
   validarTituloPartida,
   validarEdicion,
   validarFechaVictoria,
@@ -146,6 +147,25 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
       ],
     ])('rechaza «%s» con motivo esperado', (codigo, motivoEsperado) => {
       const resultado = validarCodigoRegistro(codigo);
+      expect(resultado.valido).toBe(false);
+      expect(resultado.motivo).toBe(motivoEsperado);
+    });
+
+    it.each([
+      ['1', true],
+      ['001', true],
+      ['0042', true],
+      ['9999', true],
+    ])('acepta parte numérica válida: «%s»', (numero, esperado) => {
+      expect(validarNumeroRegistro(numero).valido).toBe(esperado);
+    });
+
+    it.each([
+      ['', 'Escribe un número de registro (ej. 001 o 42)'],
+      ['12345', 'Introduce solo entre 1 y 4 dígitos (ej. 001 o 0042)'],
+      ['12a', 'Introduce solo entre 1 y 4 dígitos (ej. 001 o 0042)'],
+    ])('rechaza parte numérica inválida «%s»', (numero, motivoEsperado) => {
+      const resultado = validarNumeroRegistro(numero);
       expect(resultado.valido).toBe(false);
       expect(resultado.motivo).toBe(motivoEsperado);
     });

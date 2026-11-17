@@ -209,6 +209,24 @@ export function validarCodigoRegistro(valor) {
 }
 
 /**
+ * Valida la parte numérica que escribe el usuario para el código de registro (1 a 4 dígitos).
+ * @param {string} valor
+ * @returns {{valido: boolean, motivo?: string}}
+ * @example
+ * validarNumeroRegistro('001'); // { valido: true }
+ */
+export function validarNumeroRegistro(valor) {
+  if (!valor || typeof valor !== 'string' || !valor.trim()) {
+    return { valido: false, motivo: 'Escribe un número de registro (ej. 001 o 42)' };
+  }
+  const limpio = valor.trim();
+  if (!/^\d{1,4}$/.test(limpio)) {
+    return { valido: false, motivo: 'Introduce solo entre 1 y 4 dígitos (ej. 001 o 0042)' };
+  }
+  return { valido: true };
+}
+
+/**
  * Valida el título de una partida (3 a 40 caracteres).
  * @param {string} valor
  * @returns {{valido: boolean, motivo?: string}}
@@ -541,6 +559,7 @@ export const validadores = {
   email: validarEmail,
   clave: validarClave,
   codigoRegistro: validarCodigoRegistro,
+  numeroRegistro: validarNumeroRegistro,
   titulo: validarTituloPartida,
   edicion: validarEdicion,
   fechaVictoria: validarFechaVictoria,
