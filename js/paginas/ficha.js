@@ -22,7 +22,11 @@ import {
   validarModalidadesLocke,
 } from '../validadores.js';
 import { buscarPartidaPorId, crearPartida, actualizarPartida } from '../datos/partidas.js';
-import { obtenerCaratulaEdicion, obtenerSiglasEdicion } from '../datos/ediciones.js';
+import {
+  obtenerCaratulaEdicion,
+  obtenerSiglasEdicion,
+  obtenerTemaEdicion,
+} from '../datos/ediciones.js';
 
 export const MIN_POKEMON_EQUIPO = 1;
 export const MAX_POKEMON_EQUIPO = 6;
@@ -43,6 +47,7 @@ function poblarSelectorCaratulas(contenedor, doc) {
     etiqueta.className = 'btn-caratula';
     etiqueta.htmlFor = idRadio;
     etiqueta.dataset.edicion = edicion;
+    etiqueta.dataset.edicionTema = obtenerTemaEdicion(edicion);
     etiqueta.title = `Elegir Pokémon ${edicion}`;
 
     const radio = doc.createElement('input');
@@ -180,10 +185,17 @@ export function iniciarFicha({
       });
     }
     if (badgeEdicion) {
+      const tema = obtenerTemaEdicion(edicionActiva);
       badgeEdicion.textContent = edicionActiva
         ? `Seleccionada: ${edicionActiva}`
         : 'Ninguna edición seleccionada';
-      badgeEdicion.className = edicionActiva ? 'badge bg-primary' : 'badge bg-secondary';
+      if (tema) {
+        badgeEdicion.className = 'badge badge-edicion';
+        badgeEdicion.dataset.edicionTema = tema;
+      } else {
+        badgeEdicion.className = 'badge bg-secondary';
+        delete badgeEdicion.dataset.edicionTema;
+      }
     }
     sincronizarCodigoRegistro(edicionActiva);
   }

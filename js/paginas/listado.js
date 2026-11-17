@@ -14,7 +14,7 @@
 import { protegerPagina, renderizarCabecera } from '../componentes/cabecera.js';
 import { inicializarAvisos, lanzarAviso } from '../avisos.js';
 import { obtenerPartidas, eliminarPartida } from '../datos/partidas.js';
-import { obtenerCaratulaEdicion } from '../datos/ediciones.js';
+import { obtenerCaratulaEdicion, obtenerTemaEdicion } from '../datos/ediciones.js';
 import { filtrarLista, paginar } from '../paginacion.js';
 import {
   leerPaginaDeUrl,
@@ -72,6 +72,15 @@ function crearTarjetaPartida(plantilla, partida, doc) {
   ponerTexto('codigoRegistro', partida.codigoRegistro);
   ponerTexto('edicion', partida.edicion);
   ponerTexto('titulo', partida.titulo);
+
+  const badgeEdicion = fragmento.querySelector('[data-campo="edicion"]');
+  if (badgeEdicion) {
+    const tema = obtenerTemaEdicion(partida.edicion);
+    if (tema) {
+      badgeEdicion.className = 'badge badge-edicion';
+      badgeEdicion.dataset.edicionTema = tema;
+    }
+  }
 
   const imgCaratula = fragmento.querySelector('[data-campo="caratula"]');
   if (imgCaratula) {

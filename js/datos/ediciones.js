@@ -67,6 +67,49 @@ export const SIGLAS_EDICIONES = Object.freeze({
 });
 
 /**
+ * Mapa de nombre oficial de edición -> identificador de tema CSS (`data-edicion-tema`).
+ * @type {Readonly<Record<string, string>>}
+ */
+export const TEMAS_EDICIONES = Object.freeze({
+  'Rojo Fuego': 'rojo-fuego',
+  'Verde Hoja': 'verde-hoja',
+  Esmeralda: 'esmeralda',
+  Diamante: 'diamante',
+  Perla: 'perla',
+  Platino: 'platino',
+  HeartGold: 'heartgold',
+  SoulSilver: 'soulsilver',
+  Negro: 'negro',
+  Blanco: 'blanco',
+  'Negro 2': 'negro-2',
+  'Blanco 2': 'blanco-2',
+  X: 'x',
+  Y: 'y',
+  'Rubí Omega': 'rubi-omega',
+  'Zafiro Alfa': 'zafiro-alfa',
+  Sol: 'sol',
+  Luna: 'luna',
+  Espada: 'espada',
+  Escudo: 'escudo',
+  'Leyendas: Arceus': 'leyendas-arceus',
+  Escarlata: 'escarlata',
+  Púrpura: 'purpura',
+  'Leyendas: Z-A': 'leyendas-za',
+});
+
+/**
+ * Devuelve el identificador de tema CSS correspondiente a una edición oficial.
+ * @param {string} edicion
+ * @returns {string} Slug del tema o cadena vacía si no hay edición.
+ */
+export function obtenerTemaEdicion(edicion) {
+  if (edicion && Object.hasOwn(TEMAS_EDICIONES, edicion)) {
+    return TEMAS_EDICIONES[edicion];
+  }
+  return '';
+}
+
+/**
  * Devuelve la ruta local de la carátula correspondiente a una edición oficial.
  * @param {string} edicion
  * @returns {string} Ruta de la imagen o logo por defecto si no coincide.
