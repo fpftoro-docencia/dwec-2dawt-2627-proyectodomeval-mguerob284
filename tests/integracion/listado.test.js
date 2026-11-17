@@ -12,7 +12,7 @@ function crearPartidaDemo(numero, extra = {}) {
     edicion: 'HeartGold',
     fechaVictoria: '2026-10-10',
     tiempoJuego: '42:15',
-    licenciaEntrenador: '12345678Z',
+    idEntrenador: '00151-7',
     huboLeyendasCaidas: false,
     leyendasCaidas: [],
     equipo: [{ mote: 'Typhlosion', nivel: 60, movimientoClave: 'Lanzallamas' }],

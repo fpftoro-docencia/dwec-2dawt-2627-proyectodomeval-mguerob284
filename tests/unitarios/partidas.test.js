@@ -16,7 +16,7 @@ const PARTIDA_BASE = {
   edicion: 'HeartGold',
   fechaVictoria: '2026-10-15',
   tiempoJuego: '48:25',
-  licenciaEntrenador: '12345678z',
+  idEntrenador: ' 00151-7 ',
   huboLeyendasCaidas: true,
   leyendasCaidas: [
     {
@@ -44,7 +44,7 @@ describe('Módulo de datos: Partidas (localStorage por usuario)', () => {
   it('normaliza campos y vacía las leyendas caídas cuando no hubo caídos', () => {
     const conLeyenda = normalizarPartida(PARTIDA_BASE);
     expect(conLeyenda.codigoRegistro).toBe('POKE-HGD-0042');
-    expect(conLeyenda.licenciaEntrenador).toBe('12345678Z');
+    expect(conLeyenda.idEntrenador).toBe('00151-7');
     expect(conLeyenda.titulo).toBe('Liga Johto Nuzlocke');
     expect(conLeyenda.equipo[0].nivel).toBe(65);
     expect(conLeyenda.leyendasCaidas).toEqual([

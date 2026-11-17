@@ -40,9 +40,6 @@ export const EDICIONES_OFICIALES = Object.freeze([
  */
 export const ESTADOS_POKEMON = Object.freeze(['Campeón', 'Leyenda Caída']);
 
-const LETRAS_DNI = 'TRWAGMYFPDXBNJZSQVHLCKE';
-const MAPA_INICIAL_NIE = { X: '0', Y: '1', Z: '2' };
-
 /**
  * Devuelve una fecha en formato ISO local (YYYY-MM-DD) sin desfase horario UTC.
  * @param {Date} [fecha=new Date()] - Fecha de referencia.
@@ -291,48 +288,35 @@ export function validarTiempoJuego(valor) {
 }
 
 /**
- * Valida la licencia de entrenador con formato DNI o NIE y algoritmo de control módulo 23.
+ * Valida el ID de Entrenador con formato `00000-0` (5 dígitos y dígito de control módulo 10).
  * @param {string} valor
  * @returns {{valido: boolean, motivo?: string}}
  * @example
- * validarLicenciaEntrenador('12345678Z'); // { valido: true }
+ * validarIdEntrenador('00151-7'); // { valido: true }
  */
-export function validarLicenciaEntrenador(valor) {
+export function validarIdEntrenador(valor) {
   if (!valor || typeof valor !== 'string' || !valor.trim()) {
-    return { valido: false, motivo: 'La licencia de entrenador (DNI/NIE) es obligatoria' };
+    return { valido: false, motivo: 'El ID de Entrenador es obligatorio' };
   }
-  const limpio = valor.trim().toUpperCase();
-  const regex = /^[XYZ]?\d{7,8}[A-Z]$/;
+  const limpio = valor.trim();
+  const coincidencia = /^(\d{5})-(\d)$/.exec(limpio);
 
-  if (!regex.test(limpio)) {
+  if (!coincidencia) {
     return {
       valido: false,
-      motivo: 'La licencia de entrenador (DNI/NIE) o su letra no son válidas',
+      motivo: 'Formato inválido: usa 5 dígitos, guion y dígito de control (ej. 00151-7)',
     };
   }
 
-  // Comprobar longitud exacta: NIE (1 letra + 7 dígitos + 1 letra) o DNI (8 dígitos + 1 letra)
-  const empiezaPorNie = Object.hasOwn(MAPA_INICIAL_NIE, limpio[0]);
-  const parteNumericaTexto = empiezaPorNie ? limpio.slice(1, -1) : limpio.slice(0, -1);
-  const longitudEsperada = empiezaPorNie ? 7 : 8;
+  const digitos = coincidencia[1];
+  const controlIndicado = Number(coincidencia[2]);
+  const suma = Array.from(digitos).reduce((acumulado, cifra) => acumulado + Number(cifra), 0);
+  const controlEsperado = suma % 10;
 
-  if (parteNumericaTexto.length !== longitudEsperada) {
+  if (controlIndicado !== controlEsperado) {
     return {
       valido: false,
-      motivo: 'La licencia de entrenador (DNI/NIE) o su letra no son válidas',
-    };
-  }
-
-  const numeroParaCalculo = Number(
-    (empiezaPorNie ? MAPA_INICIAL_NIE[limpio[0]] : '') + parteNumericaTexto,
-  );
-  const letraEsperada = LETRAS_DNI[numeroParaCalculo % 23];
-  const letraIndicada = limpio.at(-1);
-
-  if (letraIndicada !== letraEsperada) {
-    return {
-      valido: false,
-      motivo: 'La letra de control de la licencia (DNI/NIE) no es correcta',
+      motivo: 'El dígito de control del ID de Entrenador no es correcto',
     };
   }
 
@@ -511,7 +495,7 @@ export const validadores = {
   edicion: validarEdicion,
   fechaVictoria: validarFechaVictoria,
   tiempoJuego: validarTiempoJuego,
-  licenciaEntrenador: validarLicenciaEntrenador,
+  idEntrenador: validarIdEntrenador,
   mencionHonor: validarMencionHonor,
   motePokemon: validarMotePokemon,
   nivelPokemon: validarNivelPokemon,

@@ -41,7 +41,7 @@ function textoBuscablePartida(partida) {
     partida.codigoRegistro,
     partida.titulo,
     partida.edicion,
-    partida.licenciaEntrenador,
+    partida.idEntrenador || partida.licenciaEntrenador || '',
     motes,
     leyendas,
   ].join(' ');
@@ -68,7 +68,7 @@ function crearTarjetaPartida(plantilla, partida, doc) {
   ponerTexto('titulo', partida.titulo);
   ponerTexto('fechaVictoria', partida.fechaVictoria);
   ponerTexto('tiempoJuego', `${partida.tiempoJuego} h`);
-  ponerTexto('licenciaEntrenador', partida.licenciaEntrenador);
+  ponerTexto('idEntrenador', partida.idEntrenador || partida.licenciaEntrenador || '');
 
   const listaEquipo = fragmento.querySelector('[data-campo="equipo"]');
   if (listaEquipo && Array.isArray(partida.equipo)) {

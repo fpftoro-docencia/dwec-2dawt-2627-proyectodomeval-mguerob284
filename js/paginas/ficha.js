@@ -3,7 +3,7 @@
  *
  * Elementos HTML requeridos:
  * - `#cabecera-principal`, `#zona-avisos`, `#titulo-ficha`, `#form-partida`
- * - `#codigo-registro`, `#titulo`, `#edicion`, `#fecha-victoria`, `#tiempo-juego`, `#licencia-entrenador`
+ * - `#codigo-registro`, `#titulo`, `#edicion`, `#fecha-victoria`, `#tiempo-juego`, `#id-entrenador`
  * - `#lista-equipo`, `#contador-equipo`, `#btn-anadir-pokemon`, `#plantilla-pokemon`
  * - `#hubo-leyendas-caidas`, `#bloque-leyendas-caidas`, `#lista-leyendas`, `#contador-leyendas`,
  *   `#btn-anadir-leyenda`, `#plantilla-leyenda-caida`, `#btn-guardar-partida`
@@ -79,7 +79,7 @@ export function iniciarFicha({
   const campoEdicion = doc.getElementById('edicion');
   const campoFecha = doc.getElementById('fecha-victoria');
   const campoTiempo = doc.getElementById('tiempo-juego');
-  const campoLicencia = doc.getElementById('licencia-entrenador');
+  const campoIdEntrenador = doc.getElementById('id-entrenador');
   const listaEquipo = doc.getElementById('lista-equipo');
   const contadorEquipo = doc.getElementById('contador-equipo');
   const btnAnadirPokemon = doc.getElementById('btn-anadir-pokemon');
@@ -290,7 +290,8 @@ export function iniciarFicha({
     campoEdicion.value = partidaEditada.edicion;
     campoFecha.value = partidaEditada.fechaVictoria;
     campoTiempo.value = partidaEditada.tiempoJuego;
-    campoLicencia.value = partidaEditada.licenciaEntrenador;
+    campoIdEntrenador.value =
+      partidaEditada.idEntrenador || partidaEditada.licenciaEntrenador || '';
 
     const equipoGuardado =
       Array.isArray(partidaEditada.equipo) && partidaEditada.equipo.length > 0
@@ -410,7 +411,7 @@ export function iniciarFicha({
         edicion: String(datosFormulario.get('edicion') || ''),
         fechaVictoria: String(datosFormulario.get('fechaVictoria') || ''),
         tiempoJuego: String(datosFormulario.get('tiempoJuego') || ''),
-        licenciaEntrenador: String(datosFormulario.get('licenciaEntrenador') || ''),
+        idEntrenador: String(datosFormulario.get('idEntrenador') || ''),
         huboLeyendasCaidas,
         leyendasCaidas,
         equipo,

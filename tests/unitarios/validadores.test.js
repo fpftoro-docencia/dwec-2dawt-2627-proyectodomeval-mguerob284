@@ -11,7 +11,7 @@ import {
   validarEdicion,
   validarFechaVictoria,
   validarTiempoJuego,
-  validarLicenciaEntrenador,
+  validarIdEntrenador,
   validarMencionHonor,
   validarMotePokemon,
   validarNivelPokemon,
@@ -237,27 +237,26 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
     });
   });
 
-  describe('Licencia de entrenador DNI/NIE con módulo 23 (validarLicenciaEntrenador)', () => {
+  describe('ID de Entrenador con dígito de control módulo 10 (validarIdEntrenador)', () => {
     it.each([
-      ['12345678Z', true],
-      ['00000000T', true],
-      ['X1234567L', true],
-      ['Y1234567X', true],
-      ['Z1234567R', true],
-      ['12345678z', true], // normaliza a mayúsculas
-    ])('acepta DNI/NIE válido: «%s»', (licencia, esperado) => {
-      expect(validarLicenciaEntrenador(licencia).valido).toBe(esperado);
+      ['00151-7', true], // 0+0+1+5+1 = 7
+      ['12345-5', true], // 1+2+3+4+5 = 15 -> 5
+      ['00000-0', true], // límite inferior
+      ['99999-5', true], // 45 -> 5 (límite superior)
+    ])('acepta ID de Entrenador válido: «%s»', (idEntrenador, esperado) => {
+      expect(validarIdEntrenador(idEntrenador).valido).toBe(esperado);
     });
 
     it.each([
-      ['', 'La licencia de entrenador (DNI/NIE) es obligatoria'],
-      ['1234567Z', 'La licencia de entrenador (DNI/NIE) o su letra no son válidas'],
-      ['X12345678L', 'La licencia de entrenador (DNI/NIE) o su letra no son válidas'],
-      ['A1234567L', 'La licencia de entrenador (DNI/NIE) o su letra no son válidas'],
-      ['12345678A', 'La letra de control de la licencia (DNI/NIE) no es correcta'],
-      ['X1234567T', 'La letra de control de la licencia (DNI/NIE) no es correcta'],
-    ])('rechaza licencia inválida «%s»', (licencia, motivoEsperado) => {
-      const resultado = validarLicenciaEntrenador(licencia);
+      ['', 'El ID de Entrenador es obligatorio'],
+      ['1234-0', 'Formato inválido: usa 5 dígitos, guion y dígito de control (ej. 00151-7)'],
+      ['123456-1', 'Formato inválido: usa 5 dígitos, guion y dígito de control (ej. 00151-7)'],
+      ['001517', 'Formato inválido: usa 5 dígitos, guion y dígito de control (ej. 00151-7)'],
+      ['00151-A', 'Formato inválido: usa 5 dígitos, guion y dígito de control (ej. 00151-7)'],
+      ['00151-8', 'El dígito de control del ID de Entrenador no es correcto'],
+      ['12345-0', 'El dígito de control del ID de Entrenador no es correcto'],
+    ])('rechaza ID de Entrenador inválido «%s»', (idEntrenador, motivoEsperado) => {
+      const resultado = validarIdEntrenador(idEntrenador);
       expect(resultado.valido).toBe(false);
       expect(resultado.motivo).toBe(motivoEsperado);
     });
@@ -362,7 +361,7 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
   describe('Mapa unificado de validadores (data-validar)', () => {
     it('expone las estrategias de validación por clave', () => {
       expect(validadores.codigoRegistro('POKE-HGD-0001').valido).toBe(true);
-      expect(validadores.licenciaEntrenador('12345678Z').valido).toBe(true);
+      expect(validadores.idEntrenador('00151-7').valido).toBe(true);
       expect(validadores.tiempoJuego('12:30').valido).toBe(true);
     });
   });

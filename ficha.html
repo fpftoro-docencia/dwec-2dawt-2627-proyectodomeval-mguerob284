@@ -108,23 +108,21 @@
             </div>
 
             <div class="col-12 col-md-6">
-              <label for="licencia-entrenador" class="form-label fw-semibold">
-                Licencia de Entrenador (DNI/NIE)
-              </label>
+              <label for="id-entrenador" class="form-label fw-semibold">ID de Entrenador</label>
               <input
                 type="text"
-                id="licencia-entrenador"
-                name="licenciaEntrenador"
+                id="id-entrenador"
+                name="idEntrenador"
                 class="form-control"
-                placeholder="Ej. 12345678Z"
-                data-validar="licenciaEntrenador"
-                aria-describedby="ayuda-licencia error-licencia-entrenador"
+                placeholder="Ej. 00151-7"
+                data-validar="idEntrenador"
+                aria-describedby="ayuda-id-entrenador error-id-entrenador"
                 required
               />
-              <div class="form-text small" id="ayuda-licencia">
-                DNI o NIE válido con su letra oficial de control
+              <div class="form-text small" id="ayuda-id-entrenador">
+                5 dígitos de tu tarjeta de entrenador y su dígito de control (ej. 00151-7)
               </div>
-              <div class="invalid-feedback" id="error-licencia-entrenador"></div>
+              <div class="invalid-feedback" id="error-id-entrenador"></div>
             </div>
           </div>
 

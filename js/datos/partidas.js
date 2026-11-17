@@ -28,7 +28,7 @@ const PREFIJO_CLAVE_PARTIDAS = 'PokeMemories_partidas_';
  * @property {string} edicion - Edición oficial de Pokémon.
  * @property {string} fechaVictoria - Fecha de victoria en formato YYYY-MM-DD.
  * @property {string} tiempoJuego - Tiempo total en formato Horas:Minutos.
- * @property {string} licenciaEntrenador - Licencia DNI o NIE normalizada en mayúsculas.
+ * @property {string} idEntrenador - ID de Entrenador en formato 00000-0 con dígito de control.
  * @property {boolean} huboLeyendasCaidas - Indica si la partida incluye homenaje a caídos.
  * @property {LeyendaCaida[]} leyendasCaidas - Pokémon caídos en la aventura (vacío si no hubo).
  * @property {MiembroEquipo[]} equipo - Lista de 1 a 6 Pokémon campeones registrados.
@@ -93,9 +93,7 @@ export function normalizarPartida(datos = {}) {
     edicion: String(datos.edicion ?? '').trim(),
     fechaVictoria: String(datos.fechaVictoria ?? '').trim(),
     tiempoJuego: String(datos.tiempoJuego ?? '').trim(),
-    licenciaEntrenador: String(datos.licenciaEntrenador ?? '')
-      .trim()
-      .toUpperCase(),
+    idEntrenador: String(datos.idEntrenador ?? datos.licenciaEntrenador ?? '').trim(),
     huboLeyendasCaidas,
     leyendasCaidas,
     equipo,
