@@ -40,9 +40,11 @@ export function filtrarLista(lista, consulta, obtenerTexto) {
   if (!termino) {
     return [...lista];
   }
-  return lista.filter((elemento) =>
-    normalizarTextoBusqueda(obtenerTexto(elemento)).includes(termino),
-  );
+  const palabras = termino.split(/\s+/);
+  return lista.filter((elemento) => {
+    const texto = normalizarTextoBusqueda(obtenerTexto(elemento));
+    return palabras.every((palabra) => texto.includes(palabra));
+  });
 }
 
 /**
