@@ -37,11 +37,16 @@ function textoBuscablePartida(partida) {
   const leyendas = Array.isArray(partida.leyendasCaidas)
     ? partida.leyendasCaidas.map((leyenda) => `${leyenda.mote} ${leyenda.hazana}`).join(' ')
     : '';
+  const modalidades = Array.isArray(partida.modalidadesLocke)
+    ? partida.modalidadesLocke.join(' ')
+    : '';
   return [
     partida.codigoRegistro,
     partida.titulo,
     partida.edicion,
     partida.idEntrenador || partida.licenciaEntrenador || '',
+    partida.tipoPartida || 'Clásica',
+    modalidades,
     motes,
     leyendas,
   ].join(' ');
@@ -66,6 +71,18 @@ function crearTarjetaPartida(plantilla, partida, doc) {
   ponerTexto('codigoRegistro', partida.codigoRegistro);
   ponerTexto('edicion', partida.edicion);
   ponerTexto('titulo', partida.titulo);
+
+  const badgeModalidad = fragmento.querySelector('[data-campo="modalidad"]');
+  if (badgeModalidad) {
+    const esLocke =
+      partida.tipoPartida === 'Locke' &&
+      Array.isArray(partida.modalidadesLocke) &&
+      partida.modalidadesLocke.length > 0;
+    badgeModalidad.textContent = esLocke
+      ? `🔥 Locke · ${partida.modalidadesLocke.join(' + ')}`
+      : '🎮 Clásica';
+    badgeModalidad.className = esLocke ? 'badge bg-danger' : 'badge bg-secondary';
+  }
   ponerTexto('fechaVictoria', partida.fechaVictoria);
   ponerTexto('tiempoJuego', `${partida.tiempoJuego} h`);
   ponerTexto('idEntrenador', partida.idEntrenador || partida.licenciaEntrenador || '');

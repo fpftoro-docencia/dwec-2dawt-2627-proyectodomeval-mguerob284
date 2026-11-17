@@ -124,6 +124,96 @@
               </div>
               <div class="invalid-feedback" id="error-id-entrenador"></div>
             </div>
+
+            <div class="col-12 col-md-6">
+              <fieldset>
+                <legend class="form-label fw-semibold fs-6 mb-2">Modalidad de partida</legend>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="tipo-clasica"
+                      name="tipoPartida"
+                      value="Clásica"
+                      class="form-check-input"
+                      checked
+                    />
+                    <label for="tipo-clasica" class="form-check-label">Clásica</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="tipo-locke"
+                      name="tipoPartida"
+                      value="Locke"
+                      class="form-check-input"
+                    />
+                    <label for="tipo-locke" class="form-check-label">Locke</label>
+                  </div>
+                </div>
+                <div class="form-text small">
+                  Elige si es una partida Clásica o un desafío Locke (no pueden ser ambas a la vez)
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="col-12" id="bloque-modalidades-locke" hidden>
+              <fieldset
+                class="border rounded p-3 bg-light"
+                aria-describedby="error-modalidades-locke"
+              >
+                <legend class="fs-6 fw-semibold mb-2">
+                  🔥 Modalidades de Locke (puedes marcar varias)
+                </legend>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-nuzlocke"
+                      name="modalidadesLocke"
+                      value="Nuzlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-nuzlocke" class="form-check-label">Nuzlocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-randomlocke"
+                      name="modalidadesLocke"
+                      value="Randomlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-randomlocke" class="form-check-label">Randomlocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-vidalocke"
+                      name="modalidadesLocke"
+                      value="Vidalocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-vidalocke" class="form-check-label">Vidalocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-hardlocke"
+                      name="modalidadesLocke"
+                      value="Hardlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-hardlocke" class="form-check-label">Hardlocke</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback d-block" id="error-modalidades-locke"></div>
+              </fieldset>
+            </div>
           </div>
 
           <hr class="my-4" />
@@ -303,7 +393,7 @@
               type="text"
               name="leyendaHazana"
               class="form-control"
-              placeholder="Ej. Cayó contra Lance protegiendo al equipo en la final"
+              placeholder='Ej. Hizo un crítico, congeló y se tanqueó un "A bocajarro" en la medalla 7'
               data-campo="hazana"
               data-validar="mencionHonor"
               required

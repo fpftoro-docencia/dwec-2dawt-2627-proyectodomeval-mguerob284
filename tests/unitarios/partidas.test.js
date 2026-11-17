@@ -17,6 +17,8 @@ const PARTIDA_BASE = {
   fechaVictoria: '2026-10-15',
   tiempoJuego: '48:25',
   idEntrenador: ' 00151-7 ',
+  tipoPartida: 'Locke',
+  modalidadesLocke: ['Nuzlocke', 'Hardlocke'],
   huboLeyendasCaidas: true,
   leyendasCaidas: [
     {
@@ -45,6 +47,8 @@ describe('Módulo de datos: Partidas (localStorage por usuario)', () => {
     const conLeyenda = normalizarPartida(PARTIDA_BASE);
     expect(conLeyenda.codigoRegistro).toBe('POKE-HGD-0042');
     expect(conLeyenda.idEntrenador).toBe('00151-7');
+    expect(conLeyenda.tipoPartida).toBe('Locke');
+    expect(conLeyenda.modalidadesLocke).toEqual(['Nuzlocke', 'Hardlocke']);
     expect(conLeyenda.titulo).toBe('Liga Johto Nuzlocke');
     expect(conLeyenda.equipo[0].nivel).toBe(65);
     expect(conLeyenda.leyendasCaidas).toEqual([
@@ -57,9 +61,13 @@ describe('Módulo de datos: Partidas (localStorage por usuario)', () => {
 
     const sinLeyenda = normalizarPartida({
       ...PARTIDA_BASE,
+      tipoPartida: 'Clásica',
+      modalidadesLocke: ['Nuzlocke'],
       huboLeyendasCaidas: false,
       leyendasCaidas: [{ mote: 'Pidgeot', nivel: 40, hazana: 'Debe ignorarse al desmarcar' }],
     });
+    expect(sinLeyenda.tipoPartida).toBe('Clásica');
+    expect(sinLeyenda.modalidadesLocke).toEqual([]);
     expect(sinLeyenda.huboLeyendasCaidas).toBe(false);
     expect(sinLeyenda.leyendasCaidas).toEqual([]);
   });

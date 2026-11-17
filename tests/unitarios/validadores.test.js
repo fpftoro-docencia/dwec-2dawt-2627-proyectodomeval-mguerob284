@@ -12,6 +12,8 @@ import {
   validarFechaVictoria,
   validarTiempoJuego,
   validarIdEntrenador,
+  validarTipoPartida,
+  validarModalidadesLocke,
   validarMencionHonor,
   validarMotePokemon,
   validarNivelPokemon,
@@ -174,6 +176,7 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
       ['HeartGold', true],
       ['Esmeralda', true],
       ['Leyendas: Arceus', true],
+      ['Leyendas: Z-A', true],
     ])('acepta edición oficial: «%s»', (edicion, esperado) => {
       expect(validarEdicion(edicion).valido).toBe(esperado);
     });
@@ -355,6 +358,19 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
       expect(validarLeyendasCaidas(Array(7).fill(leyendaValida)).valido).toBe(false);
       expect(validarLeyendasCaidas([null]).valido).toBe(false);
       expect(validarLeyendasCaidas([{ ...leyendaValida, hazana: 'corta' }]).valido).toBe(false);
+    });
+
+    it('valida tipo de partida (Clásica o Locke) y modalidades Locke combinables', () => {
+      expect(validarTipoPartida('Clásica').valido).toBe(true);
+      expect(validarTipoPartida('Locke').valido).toBe(true);
+      expect(validarTipoPartida('Otra').valido).toBe(false);
+      expect(validarTipoPartida('').valido).toBe(false);
+
+      expect(validarModalidadesLocke(['Nuzlocke']).valido).toBe(true);
+      expect(validarModalidadesLocke(['Nuzlocke', 'Randomlocke', 'Hardlocke']).valido).toBe(true);
+      expect(validarModalidadesLocke(['Vidalocke']).valido).toBe(true);
+      expect(validarModalidadesLocke([]).valido).toBe(false);
+      expect(validarModalidadesLocke(['InventadoLocke']).valido).toBe(false);
     });
   });
 

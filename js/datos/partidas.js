@@ -29,6 +29,8 @@ const PREFIJO_CLAVE_PARTIDAS = 'PokeMemories_partidas_';
  * @property {string} fechaVictoria - Fecha de victoria en formato YYYY-MM-DD.
  * @property {string} tiempoJuego - Tiempo total en formato Horas:Minutos.
  * @property {string} idEntrenador - ID de Entrenador en formato 00000-0 con dígito de control.
+ * @property {'Clásica'|'Locke'} tipoPartida - Modalidad principal de la aventura.
+ * @property {string[]} modalidadesLocke - Submodalidades Locke seleccionadas (vacío si es Clásica).
  * @property {boolean} huboLeyendasCaidas - Indica si la partida incluye homenaje a caídos.
  * @property {LeyendaCaida[]} leyendasCaidas - Pokémon caídos en la aventura (vacío si no hubo).
  * @property {MiembroEquipo[]} equipo - Lista de 1 a 6 Pokémon campeones registrados.
@@ -68,6 +70,11 @@ export function obtenerClavePartidas(nombreUsuario) {
  * @returns {Omit<RegistroPartida, 'id'|'fechaCreacion'|'fechaActualizacion'>}
  */
 export function normalizarPartida(datos = {}) {
+  const tipoPartida = datos.tipoPartida === 'Locke' ? 'Locke' : 'Clásica';
+  const modalidadesLocke =
+    tipoPartida === 'Locke' && Array.isArray(datos.modalidadesLocke)
+      ? Array.from(new Set(datos.modalidadesLocke.map((mod) => String(mod).trim()).filter(Boolean)))
+      : [];
   const huboLeyendasCaidas = Boolean(datos.huboLeyendasCaidas);
   const equipoEntrada = Array.isArray(datos.equipo) ? datos.equipo : [];
   const leyendasEntrada =
@@ -94,6 +101,8 @@ export function normalizarPartida(datos = {}) {
     fechaVictoria: String(datos.fechaVictoria ?? '').trim(),
     tiempoJuego: String(datos.tiempoJuego ?? '').trim(),
     idEntrenador: String(datos.idEntrenador ?? datos.licenciaEntrenador ?? '').trim(),
+    tipoPartida,
+    modalidadesLocke,
     huboLeyendasCaidas,
     leyendasCaidas,
     equipo,

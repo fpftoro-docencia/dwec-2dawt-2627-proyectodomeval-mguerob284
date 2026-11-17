@@ -14,7 +14,12 @@
 import { protegerPagina, renderizarCabecera } from '../componentes/cabecera.js';
 import { inicializarAvisos, lanzarAviso, guardarAvisoPendiente } from '../avisos.js';
 import { configurarValidacionFormulario } from '../componentes/validacionFormulario.js';
-import { EDICIONES_OFICIALES, obtenerFechaHoyIso, validarFechaVictoria } from '../validadores.js';
+import {
+  EDICIONES_OFICIALES,
+  obtenerFechaHoyIso,
+  validarFechaVictoria,
+  validarModalidadesLocke,
+} from '../validadores.js';
 import { buscarPartidaPorId, crearPartida, actualizarPartida } from '../datos/partidas.js';
 
 export const MIN_POKEMON_EQUIPO = 1;
@@ -80,6 +85,10 @@ export function iniciarFicha({
   const campoFecha = doc.getElementById('fecha-victoria');
   const campoTiempo = doc.getElementById('tiempo-juego');
   const campoIdEntrenador = doc.getElementById('id-entrenador');
+  const radioClasica = doc.getElementById('tipo-clasica');
+  const radioLocke = doc.getElementById('tipo-locke');
+  const bloqueLocke = doc.getElementById('bloque-modalidades-locke');
+  const errorModalidadesLocke = doc.getElementById('error-modalidades-locke');
   const listaEquipo = doc.getElementById('lista-equipo');
   const contadorEquipo = doc.getElementById('contador-equipo');
   const btnAnadirPokemon = doc.getElementById('btn-anadir-pokemon');
@@ -108,6 +117,70 @@ export function iniciarFicha({
 
   let contadorFilasEquipo = 0;
   let contadorFilasLeyendas = 0;
+
+  /**
+   * Devuelve las casillas de submodalidades Locke dentro del formulario.
+   * @returns {HTMLInputElement[]}
+   */
+  function obtenerCasillasLocke() {
+    return Array.from(formulario.querySelectorAll('input[name="modalidadesLocke"]'));
+  }
+
+  /**
+   * Valida las modalidades Locke cuando el tipo de partida es 'Locke'.
+   * @returns {{valido: boolean, primerError: HTMLElement|null}}
+   */
+  function comprobarModalidadesLocke() {
+    const casillas = obtenerCasillasLocke();
+    const esLocke = Boolean(radioLocke?.checked);
+
+    if (!esLocke) {
+      casillas.forEach((casilla) => {
+        casilla.classList.remove('is-invalid');
+        casilla.removeAttribute('aria-invalid');
+      });
+      if (errorModalidadesLocke) errorModalidadesLocke.textContent = '';
+      return { valido: true, primerError: null };
+    }
+
+    const elegidas = casillas.filter((casilla) => casilla.checked).map((casilla) => casilla.value);
+    const resultado = validarModalidadesLocke(elegidas);
+
+    casillas.forEach((casilla) => {
+      casilla.classList.toggle('is-invalid', !resultado.valido);
+      casilla.setAttribute('aria-invalid', String(!resultado.valido));
+    });
+
+    if (errorModalidadesLocke) {
+      errorModalidadesLocke.textContent = resultado.valido ? '' : resultado.motivo || '';
+    }
+
+    return {
+      valido: resultado.valido,
+      primerError: resultado.valido ? null : casillas[0] || null,
+    };
+  }
+
+  /**
+   * Muestra u oculta y activa/desactiva las modalidades Locke según el radio seleccionado.
+   * @param {boolean} esLocke
+   */
+  function actualizarBloqueLocke(esLocke) {
+    if (!bloqueLocke) return;
+    bloqueLocke.hidden = !esLocke;
+    const casillas = obtenerCasillasLocke();
+    casillas.forEach((casilla) => {
+      casilla.disabled = !esLocke;
+      if (!esLocke) {
+        casilla.checked = false;
+        casilla.classList.remove('is-invalid');
+        casilla.removeAttribute('aria-invalid');
+      }
+    });
+    if (!esLocke && errorModalidadesLocke) {
+      errorModalidadesLocke.textContent = '';
+    }
+  }
 
   /**
    * Actualiza la numeración visual del equipo campeón y el estado desactivado de sus botones.
@@ -293,6 +366,16 @@ export function iniciarFicha({
     campoIdEntrenador.value =
       partidaEditada.idEntrenador || partidaEditada.licenciaEntrenador || '';
 
+    const esLocke = partidaEditada.tipoPartida === 'Locke';
+    if (radioClasica) radioClasica.checked = !esLocke;
+    if (radioLocke) radioLocke.checked = esLocke;
+    actualizarBloqueLocke(esLocke);
+    if (esLocke && Array.isArray(partidaEditada.modalidadesLocke)) {
+      obtenerCasillasLocke().forEach((casilla) => {
+        casilla.checked = partidaEditada.modalidadesLocke.includes(casilla.value);
+      });
+    }
+
     const equipoGuardado =
       Array.isArray(partidaEditada.equipo) && partidaEditada.equipo.length > 0
         ? partidaEditada.equipo
@@ -310,8 +393,28 @@ export function iniciarFicha({
     }
     actualizarBloqueLeyendas(huboLeyendas);
   } else {
+    actualizarBloqueLocke(false);
     anadirFilaPokemon();
     actualizarBloqueLeyendas(false);
+  }
+
+  // Radio excluyente Clásica / Locke y revalidación de submodalidades
+  if (radioClasica) {
+    radioClasica.addEventListener('change', () => {
+      actualizarBloqueLocke(false);
+    });
+  }
+  if (radioLocke) {
+    radioLocke.addEventListener('change', () => {
+      actualizarBloqueLocke(true);
+    });
+  }
+  if (bloqueLocke) {
+    bloqueLocke.addEventListener('change', (evento) => {
+      if (evento.target.matches('input[name="modalidadesLocke"]')) {
+        comprobarModalidadesLocke();
+      }
+    });
   }
 
   // Casilla condicional: mostrar y habilitar las Leyendas Caídas
@@ -372,9 +475,11 @@ export function iniciarFicha({
     if (procesandoEnvio) return;
 
     const { valido, primerError } = validador.validarFormulario();
-    if (!valido) {
+    const resultadoLocke = comprobarModalidadesLocke();
+    if (!valido || !resultadoLocke.valido) {
       lanzarAviso(formulario, 'Revisa los campos marcados en rojo antes de guardar', 'warning');
-      if (primerError) primerError.focus();
+      const focoDestino = primerError || resultadoLocke.primerError;
+      if (focoDestino) focoDestino.focus();
       return;
     }
 
@@ -405,6 +510,13 @@ export function iniciarFicha({
           }))
         : [];
 
+      const tipoPartida =
+        String(datosFormulario.get('tipoPartida') || 'Clásica') === 'Locke' ? 'Locke' : 'Clásica';
+      const modalidadesLocke =
+        tipoPartida === 'Locke'
+          ? datosFormulario.getAll('modalidadesLocke').map((mod) => String(mod))
+          : [];
+
       const registro = {
         codigoRegistro: String(datosFormulario.get('codigoRegistro') || ''),
         titulo: String(datosFormulario.get('titulo') || ''),
@@ -412,6 +524,8 @@ export function iniciarFicha({
         fechaVictoria: String(datosFormulario.get('fechaVictoria') || ''),
         tiempoJuego: String(datosFormulario.get('tiempoJuego') || ''),
         idEntrenador: String(datosFormulario.get('idEntrenador') || ''),
+        tipoPartida,
+        modalidadesLocke,
         huboLeyendasCaidas,
         leyendasCaidas,
         equipo,

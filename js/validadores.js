@@ -32,6 +32,24 @@ export const EDICIONES_OFICIALES = Object.freeze([
   'Leyendas: Arceus',
   'Escarlata',
   'Púrpura',
+  'Leyendas: Z-A',
+]);
+
+/**
+ * Tipos de partida permitidos (mutuamente excluyentes: Clásica o Locke).
+ * @type {readonly string[]}
+ */
+export const TIPOS_PARTIDA = Object.freeze(['Clásica', 'Locke']);
+
+/**
+ * Modalidades combinables disponibles cuando la partida es de tipo Locke.
+ * @type {readonly string[]}
+ */
+export const MODALIDADES_LOCKE = Object.freeze([
+  'Nuzlocke',
+  'Randomlocke',
+  'Vidalocke',
+  'Hardlocke',
 ]);
 
 /**
@@ -483,6 +501,38 @@ export function validarLeyendasCaidas(leyendas) {
 }
 
 /**
+ * Valida el tipo de partida ('Clásica' o 'Locke').
+ * @param {string} valor
+ * @returns {{valido: boolean, motivo?: string}}
+ * @example
+ * validarTipoPartida('Locke'); // { valido: true }
+ */
+export function validarTipoPartida(valor) {
+  if (!valor || typeof valor !== 'string' || !TIPOS_PARTIDA.includes(valor.trim())) {
+    return { valido: false, motivo: 'Selecciona si la partida es Clásica o Locke' };
+  }
+  return { valido: true };
+}
+
+/**
+ * Valida las modalidades elegidas para una partida tipo Locke (al menos una modalidad oficial).
+ * @param {string[]} modalidades
+ * @returns {{valido: boolean, motivo?: string}}
+ * @example
+ * validarModalidadesLocke(['Nuzlocke', 'Hardlocke']); // { valido: true }
+ */
+export function validarModalidadesLocke(modalidades) {
+  if (!Array.isArray(modalidades) || modalidades.length === 0) {
+    return { valido: false, motivo: 'Selecciona al menos una modalidad de Locke' };
+  }
+  const todasValidas = modalidades.every((mod) => MODALIDADES_LOCKE.includes(String(mod).trim()));
+  if (!todasValidas) {
+    return { valido: false, motivo: 'Alguna modalidad de Locke seleccionada no es válida' };
+  }
+  return { valido: true };
+}
+
+/**
  * Mapa centralizado de validadores de formato (patrón Estrategia) seleccionables por `data-validar`.
  * @type {Record<string, (valor: string) => {valido: boolean, motivo?: string}>}
  */
@@ -496,6 +546,7 @@ export const validadores = {
   fechaVictoria: validarFechaVictoria,
   tiempoJuego: validarTiempoJuego,
   idEntrenador: validarIdEntrenador,
+  tipoPartida: validarTipoPartida,
   mencionHonor: validarMencionHonor,
   motePokemon: validarMotePokemon,
   nivelPokemon: validarNivelPokemon,
