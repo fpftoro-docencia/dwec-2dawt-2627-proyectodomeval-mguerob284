@@ -4,8 +4,9 @@
  * Elementos HTML requeridos:
  * - `#cabecera-principal`, `#zona-avisos`, `#titulo-ficha`, `#form-partida`
  * - `#codigo-registro`, `#titulo`, `#edicion`, `#fecha-victoria`, `#tiempo-juego`, `#licencia-entrenador`
- * - `#hubo-leyendas-caidas`, `#bloque-mencion-honor`, `#mencion-honor`
- * - `#lista-equipo`, `#contador-equipo`, `#btn-anadir-pokemon`, `#plantilla-pokemon`, `#btn-guardar-partida`
+ * - `#lista-equipo`, `#contador-equipo`, `#btn-anadir-pokemon`, `#plantilla-pokemon`
+ * - `#hubo-leyendas-caidas`, `#bloque-leyendas-caidas`, `#lista-leyendas`, `#contador-leyendas`,
+ *   `#btn-anadir-leyenda`, `#plantilla-leyenda-caida`, `#btn-guardar-partida`
  *
  * @module paginas/ficha
  */
@@ -18,6 +19,8 @@ import { buscarPartidaPorId, crearPartida, actualizarPartida } from '../datos/pa
 
 export const MIN_POKEMON_EQUIPO = 1;
 export const MAX_POKEMON_EQUIPO = 6;
+export const MIN_LEYENDAS_CAIDAS = 1;
+export const MAX_LEYENDAS_CAIDAS = 6;
 
 /**
  * Rellena el desplegable de ediciones oficiales con métodos del DOM.
@@ -77,13 +80,16 @@ export function iniciarFicha({
   const campoFecha = doc.getElementById('fecha-victoria');
   const campoTiempo = doc.getElementById('tiempo-juego');
   const campoLicencia = doc.getElementById('licencia-entrenador');
-  const campoLeyendas = doc.getElementById('hubo-leyendas-caidas');
-  const bloqueMencion = doc.getElementById('bloque-mencion-honor');
-  const campoMencion = doc.getElementById('mencion-honor');
   const listaEquipo = doc.getElementById('lista-equipo');
   const contadorEquipo = doc.getElementById('contador-equipo');
   const btnAnadirPokemon = doc.getElementById('btn-anadir-pokemon');
   const plantillaPokemon = doc.getElementById('plantilla-pokemon');
+  const campoLeyendas = doc.getElementById('hubo-leyendas-caidas');
+  const bloqueLeyendas = doc.getElementById('bloque-leyendas-caidas');
+  const listaLeyendas = doc.getElementById('lista-leyendas');
+  const contadorLeyendas = doc.getElementById('contador-leyendas');
+  const btnAnadirLeyenda = doc.getElementById('btn-anadir-leyenda');
+  const plantillaLeyenda = doc.getElementById('plantilla-leyenda-caida');
   const btnGuardar = doc.getElementById('btn-guardar-partida');
 
   if (!formulario || !listaEquipo || !plantillaPokemon) return;
@@ -100,23 +106,11 @@ export function iniciarFicha({
     },
   });
 
-  let contadorFilasId = 0;
+  let contadorFilasEquipo = 0;
+  let contadorFilasLeyendas = 0;
 
   /**
-   * Muestra u oculta y activa/desactiva el campo condicional de mención de honor.
-   * @param {boolean} activo
-   */
-  function actualizarCampoCondicional(activo) {
-    bloqueMencion.hidden = !activo;
-    campoMencion.disabled = !activo;
-    if (!activo) {
-      campoMencion.value = '';
-      validador.limpiarCampo(campoMencion);
-    }
-  }
-
-  /**
-   * Actualiza la numeración visual de las filas de Pokémon y el estado desactivado de los botones.
+   * Actualiza la numeración visual del equipo campeón y el estado desactivado de sus botones.
    */
   function actualizarEstadoEquipo() {
     const filas = Array.from(listaEquipo.querySelectorAll('[data-fila-pokemon]'));
@@ -143,21 +137,20 @@ export function iniciarFicha({
   }
 
   /**
-   * Añade una fila al grupo dinámico desde `<template>` con ids, `htmlFor` y cajas de error únicos.
-   * @param {{mote?: string, nivel?: number|string, estado?: string, movimientoClave?: string}} [datos={}]
+   * Añade una fila al equipo campeón desde `<template>` con ids, `htmlFor` y cajas de error únicos.
+   * @param {{mote?: string, nivel?: number|string, movimientoClave?: string}} [datos={}]
    */
   function anadirFilaPokemon(datos = {}) {
     const actuales = listaEquipo.querySelectorAll('[data-fila-pokemon]').length;
     if (actuales >= MAX_POKEMON_EQUIPO) return;
 
-    contadorFilasId += 1;
-    const sufijo = contadorFilasId;
+    contadorFilasEquipo += 1;
+    const sufijo = contadorFilasEquipo;
     const fragmento = plantillaPokemon.content.cloneNode(true);
 
     const campos = [
       { clave: 'mote', valor: datos.mote ?? '' },
       { clave: 'nivel', valor: datos.nivel ?? '' },
-      { clave: 'estado', valor: datos.estado ?? 'Campeón' },
       { clave: 'movimiento', valor: datos.movimientoClave ?? '' },
     ];
 
@@ -180,6 +173,96 @@ export function iniciarFicha({
 
     listaEquipo.append(fragmento);
     actualizarEstadoEquipo();
+  }
+
+  /**
+   * Actualiza la numeración de las Leyendas Caídas y activa/desactiva sus controles según la casilla.
+   */
+  function actualizarEstadoLeyendas() {
+    if (!listaLeyendas) return;
+    const activo = Boolean(campoLeyendas?.checked);
+    const filas = Array.from(listaLeyendas.querySelectorAll('[data-fila-leyenda]'));
+    const total = filas.length;
+
+    filas.forEach((fila, indice) => {
+      const leyenda = fila.querySelector('[data-titulo-leyenda]');
+      if (leyenda) {
+        leyenda.textContent = `⭐ Leyenda Caída #${indice + 1}`;
+      }
+      const controles = fila.querySelectorAll('input, select, textarea');
+      controles.forEach((control) => {
+        control.disabled = !activo;
+        if (!activo) {
+          validador.limpiarCampo(control);
+        }
+      });
+      const btnQuitar = fila.querySelector('[data-accion="quitar-leyenda"]');
+      if (btnQuitar) {
+        btnQuitar.disabled = !activo || total <= MIN_LEYENDAS_CAIDAS;
+      }
+    });
+
+    if (btnAnadirLeyenda) {
+      btnAnadirLeyenda.disabled = !activo || total >= MAX_LEYENDAS_CAIDAS;
+    }
+
+    if (contadorLeyendas) {
+      contadorLeyendas.textContent = `${total} de ${MAX_LEYENDAS_CAIDAS} leyendas caídas en tu corazón`;
+    }
+  }
+
+  /**
+   * Añade una fila condicional de Leyenda Caída desde `<template>` con ids y cajas de error únicos.
+   * @param {{mote?: string, nivel?: number|string, hazana?: string}} [datos={}]
+   */
+  function anadirFilaLeyenda(datos = {}) {
+    if (!listaLeyendas || !plantillaLeyenda) return;
+    const actuales = listaLeyendas.querySelectorAll('[data-fila-leyenda]').length;
+    if (actuales >= MAX_LEYENDAS_CAIDAS) return;
+
+    contadorFilasLeyendas += 1;
+    const sufijo = contadorFilasLeyendas;
+    const fragmento = plantillaLeyenda.content.cloneNode(true);
+
+    const campos = [
+      { clave: 'mote', valor: datos.mote ?? '' },
+      { clave: 'nivel', valor: datos.nivel ?? '' },
+      { clave: 'hazana', valor: datos.hazana ?? '' },
+    ];
+
+    for (const { clave, valor } of campos) {
+      const idCampo = `leyenda-${clave}-${sufijo}`;
+      const idError = `error-${idCampo}`;
+      const etiqueta = fragmento.querySelector(`[data-etiqueta="${clave}"]`);
+      const control = fragmento.querySelector(`[data-campo="${clave}"]`);
+      const cajaError = fragmento.querySelector(`[data-error="${clave}"]`);
+
+      if (etiqueta) etiqueta.htmlFor = idCampo;
+      if (cajaError) cajaError.id = idError;
+      if (control) {
+        control.id = idCampo;
+        control.dataset.errorId = idError;
+        control.setAttribute('aria-describedby', idError);
+        control.value = String(valor);
+      }
+    }
+
+    listaLeyendas.append(fragmento);
+    actualizarEstadoLeyendas();
+  }
+
+  /**
+   * Muestra u oculta y activa/desactiva el bloque condicional de Leyendas Caídas (`hidden` y `disabled`).
+   * @param {boolean} activo
+   */
+  function actualizarBloqueLeyendas(activo) {
+    if (!bloqueLeyendas || !listaLeyendas) return;
+    bloqueLeyendas.hidden = !activo;
+    if (activo && listaLeyendas.querySelectorAll('[data-fila-leyenda]').length === 0) {
+      anadirFilaLeyenda();
+    } else {
+      actualizarEstadoLeyendas();
+    }
   }
 
   // Comprobar si estamos editando un registro existente (`ficha.html?id=...`)
@@ -208,11 +291,6 @@ export function iniciarFicha({
     campoFecha.value = partidaEditada.fechaVictoria;
     campoTiempo.value = partidaEditada.tiempoJuego;
     campoLicencia.value = partidaEditada.licenciaEntrenador;
-    campoLeyendas.checked = Boolean(partidaEditada.huboLeyendasCaidas);
-    actualizarCampoCondicional(campoLeyendas.checked);
-    if (campoLeyendas.checked) {
-      campoMencion.value = partidaEditada.mencionHonor || '';
-    }
 
     const equipoGuardado =
       Array.isArray(partidaEditada.equipo) && partidaEditada.equipo.length > 0
@@ -221,24 +299,40 @@ export function iniciarFicha({
     for (const miembro of equipoGuardado.slice(0, MAX_POKEMON_EQUIPO)) {
       anadirFilaPokemon(miembro);
     }
+
+    const huboLeyendas = Boolean(partidaEditada.huboLeyendasCaidas);
+    campoLeyendas.checked = huboLeyendas;
+    if (huboLeyendas && Array.isArray(partidaEditada.leyendasCaidas)) {
+      for (const leyenda of partidaEditada.leyendasCaidas.slice(0, MAX_LEYENDAS_CAIDAS)) {
+        anadirFilaLeyenda(leyenda);
+      }
+    }
+    actualizarBloqueLeyendas(huboLeyendas);
   } else {
-    actualizarCampoCondicional(false);
     anadirFilaPokemon();
+    actualizarBloqueLeyendas(false);
   }
 
-  // Campo condicional: mostrar y activar mención de honor al marcar la casilla
+  // Casilla condicional: mostrar y habilitar las Leyendas Caídas
   campoLeyendas.addEventListener('change', () => {
-    actualizarCampoCondicional(campoLeyendas.checked);
+    actualizarBloqueLeyendas(campoLeyendas.checked);
   });
 
-  // Botón añadir fila del grupo dinámico
+  // Botón añadir fila del equipo campeón
   if (btnAnadirPokemon) {
     btnAnadirPokemon.addEventListener('click', () => {
       anadirFilaPokemon();
     });
   }
 
-  // Delegación de eventos en `#lista-equipo` para quitar una fila (Requisito 20)
+  // Botón añadir fila de Leyendas Caídas
+  if (btnAnadirLeyenda) {
+    btnAnadirLeyenda.addEventListener('click', () => {
+      anadirFilaLeyenda();
+    });
+  }
+
+  // Delegación de eventos en `#lista-equipo` para quitar un Pokémon campeón (Requisito 20)
   listaEquipo.addEventListener('click', (evento) => {
     const btnQuitar = evento.target.closest('button[data-accion="quitar-pokemon"]');
     if (!btnQuitar || btnQuitar.disabled) return;
@@ -252,6 +346,23 @@ export function iniciarFicha({
       actualizarEstadoEquipo();
     }
   });
+
+  // Delegación de eventos en `#lista-leyendas` para quitar una Leyenda Caída
+  if (listaLeyendas) {
+    listaLeyendas.addEventListener('click', (evento) => {
+      const btnQuitar = evento.target.closest('button[data-accion="quitar-leyenda"]');
+      if (!btnQuitar || btnQuitar.disabled) return;
+
+      const filas = listaLeyendas.querySelectorAll('[data-fila-leyenda]');
+      if (filas.length <= MIN_LEYENDAS_CAIDAS) return;
+
+      const fila = btnQuitar.closest('[data-fila-leyenda]');
+      if (fila) {
+        fila.remove();
+        actualizarEstadoLeyendas();
+      }
+    });
+  }
 
   let procesandoEnvio = false;
 
@@ -272,19 +383,26 @@ export function iniciarFicha({
     }
 
     try {
-      // Requisito 17: lectura con FormData (`get` y `getAll` para el grupo dinámico)
+      // Requisito 17: lectura con FormData (`get` y `getAll` para los grupos dinámicos)
       const datosFormulario = new FormData(formulario);
       const motes = datosFormulario.getAll('pokemonMote');
       const niveles = datosFormulario.getAll('pokemonNivel');
-      const estados = datosFormulario.getAll('pokemonEstado');
       const movimientos = datosFormulario.getAll('pokemonMovimiento');
 
       const equipo = motes.map((mote, indice) => ({
         mote: String(mote),
         nivel: Number(niveles[indice]),
-        estado: String(estados[indice]),
         movimientoClave: String(movimientos[indice]),
       }));
+
+      const huboLeyendasCaidas = datosFormulario.get('huboLeyendasCaidas') !== null;
+      const leyendasCaidas = huboLeyendasCaidas
+        ? datosFormulario.getAll('leyendaMote').map((mote, indice) => ({
+            mote: String(mote),
+            nivel: Number(datosFormulario.getAll('leyendaNivel')[indice]),
+            hazana: String(datosFormulario.getAll('leyendaHazana')[indice]),
+          }))
+        : [];
 
       const registro = {
         codigoRegistro: String(datosFormulario.get('codigoRegistro') || ''),
@@ -293,8 +411,8 @@ export function iniciarFicha({
         fechaVictoria: String(datosFormulario.get('fechaVictoria') || ''),
         tiempoJuego: String(datosFormulario.get('tiempoJuego') || ''),
         licenciaEntrenador: String(datosFormulario.get('licenciaEntrenador') || ''),
-        huboLeyendasCaidas: datosFormulario.get('huboLeyendasCaidas') !== null,
-        mencionHonor: String(datosFormulario.get('mencionHonor') || ''),
+        huboLeyendasCaidas,
+        leyendasCaidas,
         equipo,
       };
 

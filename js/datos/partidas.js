@@ -8,10 +8,16 @@ const PREFIJO_CLAVE_PARTIDAS = 'PokeMemories_partidas_';
 
 /**
  * @typedef {Object} MiembroEquipo
- * @property {string} mote - Mote o especie del Pokémon.
+ * @property {string} mote - Mote o especie del Pokémon campeón.
  * @property {number} nivel - Nivel final en la partida (1 a 100).
- * @property {'Campeón'|'Leyenda Caída'} estado - Rol o destino del Pokémon en la aventura.
  * @property {string} movimientoClave - Movimiento insignia recordado.
+ */
+
+/**
+ * @typedef {Object} LeyendaCaida
+ * @property {string} mote - Mote o especie del Pokémon caído.
+ * @property {number} nivel - Nivel que tenía al caer (1 a 100).
+ * @property {string} hazana - Recuerdo o hazaña por la que sigue en el corazón del entrenador.
  */
 
 /**
@@ -24,8 +30,8 @@ const PREFIJO_CLAVE_PARTIDAS = 'PokeMemories_partidas_';
  * @property {string} tiempoJuego - Tiempo total en formato Horas:Minutos.
  * @property {string} licenciaEntrenador - Licencia DNI o NIE normalizada en mayúsculas.
  * @property {boolean} huboLeyendasCaidas - Indica si la partida incluye homenaje a caídos.
- * @property {string} mencionHonor - Relato de homenaje (vacío si no hubo leyendas caídas).
- * @property {MiembroEquipo[]} equipo - Lista de 1 a 6 Pokémon registrados.
+ * @property {LeyendaCaida[]} leyendasCaidas - Pokémon caídos en la aventura (vacío si no hubo).
+ * @property {MiembroEquipo[]} equipo - Lista de 1 a 6 Pokémon campeones registrados.
  * @property {string} fechaCreacion - Marca de tiempo ISO de creación.
  * @property {string} fechaActualizacion - Marca de tiempo ISO de última edición.
  */
@@ -64,12 +70,19 @@ export function obtenerClavePartidas(nombreUsuario) {
 export function normalizarPartida(datos = {}) {
   const huboLeyendasCaidas = Boolean(datos.huboLeyendasCaidas);
   const equipoEntrada = Array.isArray(datos.equipo) ? datos.equipo : [];
+  const leyendasEntrada =
+    huboLeyendasCaidas && Array.isArray(datos.leyendasCaidas) ? datos.leyendasCaidas : [];
 
   const equipo = equipoEntrada.map((miembro) => ({
     mote: String(miembro?.mote ?? '').trim(),
     nivel: Number(miembro?.nivel ?? 1),
-    estado: String(miembro?.estado ?? 'Campeón').trim(),
     movimientoClave: String(miembro?.movimientoClave ?? '').trim(),
+  }));
+
+  const leyendasCaidas = leyendasEntrada.map((leyenda) => ({
+    mote: String(leyenda?.mote ?? '').trim(),
+    nivel: Number(leyenda?.nivel ?? 1),
+    hazana: String(leyenda?.hazana ?? '').trim(),
   }));
 
   return {
@@ -84,7 +97,7 @@ export function normalizarPartida(datos = {}) {
       .trim()
       .toUpperCase(),
     huboLeyendasCaidas,
-    mencionHonor: huboLeyendasCaidas ? String(datos.mencionHonor ?? '').trim() : '',
+    leyendasCaidas,
     equipo,
   };
 }

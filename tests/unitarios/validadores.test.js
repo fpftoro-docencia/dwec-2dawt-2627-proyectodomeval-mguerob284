@@ -18,6 +18,7 @@ import {
   validarEstadoPokemon,
   validarMovimientoClave,
   validarEquipoPokemon,
+  validarLeyendasCaidas,
   validadores,
 } from '../../js/validadores.js';
 
@@ -340,6 +341,21 @@ describe('Validadores de RegistroPartida (Sprint 2 · Requisito 13)', () => {
       expect(validarEquipoPokemon(Array(7).fill(miembroValido)).valido).toBe(false);
       expect(validarEquipoPokemon([null]).valido).toBe(false);
       expect(validarEquipoPokemon([{ ...miembroValido, nivel: 150 }]).valido).toBe(false);
+    });
+
+    it('valida el grupo condicional de leyendas caídas (1 a 6 Pokémon caídos)', () => {
+      const leyendaValida = {
+        mote: 'Ampharos',
+        nivel: 58,
+        hazana: 'Cayó contra Lance salvando el combate final',
+      };
+
+      expect(validarLeyendasCaidas([]).valido).toBe(false);
+      expect(validarLeyendasCaidas([leyendaValida]).valido).toBe(true);
+      expect(validarLeyendasCaidas(Array(6).fill(leyendaValida)).valido).toBe(true);
+      expect(validarLeyendasCaidas(Array(7).fill(leyendaValida)).valido).toBe(false);
+      expect(validarLeyendasCaidas([null]).valido).toBe(false);
+      expect(validarLeyendasCaidas([{ ...leyendaValida, hazana: 'corta' }]).valido).toBe(false);
     });
   });
 

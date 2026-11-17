@@ -26,8 +26,8 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 | **Tiempo de juego** | Texto | Sí | Expresión regular `^\d{1,3}:[0-5]\d$` | Introduce el tiempo en formato Horas:Minutos (ej. 45:30) |
 | **Licencia Entrenador (DNI)** | Texto | Sí | Regex `^[XYZ]?\d{7,8}[A-Z]$` + cálculo de control con letra (módulo 23) | La licencia de entrenador (DNI/NIE) o su letra no son válidas |
 | **¿Hubo leyendas caídas?** | Casilla | No | Booleano | - |
-| **Mención de honor** *(Condicional)* | Texto | Sí (si la casilla está activa) | Longitud entre 10 y 120 caracteres | Explica la hazaña de tu héroe caído (entre 10 y 120 caracteres) |
-| **Equipo Pokémon** *(Grupo dinámico)* | Plantilla `<template>` (1 a 6) | Sí | Entre 1 y 6 miembros. Mote (2-20 caracteres), nivel (1-100), estado (Campeón / Leyenda Caída) y movimiento clave | Debes registrar entre 1 y 6 Pokémon en el equipo |
+| **Leyendas Caídas** *(Sección condicional, 1 a 6)* | Plantilla `<template>` (`hidden` y `disabled` si no se marca) | Sí (si la casilla está activa) | De 1 a 6 Pokémon caídos: mote (2-20), nivel al caer (1-100) y hazaña/recuerdo (10-120 caracteres) | Explica la hazaña de tu héroe caído (entre 10 y 120 caracteres) |
+| **Equipo Campeón** *(Grupo dinámico)* | Plantilla `<template>` (1 a 6) | Sí | Entre 1 y 6 miembros. Mote (2-20 caracteres), nivel (1-100) y movimiento clave (2-30 caracteres) | Debes registrar entre 1 y 6 Pokémon en el equipo |
 
 ### El registro de usuarios
 

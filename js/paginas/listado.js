@@ -34,13 +34,16 @@ function textoBuscablePartida(partida) {
   const motes = Array.isArray(partida.equipo)
     ? partida.equipo.map((miembro) => `${miembro.mote} ${miembro.movimientoClave}`).join(' ')
     : '';
+  const leyendas = Array.isArray(partida.leyendasCaidas)
+    ? partida.leyendasCaidas.map((leyenda) => `${leyenda.mote} ${leyenda.hazana}`).join(' ')
+    : '';
   return [
     partida.codigoRegistro,
     partida.titulo,
     partida.edicion,
     partida.licenciaEntrenador,
-    partida.mencionHonor,
     motes,
+    leyendas,
   ].join(' ');
 }
 
@@ -71,23 +74,33 @@ function crearTarjetaPartida(plantilla, partida, doc) {
   if (listaEquipo && Array.isArray(partida.equipo)) {
     const chips = partida.equipo.map((miembro) => {
       const item = doc.createElement('li');
-      const esCaido = miembro.estado === 'Leyenda Caída';
-      item.className = esCaido
-        ? 'badge bg-warning text-dark border border-warning'
-        : 'badge bg-light text-dark border';
-      item.textContent = `${miembro.mote} Nv.${miembro.nivel}${esCaido ? ' ★' : ''}`;
-      item.title = `${miembro.estado} · ${miembro.movimientoClave}`;
+      item.className = 'badge bg-light text-dark border';
+      item.textContent = `${miembro.mote} Nv.${miembro.nivel}`;
+      item.title = `Movimiento clave: ${miembro.movimientoClave}`;
       return item;
     });
     listaEquipo.replaceChildren(...chips);
   }
 
-  const bloqueMencion = fragmento.querySelector('[data-bloque="mencion"]');
-  if (bloqueMencion) {
-    const tieneMencion = Boolean(partida.huboLeyendasCaidas && partida.mencionHonor);
-    bloqueMencion.hidden = !tieneMencion;
-    if (tieneMencion) {
-      ponerTexto('mencionHonor', partida.mencionHonor);
+  const bloqueLeyendas = fragmento.querySelector('[data-bloque="leyendas"]');
+  const listaLeyendas = fragmento.querySelector('[data-campo="leyendasCaidas"]');
+  if (bloqueLeyendas && listaLeyendas) {
+    const tieneLeyendas =
+      Boolean(partida.huboLeyendasCaidas) &&
+      Array.isArray(partida.leyendasCaidas) &&
+      partida.leyendasCaidas.length > 0;
+    bloqueLeyendas.hidden = !tieneLeyendas;
+    if (tieneLeyendas) {
+      const itemsLeyendas = partida.leyendasCaidas.map((leyenda) => {
+        const item = doc.createElement('li');
+        const nombre = doc.createElement('strong');
+        nombre.textContent = `★ ${leyenda.mote} (Nv.${leyenda.nivel})`;
+        item.append(nombre, ` — ${leyenda.hazana}`);
+        return item;
+      });
+      listaLeyendas.replaceChildren(...itemsLeyendas);
+    } else {
+      listaLeyendas.replaceChildren();
     }
   }
 

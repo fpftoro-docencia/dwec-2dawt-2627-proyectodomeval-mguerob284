@@ -437,10 +437,10 @@ export function validarMovimientoClave(valor) {
 
 /**
  * Valida la estructura completa de un equipo Pokémon (de 1 a 6 miembros válidos).
- * @param {Array<{mote: string, nivel: number|string, estado: string, movimientoClave: string}>} equipo
+ * @param {Array<{mote: string, nivel: number|string, estado?: string, movimientoClave: string}>} equipo
  * @returns {{valido: boolean, motivo?: string}}
  * @example
- * validarEquipoPokemon([{ mote: 'Pikachu', nivel: 55, estado: 'Campeón', movimientoClave: 'Rayo' }]);
+ * validarEquipoPokemon([{ mote: 'Pikachu', nivel: 55, movimientoClave: 'Rayo' }]);
  */
 export function validarEquipoPokemon(equipo) {
   if (!Array.isArray(equipo) || equipo.length < 1 || equipo.length > 6) {
@@ -454,8 +454,40 @@ export function validarEquipoPokemon(equipo) {
     const comprobaciones = [
       validarMotePokemon(miembro.mote),
       validarNivelPokemon(miembro.nivel),
-      validarEstadoPokemon(miembro.estado),
       validarMovimientoClave(miembro.movimientoClave),
+    ];
+    if (miembro.estado !== undefined) {
+      comprobaciones.push(validarEstadoPokemon(miembro.estado));
+    }
+    const fallo = comprobaciones.find((resultado) => !resultado.valido);
+    if (fallo) {
+      return fallo;
+    }
+  }
+
+  return { valido: true };
+}
+
+/**
+ * Valida la lista condicional de Leyendas Caídas (de 1 a 6 Pokémon caídos válidos).
+ * @param {Array<{mote: string, nivel: number|string, hazana: string}>} leyendas
+ * @returns {{valido: boolean, motivo?: string}}
+ * @example
+ * validarLeyendasCaidas([{ mote: 'Pidgeot', nivel: 48, hazana: 'Cayó protegiendo al equipo en la Calle Victoria' }]);
+ */
+export function validarLeyendasCaidas(leyendas) {
+  if (!Array.isArray(leyendas) || leyendas.length < 1 || leyendas.length > 6) {
+    return { valido: false, motivo: 'Debes registrar entre 1 y 6 leyendas caídas' };
+  }
+
+  for (const leyenda of leyendas) {
+    if (!leyenda || typeof leyenda !== 'object') {
+      return { valido: false, motivo: 'Hay una leyenda caída con datos incompletos' };
+    }
+    const comprobaciones = [
+      validarMotePokemon(leyenda.mote),
+      validarNivelPokemon(leyenda.nivel),
+      validarMencionHonor(leyenda.hazana),
     ];
     const fallo = comprobaciones.find((resultado) => !resultado.valido);
     if (fallo) {

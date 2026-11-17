@@ -14,8 +14,8 @@ function crearPartidaDemo(numero, extra = {}) {
     tiempoJuego: '42:15',
     licenciaEntrenador: '12345678Z',
     huboLeyendasCaidas: false,
-    mencionHonor: '',
-    equipo: [{ mote: 'Typhlosion', nivel: 60, estado: 'Campeón', movimientoClave: 'Lanzallamas' }],
+    leyendasCaidas: [],
+    equipo: [{ mote: 'Typhlosion', nivel: 60, movimientoClave: 'Lanzallamas' }],
     ...extra,
   };
 }
