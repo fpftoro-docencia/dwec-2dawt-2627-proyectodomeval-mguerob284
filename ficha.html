@@ -52,7 +52,7 @@
                 id="titulo"
                 name="titulo"
                 class="form-control"
-                placeholder="Ej. Nuzlocke HeartGold sin curas"
+                placeholder="Ej. Oro HeartGold en mi 3ds"
                 minlength="3"
                 maxlength="40"
                 data-validar="titulo"
@@ -62,19 +62,22 @@
               <div class="invalid-feedback" id="error-titulo"></div>
             </div>
 
-            <div class="col-12 col-md-4">
-              <label for="edicion" class="form-label fw-semibold">Edición del juego</label>
-              <select
-                id="edicion"
-                name="edicion"
-                class="form-select"
-                data-validar="edicion"
-                aria-describedby="error-edicion"
-                required
-              >
-                <option value="">Selecciona una edición</option>
-              </select>
-              <div class="invalid-feedback" id="error-edicion"></div>
+            <div class="col-12">
+              <fieldset aria-describedby="error-edicion">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
+                  <legend class="form-label fw-semibold fs-6 mb-0">Edición del juego</legend>
+                  <span class="badge bg-secondary" id="edicion-seleccionada">
+                    Ninguna edición seleccionada
+                  </span>
+                </div>
+                <div
+                  id="selector-caratulas"
+                  class="selector-caratulas border rounded bg-light"
+                  role="radiogroup"
+                  aria-label="Edición del juego"
+                ></div>
+                <div class="invalid-feedback d-block" id="error-edicion"></div>
+              </fieldset>
             </div>
 
             <div class="col-12 col-md-4">
@@ -107,19 +110,7 @@
               <div class="invalid-feedback" id="error-tiempo-juego"></div>
             </div>
 
-            <div class="col-12">
-              <p class="form-label small fw-semibold text-muted mb-1">
-                Selector visual de carátula (haz clic en un juego para elegirlo)
-              </p>
-              <div
-                id="selector-caratulas"
-                class="selector-caratulas border rounded bg-light"
-                role="group"
-                aria-label="Selector visual de edición del juego"
-              ></div>
-            </div>
-
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
               <label for="id-entrenador" class="form-label fw-semibold">ID de Entrenador</label>
               <input
                 type="text"
@@ -137,7 +128,7 @@
               <div class="invalid-feedback" id="error-id-entrenador"></div>
             </div>
 
-            <div class="col-12 col-md-6">
+            <div class="col-12">
               <fieldset>
                 <legend class="form-label fw-semibold fs-6 mb-2">Modalidad de partida</legend>
                 <div class="d-flex flex-wrap gap-3">

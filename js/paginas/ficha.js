@@ -17,6 +17,7 @@ import { configurarValidacionFormulario } from '../componentes/validacionFormula
 import {
   EDICIONES_OFICIALES,
   obtenerFechaHoyIso,
+  validarEdicion,
   validarFechaVictoria,
   validarModalidadesLocke,
 } from '../validadores.js';
@@ -29,54 +30,41 @@ export const MIN_LEYENDAS_CAIDAS = 1;
 export const MAX_LEYENDAS_CAIDAS = 6;
 
 /**
- * Rellena el desplegable de ediciones oficiales con métodos del DOM.
- * @param {HTMLSelectElement} selectorEdicion
- * @param {Document} doc
- */
-function poblarEdiciones(selectorEdicion, doc) {
-  const primera = doc.createElement('option');
-  primera.value = '';
-  primera.textContent = 'Selecciona una edición';
-
-  const opciones = EDICIONES_OFICIALES.map((edicion) => {
-    const opcion = doc.createElement('option');
-    opcion.value = edicion;
-    opcion.textContent = edicion;
-    return opcion;
-  });
-
-  selectorEdicion.replaceChildren(primera, ...opciones);
-}
-
-/**
- * Crea la galería visual de carátulas clicables sincronizada con el desplegable de edición.
+ * Crea el selector visual principal de ediciones con carátulas y botones de opción (`radio`).
  * @param {HTMLElement|null} contenedor
  * @param {Document} doc
  */
 function poblarSelectorCaratulas(contenedor, doc) {
   if (!contenedor) return;
 
-  const botones = EDICIONES_OFICIALES.map((edicion) => {
-    const boton = doc.createElement('button');
-    boton.type = 'button';
-    boton.className = 'btn-caratula';
-    boton.dataset.edicion = edicion;
-    boton.setAttribute('aria-pressed', 'false');
-    boton.title = `Elegir Pokémon ${edicion}`;
+  const tarjetas = EDICIONES_OFICIALES.map((edicion, indice) => {
+    const idRadio = `edicion-${indice + 1}`;
+    const etiqueta = doc.createElement('label');
+    etiqueta.className = 'btn-caratula';
+    etiqueta.htmlFor = idRadio;
+    etiqueta.dataset.edicion = edicion;
+    etiqueta.title = `Elegir Pokémon ${edicion}`;
+
+    const radio = doc.createElement('input');
+    radio.type = 'radio';
+    radio.id = idRadio;
+    radio.name = 'edicion';
+    radio.value = edicion;
+    radio.className = 'visually-hidden';
 
     const imagen = doc.createElement('img');
     imagen.src = obtenerCaratulaEdicion(edicion);
-    imagen.alt = `Carátula de Pokémon ${edicion}`;
+    imagen.alt = '';
     imagen.loading = 'lazy';
 
-    const etiqueta = doc.createElement('span');
-    etiqueta.textContent = edicion;
+    const texto = doc.createElement('span');
+    texto.textContent = edicion;
 
-    boton.append(imagen, etiqueta);
-    return boton;
+    etiqueta.append(radio, imagen, texto);
+    return etiqueta;
   });
 
-  contenedor.replaceChildren(...botones);
+  contenedor.replaceChildren(...tarjetas);
 }
 
 /**
@@ -113,8 +101,9 @@ export function iniciarFicha({
   const tituloFicha = doc.getElementById('titulo-ficha');
   const campoCodigo = doc.getElementById('codigo-registro');
   const campoTitulo = doc.getElementById('titulo');
-  const campoEdicion = doc.getElementById('edicion');
   const selectorCaratulas = doc.getElementById('selector-caratulas');
+  const badgeEdicion = doc.getElementById('edicion-seleccionada');
+  const errorEdicion = doc.getElementById('error-edicion');
   const campoFecha = doc.getElementById('fecha-victoria');
   const campoTiempo = doc.getElementById('tiempo-juego');
   const campoIdEntrenador = doc.getElementById('id-entrenador');
@@ -136,25 +125,71 @@ export function iniciarFicha({
 
   if (!formulario || !listaEquipo || !plantillaPokemon) return;
 
-  poblarEdiciones(campoEdicion, doc);
   poblarSelectorCaratulas(selectorCaratulas, doc);
 
   /**
-   * Marca visualmente en el selector de carátulas la edición actualmente elegida.
-   * @param {string} edicionActiva
-   * @param {boolean} [desplazar=false]
+   * Devuelve todos los botones de opción (`radio`) del selector visual de carátulas.
+   * @returns {HTMLInputElement[]}
    */
-  function sincronizarCaratulaActiva(edicionActiva, desplazar = false) {
-    if (!selectorCaratulas) return;
-    const botones = selectorCaratulas.querySelectorAll('button[data-edicion]');
-    botones.forEach((boton) => {
-      const esActiva = boton.dataset.edicion === edicionActiva;
-      boton.classList.toggle('activa', esActiva);
-      boton.setAttribute('aria-pressed', String(esActiva));
-      if (esActiva && desplazar && typeof boton.scrollIntoView === 'function') {
-        boton.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      }
+  function obtenerRadiosEdicion() {
+    if (!selectorCaratulas) return [];
+    return Array.from(selectorCaratulas.querySelectorAll('input[name="edicion"]'));
+  }
+
+  /**
+   * Devuelve el valor de la edición seleccionada actualmente en la galería de carátulas.
+   * @returns {string}
+   */
+  function obtenerEdicionSeleccionada() {
+    const marcado = obtenerRadiosEdicion().find((radio) => radio.checked);
+    return marcado ? marcado.value : '';
+  }
+
+  /**
+   * Marca visualmente la carátula activa y actualiza la insignia de edición seleccionada.
+   * @param {string} edicionActiva
+   */
+  function sincronizarCaratulaActiva(edicionActiva) {
+    if (selectorCaratulas) {
+      const tarjetas = selectorCaratulas.querySelectorAll('label[data-edicion]');
+      tarjetas.forEach((tarjeta) => {
+        const esActiva = tarjeta.dataset.edicion === edicionActiva;
+        tarjeta.classList.toggle('activa', esActiva);
+        const radio = tarjeta.querySelector('input[name="edicion"]');
+        if (radio) radio.checked = esActiva;
+      });
+    }
+    if (badgeEdicion) {
+      badgeEdicion.textContent = edicionActiva
+        ? `Seleccionada: ${edicionActiva}`
+        : 'Ninguna edición seleccionada';
+      badgeEdicion.className = edicionActiva ? 'badge bg-primary' : 'badge bg-secondary';
+    }
+  }
+
+  /**
+   * Valida que se haya elegido una edición oficial en el selector de carátulas.
+   * @returns {{valido: boolean, primerError: HTMLElement|null}}
+   */
+  function comprobarEdicion() {
+    const elegida = obtenerEdicionSeleccionada();
+    const resultado = validarEdicion(elegida);
+    const radios = obtenerRadiosEdicion();
+
+    if (selectorCaratulas) {
+      selectorCaratulas.classList.toggle('border-danger', !resultado.valido);
+    }
+    if (errorEdicion) {
+      errorEdicion.textContent = resultado.valido ? '' : resultado.motivo || '';
+    }
+    radios.forEach((radio) => {
+      radio.setAttribute('aria-invalid', String(!resultado.valido));
     });
+
+    return {
+      valido: resultado.valido,
+      primerError: resultado.valido ? null : radios[0] || null,
+    };
   }
 
   // Requisito 17: atributo `max` dinámico calculado desde el código según la fecha actual
@@ -412,8 +447,7 @@ export function iniciarFicha({
 
     campoCodigo.value = partidaEditada.codigoRegistro;
     campoTitulo.value = partidaEditada.titulo;
-    campoEdicion.value = partidaEditada.edicion;
-    sincronizarCaratulaActiva(partidaEditada.edicion, false);
+    sincronizarCaratulaActiva(partidaEditada.edicion);
     campoFecha.value = partidaEditada.fechaVictoria;
     campoTiempo.value = partidaEditada.tiempoJuego;
     campoIdEntrenador.value =
@@ -451,18 +485,13 @@ export function iniciarFicha({
     actualizarBloqueLeyendas(false);
   }
 
-  // Sincronización bidireccional entre el desplegable y la galería visual de carátulas
-  campoEdicion.addEventListener('change', () => {
-    sincronizarCaratulaActiva(campoEdicion.value, true);
-  });
-
+  // Delegación en la galería visual de carátulas al cambiar de edición
   if (selectorCaratulas) {
-    selectorCaratulas.addEventListener('click', (evento) => {
-      const boton = evento.target.closest('button[data-edicion]');
-      if (!boton) return;
-      campoEdicion.value = boton.dataset.edicion;
-      sincronizarCaratulaActiva(campoEdicion.value, false);
-      campoEdicion.dispatchEvent(new Event('change', { bubbles: true }));
+    selectorCaratulas.addEventListener('change', (evento) => {
+      if (evento.target.matches('input[name="edicion"]')) {
+        sincronizarCaratulaActiva(evento.target.value);
+        comprobarEdicion();
+      }
     });
   }
 
@@ -543,10 +572,11 @@ export function iniciarFicha({
     if (procesandoEnvio) return;
 
     const { valido, primerError } = validador.validarFormulario();
+    const resultadoEdicion = comprobarEdicion();
     const resultadoLocke = comprobarModalidadesLocke();
-    if (!valido || !resultadoLocke.valido) {
+    if (!valido || !resultadoEdicion.valido || !resultadoLocke.valido) {
       lanzarAviso(formulario, 'Revisa los campos marcados en rojo antes de guardar', 'warning');
-      const focoDestino = primerError || resultadoLocke.primerError;
+      const focoDestino = primerError || resultadoEdicion.primerError || resultadoLocke.primerError;
       if (focoDestino) focoDestino.focus();
       return;
     }

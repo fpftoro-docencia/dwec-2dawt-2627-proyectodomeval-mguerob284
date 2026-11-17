@@ -21,7 +21,7 @@ La aplicación permite registrar cada aventura en el navegador vinculando las ho
 |-------|---------|:-----------:|---------------------|-------------------------|
 | **Código de registro** | Texto | Sí | Expresión regular `^POKE-[A-Z]{3}-\d{4}$` | Formato inválido. Debe ser POKE- seguido de 3 letras de la edición y 4 dígitos (ej. POKE-HGD-0042) |
 | **Título de la partida** | Texto | Sí | Longitud entre 3 y 40 caracteres | El título debe tener entre 3 y 40 caracteres |
-| **Edición del juego** | Desplegable | Sí | Coincidir con una de las opciones oficiales | Selecciona una edición oficial de la lista |
+| **Edición del juego** | Selector visual de carátulas (`radio`) | Sí | Coincidir con una de las 24 ediciones oficiales (hasta *Leyendas: Z-A*) | Selecciona una edición oficial de la lista |
 | **Fecha de victoria** | Fecha | Sí | No puede ser posterior a la fecha actual (`max` dinámico) | La fecha de victoria no puede estar en el futuro |
 | **Tiempo de juego** | Texto | Sí | Expresión regular `^\d{1,3}:[0-5]\d$` | Introduce el tiempo en formato Horas:Minutos (ej. 45:30) |
 | **ID de Entrenador** | Texto | Sí | Regex `^\d{5}-\d$` + cálculo del dígito de control (suma de los 5 dígitos módulo 10) | El dígito de control del ID de Entrenador no es correcto |
