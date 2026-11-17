@@ -68,6 +68,7 @@
   * `js/paginacion.js`: Funciones puras `normalizarTextoBusqueda`, `filtrarLista` (sin mayúsculas ni tildes) y `paginar(lista, pagina, porPagina)` con corrección de página fuera de rango.
   * `js/componentes/cabecera.js`: `protegerPagina()` (redirección con `location.replace`) y `renderizarCabecera()` con menú condicional para administradores y botón «Cerrar sesión».
   * `js/componentes/paginacion.js`: Renderizado DOM de controles («Anterior», números con `aria-current="page"`, «Siguiente»), delegación de eventos con `closest` y sincronización de `?pagina=` con `URLSearchParams` y `history.replaceState`.
+  * `js/componentes/claveVisible.js`: Botón accesible «ojo» (`data-alternar-clave`) con delegación de eventos para mostrar/ocultar contraseñas en `index.html` y `registro.html`.
   * `js/paginas/login.js`, `js/paginas/registro.js` y `js/paginas/listado.js`: Controladores con inyección de dependencias para pruebas en `happy-dom`.
 * **Calidad, CI y Pruebas:**
   * `eslint.config.js`: Reglas añadidas (`no-var`, `prefer-const`, `eqeqeq`, `camelcase`, `no-console`, `no-duplicate-imports`).
@@ -104,3 +105,4 @@
 * **12 Nov 2026:** Cierre de implementación del Sprint 1: limpieza de formato Prettier/ESLint en módulos y tests, creación de `.github/workflows/ci.yml` (Paso 1), entrada del Sprint 1 en `blog/README.md`, actualización de documentación y reflexión en `README.md`, y tarjetas 9–12 movidas a «Hecho» en Trello.
 * **12 Nov 2026 (cierre):** Pull Request `#2` (`feature/sprint-1-autenticacion` -> `main`) fusionada con CI en verde, enlace de PR registrado en `README.md` y tag `v0.1` recolocado sobre el cierre real del Sprint 1 en `main`.
 * **17 Nov 2026:** Completado el **primer tercio del Sprint 2** en la rama `feature/sprint-2-datos-listado` (Tarjetas 13–16 movidas a `DONE` en Trello): validadores de entidad y DNI/NIE mod 23, `js/datos/partidas.js`, paginación pura y componente DOM/URL, `listado.html` + `js/paginas/listado.js` con `<template>` y `<dialog>`, `js/avisos.js` seguro sin `innerHTML`, tests unitarios + integración de listado y configuración de cobertura ≥ 90% en `vitest.config.js`.
+* **17 Nov 2026 (UX):** Añadido botón accesible «ojo» para mostrar/ocultar contraseñas en `index.html` y `registro.html` mediante el componente reutilizable `js/componentes/claveVisible.js` con delegación de eventos.

@@ -7,6 +7,7 @@ import { resumirClave } from '../clave.js';
 import { verificarCredenciales } from '../datos/usuarios.js';
 import { guardarSesion, haySesion } from '../datos/sesion.js';
 import { lanzarAviso, guardarAvisoPendiente, inicializarAvisos } from '../avisos.js';
+import { vincularBotonesVerClave } from '../componentes/claveVisible.js';
 
 /**
  * Inicializa la página de inicio de sesión.
@@ -34,6 +35,8 @@ export function iniciarLogin({
 
   const formulario = doc.getElementById('form-login');
   if (!formulario) return;
+
+  vincularBotonesVerClave(formulario, doc);
 
   const campoUsuario = doc.getElementById('usuario');
   const campoClave = doc.getElementById('clave');

@@ -13,6 +13,7 @@ import {
   validarRepeticionClave,
 } from '../validadores.js';
 import { lanzarAviso, guardarAvisoPendiente, inicializarAvisos } from '../avisos.js';
+import { vincularBotonesVerClave } from '../componentes/claveVisible.js';
 
 /**
  * Inicializa la página de registro.
@@ -39,6 +40,8 @@ export function iniciarRegistro({
 
   const formulario = doc.getElementById('form-registro');
   if (!formulario) return;
+
+  vincularBotonesVerClave(formulario, doc);
 
   const campoUsuario = doc.getElementById('usuario');
   const campoEmail = doc.getElementById('email');
