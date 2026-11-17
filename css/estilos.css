@@ -67,6 +67,34 @@ main {
   color: #6c757d;
 }
 
+/* Tarjetas de partidas y homenaje a Leyendas Caídas */
+.tarjeta-partida {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tarjeta-partida:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.bloque-leyenda-caida {
+  background-color: #fff8e6;
+  border-left: 3px solid var(--poke-gold);
+}
+
+/* Diálogo nativo de confirmación */
+.dialogo-confirmacion {
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+}
+
+.dialogo-confirmacion::backdrop {
+  background-color: rgba(34, 34, 36, 0.55);
+  backdrop-filter: blur(2px);
+}
+
 /* Indicador visual de envío / carga */
 button:disabled {
   cursor: not-allowed;

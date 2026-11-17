@@ -4,6 +4,7 @@
  */
 
 const CLAVE_AVISO_PENDIENTE = 'PokeMemories_aviso_pendiente';
+const documentosInicializados = new WeakSet();
 
 /**
  * Emite un evento personalizado 'aviso' que burbujea hasta document.
@@ -51,30 +52,40 @@ export function consumirAvisoPendiente() {
 /**
  * Inicializa el oyente global de avisos en document y muestra los pendientes si los hay.
  * @param {Document} [doc=document]
+ * @listens CustomEvent#aviso
  */
 export function inicializarAvisos(doc = document) {
   const zonaAvisos = doc.getElementById('zona-avisos');
   if (!zonaAvisos) return;
 
-  // Oyente único en document para el evento propio 'aviso' (fase burbuja)
-  doc.addEventListener('aviso', (evento) => {
-    const { mensaje, tipo = 'info' } = evento.detail || {};
-    if (!mensaje) return;
+  if (!documentosInicializados.has(doc)) {
+    documentosInicializados.add(doc);
 
-    zonaAvisos.innerHTML = `
-      <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-        <span>${mensaje}</span>
-        <button type="button" class="btn-close" aria-label="Cerrar"></button>
-      </div>
-    `;
+    // Oyente único en document para el evento propio 'aviso' (fase burbuja)
+    doc.addEventListener('aviso', (evento) => {
+      const contenedorActual = doc.getElementById('zona-avisos');
+      const { mensaje, tipo = 'info' } = evento.detail || {};
+      if (!contenedorActual || !mensaje) return;
 
-    const botonCerrar = zonaAvisos.querySelector('.btn-close');
-    if (botonCerrar) {
+      const alerta = doc.createElement('div');
+      alerta.className = `alert alert-${tipo} alert-dismissible fade show`;
+      alerta.setAttribute('role', 'alert');
+
+      const texto = doc.createElement('span');
+      texto.textContent = mensaje;
+
+      const botonCerrar = doc.createElement('button');
+      botonCerrar.type = 'button';
+      botonCerrar.className = 'btn-close';
+      botonCerrar.setAttribute('aria-label', 'Cerrar');
       botonCerrar.addEventListener('click', () => {
-        zonaAvisos.innerHTML = '';
+        contenedorActual.replaceChildren();
       });
-    }
-  });
+
+      alerta.append(texto, botonCerrar);
+      contenedorActual.replaceChildren(alerta);
+    });
+  }
 
   // Comprobar si había un aviso pendiente guardado de la página anterior
   const pendiente = consumirAvisoPendiente();
