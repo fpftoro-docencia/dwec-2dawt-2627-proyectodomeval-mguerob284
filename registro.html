@@ -40,10 +40,14 @@
                     name="usuario"
                     class="form-control"
                     placeholder="De 3 a 15 caracteres (ej. AshKetchum)"
+                    data-validar="nombreUsuario"
                     required
                     autocomplete="username"
+                    aria-describedby="ayuda-usuario error-usuario"
                   />
-                  <div class="form-text small">Solo letras, números y guiones bajos (_)</div>
+                  <div class="form-text small" id="ayuda-usuario">
+                    Solo letras, números y guiones bajos (_)
+                  </div>
                   <div class="invalid-feedback" id="error-usuario"></div>
                 </div>
 
@@ -55,8 +59,10 @@
                     name="email"
                     class="form-control"
                     placeholder="entrenador@liga.pkm"
+                    data-validar="email"
                     required
                     autocomplete="email"
+                    aria-describedby="error-email"
                   />
                   <div class="invalid-feedback" id="error-email"></div>
                 </div>
@@ -70,8 +76,10 @@
                       name="clave"
                       class="form-control"
                       placeholder="Introduzca una contraseña"
+                      data-validar="clave"
                       required
                       autocomplete="new-password"
+                      aria-describedby="indicadores-clave error-clave"
                     />
                     <button
                       type="button"
@@ -163,6 +171,7 @@
                       placeholder="Repite tu contraseña exactamente"
                       required
                       autocomplete="new-password"
+                      aria-describedby="error-repetir-clave"
                     />
                     <button
                       type="button"
@@ -209,7 +218,14 @@
                 </div>
 
                 <div class="mb-4 form-check">
-                  <input type="checkbox" class="form-check-input" id="aceptar-terminos" required />
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="aceptar-terminos"
+                    data-error-id="error-terminos"
+                    aria-describedby="error-terminos"
+                    required
+                  />
                   <label class="form-check-label small" for="aceptar-terminos">
                     Acepto las normas y términos del Salón de la Fama PokeMemories
                   </label>

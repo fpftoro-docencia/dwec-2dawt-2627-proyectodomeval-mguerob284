@@ -1,28 +1,32 @@
 ﻿/**
- * Lógica del formulario de registro de entrenadores (registro.html).
+ * Lógica del formulario de registro de entrenadores (`registro.html`).
+ *
+ * Elementos HTML requeridos:
+ * - `#zona-avisos`, `#form-registro`
+ * - `#usuario`, `#email`, `#clave`, `#repetir-clave`, `#aceptar-terminos`, `#btn-registrarse`
+ * - `#req-longitud`, `#req-minuscula`, `#req-mayuscula`, `#req-cifra`
+ * - `#error-usuario`, `#error-email`, `#error-clave`, `#error-repetir-clave`, `#error-terminos`
+ *
  * @module paginas/registro
  */
 
 import { resumirClave } from '../clave.js';
 import { registrarUsuario, existeUsuario } from '../datos/usuarios.js';
 import { guardarSesion, haySesion } from '../datos/sesion.js';
-import {
-  validarNombreUsuario,
-  validarEmail,
-  analizarRequisitosClave,
-  validarRepeticionClave,
-} from '../validadores.js';
+import { analizarRequisitosClave, validarRepeticionClave } from '../validadores.js';
 import { lanzarAviso, guardarAvisoPendiente, inicializarAvisos } from '../avisos.js';
 import { vincularBotonesVerClave } from '../componentes/claveVisible.js';
+import { configurarValidacionFormulario } from '../componentes/validacionFormulario.js';
 
 /**
- * Inicializa la página de registro.
+ * Inicializa la página de registro con validación accesible en tiempo real.
  * @param {Object} [deps={}]
  * @param {Document} [deps.doc=document]
  * @param {Storage} [deps.almacenUsuarios=localStorage]
  * @param {Storage} [deps.almacenSesion=sessionStorage]
  * @param {Location} [deps.localizacion=window.location]
  * @param {Function} [deps.resumidor=resumirClave]
+ * @fires CustomEvent#aviso
  */
 export function iniciarRegistro({
   doc = document,
@@ -46,49 +50,64 @@ export function iniciarRegistro({
   const campoUsuario = doc.getElementById('usuario');
   const campoEmail = doc.getElementById('email');
   const campoClave = doc.getElementById('clave');
-  const campoRepetir = doc.getElementById('repetir-clave');
-  const campoAceptar = doc.getElementById('aceptar-terminos');
   const botonRegistro = doc.getElementById('btn-registrarse');
 
-  // Elementos indicadores de requisitos de contraseña
   const reqLongitud = doc.getElementById('req-longitud');
   const reqMinuscula = doc.getElementById('req-minuscula');
   const reqMayuscula = doc.getElementById('req-mayuscula');
   const reqCifra = doc.getElementById('req-cifra');
 
   /**
-   * Actualiza los indicadores visuales de los requisitos de la contraseña en tiempo real.
+   * Actualiza un indicador visual de requisito de contraseña.
+   * @param {HTMLElement|null} el
+   * @param {boolean} cumplido
+   */
+  function actualizarElementoRequisito(el, cumplido) {
+    if (!el) return;
+    const textoBase = el.dataset.texto || el.textContent.replace(/^[✓✗•]\s*/, '');
+    if (cumplido) {
+      el.classList.add('cumplido');
+      el.classList.remove('pendiente');
+      el.textContent = `✓ ${textoBase}`;
+    } else {
+      el.classList.remove('cumplido');
+      el.classList.add('pendiente');
+      el.textContent = `• ${textoBase}`;
+    }
+  }
+
+  /**
+   * Actualiza los indicadores visuales de los 4 requisitos de contraseña en vivo.
    */
   function actualizarIndicadoresClave() {
-    const valor = campoClave.value;
-    const analisis = analizarRequisitosClave(valor);
-
+    const analisis = analizarRequisitosClave(campoClave.value);
     actualizarElementoRequisito(reqLongitud, analisis.longitud);
     actualizarElementoRequisito(reqMinuscula, analisis.minuscula);
     actualizarElementoRequisito(reqMayuscula, analisis.mayuscula);
     actualizarElementoRequisito(reqCifra, analisis.cifra);
   }
 
-  /**
-   * @param {HTMLElement|null} el
-   * @param {boolean} cumplido
-   */
-  function actualizarElementoRequisito(el, cumplido) {
-    if (!el) return;
-    if (cumplido) {
-      el.classList.add('cumplido');
-      el.classList.remove('pendiente');
-      el.textContent = `✓ ${el.dataset.texto || el.textContent.replace(/^[✓✗•]\s*/, '')}`;
-    } else {
-      el.classList.remove('cumplido');
-      el.classList.add('pendiente');
-      el.textContent = `• ${el.dataset.texto || el.textContent.replace(/^[✓✗•]\s*/, '')}`;
-    }
-  }
+  campoClave.addEventListener('input', actualizarIndicadoresClave);
 
-  // Escuchar mientras se escribe la contraseña (Requisito 5)
-  campoClave.addEventListener('input', () => {
-    actualizarIndicadoresClave();
+  const validador = configurarValidacionFormulario(formulario, {
+    doc,
+    reglasExtra: {
+      usuario: (campo) =>
+        existeUsuario(campo.value, almacenUsuarios)
+          ? { valido: false, motivo: 'El nombre de entrenador ya está en uso, elige otro' }
+          : { valido: true },
+      'repetir-clave': (campo) => validarRepeticionClave(campoClave.value, campo.value),
+      'aceptar-terminos': (campo) =>
+        campo.checked
+          ? { valido: true }
+          : {
+              valido: false,
+              motivo: 'Debes aceptar las condiciones de PokeMemories para continuar',
+            },
+    },
+    dependencias: {
+      clave: ['repetir-clave'],
+    },
   });
 
   let procesandoEnvio = false;
@@ -96,59 +115,12 @@ export function iniciarRegistro({
   formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 
-    // Requisito 6: Bloqueo de segundo envío
     if (procesandoEnvio) return;
 
-    // 1. Validar nombre de usuario
-    const valUsuario = validarNombreUsuario(campoUsuario.value);
-    if (!valUsuario.valido) {
-      lanzarAviso(formulario, valUsuario.motivo, 'warning');
-      campoUsuario.focus();
-      return;
-    }
-
-    if (existeUsuario(campoUsuario.value, almacenUsuarios)) {
-      lanzarAviso(formulario, 'El nombre de entrenador ya está en uso, elige otro', 'warning');
-      campoUsuario.focus();
-      return;
-    }
-
-    // 2. Validar correo
-    const valEmail = validarEmail(campoEmail.value);
-    if (!valEmail.valido) {
-      lanzarAviso(formulario, valEmail.motivo, 'warning');
-      campoEmail.focus();
-      return;
-    }
-
-    // 3. Validar requisitos de contraseña
-    const analisisClave = analizarRequisitosClave(campoClave.value);
-    if (!analisisClave.esValida) {
-      lanzarAviso(
-        formulario,
-        'La contraseña no cumple todos los requisitos de seguridad',
-        'warning',
-      );
-      campoClave.focus();
-      return;
-    }
-
-    // 4. Validar repetición de contraseña
-    const valRepetir = validarRepeticionClave(campoClave.value, campoRepetir.value);
-    if (!valRepetir.valido) {
-      lanzarAviso(formulario, valRepetir.motivo, 'warning');
-      campoRepetir.focus();
-      return;
-    }
-
-    // 5. Validar casilla de aceptación
-    if (!campoAceptar.checked) {
-      lanzarAviso(
-        formulario,
-        'Debes aceptar las condiciones de PokeMemories para continuar',
-        'warning',
-      );
-      campoAceptar.focus();
+    const { valido, primerError } = validador.validarFormulario();
+    if (!valido) {
+      lanzarAviso(formulario, 'Revisa los campos marcados en rojo antes de registrarte', 'warning');
+      if (primerError) primerError.focus();
       return;
     }
 
@@ -159,9 +131,7 @@ export function iniciarRegistro({
         botonRegistro.textContent = 'Registrando...';
       }
 
-      // Hash asíncrono
       const resumen = await resumidor(campoClave.value);
-
       const nuevoUsuario = registrarUsuario(
         {
           nombreUsuario: campoUsuario.value,
@@ -171,7 +141,6 @@ export function iniciarRegistro({
         almacenUsuarios,
       );
 
-      // Inicia sesión automáticamente tras el registro
       guardarSesion(
         {
           nombreUsuario: nuevoUsuario.nombreUsuario,
