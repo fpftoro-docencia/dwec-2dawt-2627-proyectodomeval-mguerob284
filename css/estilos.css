@@ -102,8 +102,17 @@ footer {
   color: #6c757d;
 }
 
+/* Utilidades de maquetación */
+.min-w-0 {
+  min-width: 0 !important;
+}
+
 /* Tarjetas de partidas y homenaje a Leyendas Caídas */
 .tarjeta-partida {
+  min-width: 0;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -114,9 +123,38 @@ footer {
   box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
 }
 
+.tarjeta-partida .card-body {
+  min-width: 0;
+}
+
+.tarjeta-partida .card-body > * {
+  min-width: 0;
+}
+
+.tarjeta-partida .card-title {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-partida .badge {
+  white-space: normal;
+  text-align: left;
+  line-height: 1.25;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-partida dl dd {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 .bloque-leyenda-caida {
   background-color: #fff8e6;
   border-left: 3px solid var(--poke-gold);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Diálogo nativo de confirmación */

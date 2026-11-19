@@ -64,4 +64,59 @@ test.describe('Recorrido E2E: Operaciones CRUD de recuerdos (Requisito 21)', () 
     await expect(page.locator('#estado-vacio')).toBeVisible();
     await expect(page.locator('[data-campo="titulo"]')).toHaveCount(0);
   });
+
+  test('las tarjetas de recuerdos se adaptan a títulos largos y múltiples modalidades Locke sin desbordar', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      sessionStorage.setItem(
+        'PokeMemories_sesion',
+        JSON.stringify({
+          nombreUsuario: 'AshKetchum',
+          rol: 'administrador',
+        }),
+      );
+      localStorage.setItem(
+        'PokeMemories_partidas_ashketchum',
+        JSON.stringify([
+          {
+            id: 'partida-test-layout',
+            propietario: 'AshKetchum',
+            codigoRegistro: 'POKE-ESM-0345',
+            titulo: 'dhbdfhdgfbhfhdfghhdfgh',
+            edicion: 'Esmeralda',
+            fechaVictoria: '2026-11-19',
+            tiempoJuego: '23:23',
+            idEntrenador: '00262-0',
+            tipoPartida: 'Locke',
+            modalidadesLocke: ['Nuzlocke', 'Randomlocke', 'Vidalocke', 'Hardlocke'],
+            equipo: [
+              { mote: 'adasd', nivel: 34, movimientoClave: 'Placaje' },
+              { mote: 'xfsdfsf', nivel: 33, movimientoClave: 'Gruñido' },
+            ],
+            leyendasCaidas: [{ mote: 'gfg', nivel: 1, hazana: 'aaafgdfgdgdgdfgdg' }],
+          },
+        ]),
+      );
+    });
+
+    await page.goto('/listado.html');
+    const tarjeta = page.locator('.tarjeta-partida').first();
+    await expect(tarjeta).toBeVisible();
+
+    const cardBox = await tarjeta.boundingBox();
+    const edicionBox = await page.locator('[data-campo="edicion"]').first().boundingBox();
+    const modalidadBox = await page.locator('[data-campo="modalidad"]').first().boundingBox();
+    const tituloBox = await page.locator('[data-campo="titulo"]').first().boundingBox();
+
+    // Comprobar que ninguna insignia ni el título desbordan horizontalmente la tarjeta
+    expect(edicionBox.x).toBeGreaterThanOrEqual(cardBox.x);
+    expect(edicionBox.x + edicionBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1);
+
+    expect(modalidadBox.x).toBeGreaterThanOrEqual(cardBox.x);
+    expect(modalidadBox.x + modalidadBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1);
+
+    expect(tituloBox.x).toBeGreaterThanOrEqual(cardBox.x);
+    expect(tituloBox.x + tituloBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 1);
+  });
 });
