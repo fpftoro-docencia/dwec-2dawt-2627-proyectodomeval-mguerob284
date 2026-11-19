@@ -1,22 +1,57 @@
 /* Estilos propios de PokeMemories */
 
 :root {
-  --poke-red: #ee1515;
-  --poke-dark: #222224;
+  --poke-red: #f02a2a;
+  --poke-dark: #252527;
   --poke-gold: #ffcb05;
   --poke-blue: #2a75bb;
+  --poke-white: #ffffff;
+}
+
+html {
+  font-size: 17.5px;
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background-color: var(--poke-white);
+  background-image: linear-gradient(
+    to bottom,
+    var(--poke-red) 0%,
+    var(--poke-red) 43%,
+    var(--poke-dark) 43%,
+    var(--poke-dark) 56%,
+    var(--poke-white) 56%,
+    var(--poke-white) 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: #212529;
+  line-height: 1.55;
 }
 
 main {
   flex: 1;
+}
+
+footer {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+/* Encabezado de secciones privadas sobre la franja roja superior */
+.encabezado-pagina h1 {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.encabezado-pagina p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.card {
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.14) !important;
 }
 
 /* Cabecera, logo y navegación */
@@ -65,6 +100,253 @@ main {
 
 .requisito-clave.pendiente {
   color: #6c757d;
+}
+
+/* Tarjetas de partidas y homenaje a Leyendas Caídas */
+.tarjeta-partida {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tarjeta-partida:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.bloque-leyenda-caida {
+  background-color: #fff8e6;
+  border-left: 3px solid var(--poke-gold);
+}
+
+/* Diálogo nativo de confirmación */
+.dialogo-confirmacion {
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+}
+
+.dialogo-confirmacion::backdrop {
+  background-color: rgba(34, 34, 36, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+/* Carátulas visuales de ediciones (ficha y listado) */
+.selector-caratulas {
+  display: flex;
+  gap: 0.7rem;
+  overflow-x: auto;
+  padding: 0.6rem 0.4rem 0.85rem;
+  scroll-snap-type: x proximity;
+}
+
+.btn-caratula {
+  --color-edicion: var(--poke-blue);
+  --color-edicion-suave: #eef5ff;
+  flex: 0 0 auto;
+  width: 6.4rem;
+  padding: 0.45rem;
+  border: 2px solid #dee2e6;
+  border-radius: 0.6rem;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  scroll-snap-align: center;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn-caratula:hover,
+.btn-caratula:focus-within {
+  transform: translateY(-2px);
+  border-color: var(--color-edicion);
+}
+
+.btn-caratula.activa {
+  border-color: var(--color-edicion);
+  background-color: var(--color-edicion-suave);
+  box-shadow: 0 0 0 0.22rem color-mix(in srgb, var(--color-edicion) 28%, transparent);
+}
+
+.btn-caratula img {
+  width: 5.1rem;
+  height: 5.4rem;
+  object-fit: contain;
+}
+
+.btn-caratula span {
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: center;
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Insignias con color temático según la edición elegida */
+.badge-edicion[data-edicion-tema] {
+  background-color: var(--color-edicion, #6c757d);
+  color: var(--color-edicion-texto, #fff);
+  border: 1px solid var(--color-edicion-borde, transparent);
+}
+
+[data-edicion-tema='rojo-fuego'] {
+  --color-edicion: #d9381e;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #fdebe7;
+}
+
+[data-edicion-tema='verde-hoja'] {
+  --color-edicion: #2c9b4b;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e7f6ec;
+}
+
+[data-edicion-tema='esmeralda'] {
+  --color-edicion: #008f5a;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e3f7ef;
+}
+
+[data-edicion-tema='diamante'] {
+  --color-edicion: #3e82c7;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e8f2fc;
+}
+
+[data-edicion-tema='perla'] {
+  --color-edicion: #c4649f;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #faedf5;
+}
+
+[data-edicion-tema='platino'] {
+  --color-edicion: #5c6470;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #eef0f3;
+}
+
+[data-edicion-tema='heartgold'] {
+  --color-edicion: #d49b00;
+  --color-edicion-texto: #1f1a06;
+  --color-edicion-suave: #fdf6dc;
+}
+
+[data-edicion-tema='soulsilver'] {
+  --color-edicion: #758aa0;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #eef3f8;
+}
+
+[data-edicion-tema='negro'] {
+  --color-edicion: #212529;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e9ecef;
+}
+
+[data-edicion-tema='blanco'] {
+  --color-edicion: #edf2f7;
+  --color-edicion-texto: #212529;
+  --color-edicion-borde: #adb5bd;
+  --color-edicion-suave: #f4f7fa;
+}
+
+[data-edicion-tema='negro-2'] {
+  --color-edicion: #183d54;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e4f0f7;
+}
+
+[data-edicion-tema='blanco-2'] {
+  --color-edicion: #dde7f2;
+  --color-edicion-texto: #1e293b;
+  --color-edicion-borde: #94a3b8;
+  --color-edicion-suave: #f1f6fb;
+}
+
+[data-edicion-tema='x'] {
+  --color-edicion: #1d5bc4;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e7effd;
+}
+
+[data-edicion-tema='y'] {
+  --color-edicion: #c62839;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #fce8ea;
+}
+
+[data-edicion-tema='rubi-omega'] {
+  --color-edicion: #b31b24;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #fbe7e8;
+}
+
+[data-edicion-tema='zafiro-alfa'] {
+  --color-edicion: #135d9e;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e6f1fa;
+}
+
+[data-edicion-tema='sol'] {
+  --color-edicion: #e67e22;
+  --color-edicion-texto: #1f1407;
+  --color-edicion-suave: #fdf0e4;
+}
+
+[data-edicion-tema='luna'] {
+  --color-edicion: #4f368f;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #eeeaf9;
+}
+
+[data-edicion-tema='espada'] {
+  --color-edicion: #0095d9;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e3f5fc;
+}
+
+[data-edicion-tema='escudo'] {
+  --color-edicion: #d41c64;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #fce7f0;
+}
+
+[data-edicion-tema='leyendas-arceus'] {
+  --color-edicion: #36786a;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e6f4f1;
+}
+
+[data-edicion-tema='escarlata'] {
+  --color-edicion: #c82333;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #fce8ea;
+}
+
+[data-edicion-tema='purpura'] {
+  --color-edicion: #6f2da8;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #f2eaf9;
+}
+
+[data-edicion-tema='leyendas-za'] {
+  --color-edicion: #009e73;
+  --color-edicion-texto: #fff;
+  --color-edicion-suave: #e3f7f1;
+}
+
+.caratula-tarjeta {
+  width: 4.8rem;
+  height: 5.5rem;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  padding: 0.2rem;
+  flex-shrink: 0;
 }
 
 /* Indicador visual de envío / carga */
