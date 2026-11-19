@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokeMemories · Ficha de Partida</title>
+    <link rel="icon" type="image/png" href="img/logo.png" />
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body>
+    <header id="cabecera-principal"></header>
+
+    <main class="container py-4">
+      <div id="zona-avisos" role="status" aria-live="polite" class="mb-3"></div>
+
+      <div
+        class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 encabezado-pagina"
+      >
+        <div>
+          <h1 class="h3 fw-bold mb-1" id="titulo-ficha">📝 Registrar Recuerdo de Partida</h1>
+          <p class="small mb-0">Inmortaliza tu aventura, estadísticas y tu equipo campeón</p>
+        </div>
+        <a href="listado.html" class="btn btn-light btn-sm fw-semibold shadow-sm">
+          ← Volver a la vitrina
+        </a>
+      </div>
+
+      <section class="card shadow-sm border-0 p-4">
+        <form id="form-partida" novalidate>
+          <div class="row g-3">
+            <div class="col-12">
+              <fieldset aria-describedby="error-edicion">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
+                  <legend class="form-label fw-semibold fs-6 mb-0">Edición del juego</legend>
+                  <span class="badge bg-secondary" id="edicion-seleccionada">
+                    Ninguna edición seleccionada
+                  </span>
+                </div>
+                <div
+                  id="selector-caratulas"
+                  class="selector-caratulas border rounded bg-light"
+                  role="radiogroup"
+                  aria-label="Edición del juego"
+                ></div>
+                <div class="invalid-feedback d-block" id="error-edicion"></div>
+              </fieldset>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label for="codigo-numero" class="form-label fw-semibold">Código de registro</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text fw-semibold font-monospace" id="prefijo-codigo">
+                  POKE-???-
+                </span>
+                <input
+                  type="text"
+                  id="codigo-numero"
+                  name="codigoNumero"
+                  class="form-control font-monospace"
+                  placeholder="Ej. 001"
+                  inputmode="numeric"
+                  maxlength="4"
+                  data-validar="numeroRegistro"
+                  aria-describedby="prefijo-codigo ayuda-codigo error-codigo-numero"
+                  required
+                />
+                <div class="invalid-feedback" id="error-codigo-numero"></div>
+              </div>
+              <input type="hidden" id="codigo-registro" name="codigoRegistro" value="" />
+              <div class="form-text small" id="ayuda-codigo">
+                El prefijo y las siglas cambian solos al elegir juego; escribe solo el número
+              </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+              <label for="titulo" class="form-label fw-semibold">Título de la partida</label>
+              <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                class="form-control"
+                placeholder="Ej. Oro HeartGold en mi 3ds"
+                minlength="3"
+                maxlength="40"
+                data-validar="titulo"
+                aria-describedby="error-titulo"
+                required
+              />
+              <div class="invalid-feedback" id="error-titulo"></div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label for="fecha-victoria" class="form-label fw-semibold">Fecha de victoria</label>
+              <input
+                type="date"
+                id="fecha-victoria"
+                name="fechaVictoria"
+                class="form-control"
+                data-validar="fechaVictoria"
+                aria-describedby="error-fecha-victoria"
+                required
+              />
+              <div class="invalid-feedback" id="error-fecha-victoria"></div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label for="tiempo-juego" class="form-label fw-semibold">Tiempo de juego</label>
+              <input
+                type="text"
+                id="tiempo-juego"
+                name="tiempoJuego"
+                class="form-control"
+                placeholder="Ej. 45:30"
+                data-validar="tiempoJuego"
+                aria-describedby="ayuda-tiempo error-tiempo-juego"
+                required
+              />
+              <div class="form-text small" id="ayuda-tiempo">Horas y minutos (ej. 45:30)</div>
+              <div class="invalid-feedback" id="error-tiempo-juego"></div>
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label for="id-entrenador" class="form-label fw-semibold">ID de Entrenador</label>
+              <input
+                type="text"
+                id="id-entrenador"
+                name="idEntrenador"
+                class="form-control"
+                placeholder="Ej. 00151-7"
+                data-validar="idEntrenador"
+                aria-describedby="ayuda-id-entrenador error-id-entrenador"
+                required
+              />
+              <div class="form-text small" id="ayuda-id-entrenador">
+                5 dígitos de tu tarjeta de entrenador y su dígito de control (ej. 00151-7)
+              </div>
+              <div class="invalid-feedback" id="error-id-entrenador"></div>
+            </div>
+
+            <div class="col-12">
+              <fieldset>
+                <legend class="form-label fw-semibold fs-6 mb-2">Modalidad de partida</legend>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="tipo-clasica"
+                      name="tipoPartida"
+                      value="Clásica"
+                      class="form-check-input"
+                      checked
+                    />
+                    <label for="tipo-clasica" class="form-check-label">Clásica</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="radio"
+                      id="tipo-locke"
+                      name="tipoPartida"
+                      value="Locke"
+                      class="form-check-input"
+                    />
+                    <label for="tipo-locke" class="form-check-label">Locke</label>
+                  </div>
+                </div>
+                <div class="form-text small">
+                  Elige si es una partida Clásica o un desafío Locke (no pueden ser ambas a la vez)
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="col-12" id="bloque-modalidades-locke" hidden>
+              <fieldset
+                class="border rounded p-3 bg-light"
+                aria-describedby="error-modalidades-locke"
+              >
+                <legend class="fs-6 fw-semibold mb-2">
+                  🔥 Modalidades de Locke (puedes marcar varias)
+                </legend>
+                <div class="d-flex flex-wrap gap-3">
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-nuzlocke"
+                      name="modalidadesLocke"
+                      value="Nuzlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-nuzlocke" class="form-check-label">Nuzlocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-randomlocke"
+                      name="modalidadesLocke"
+                      value="Randomlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-randomlocke" class="form-check-label">Randomlocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-vidalocke"
+                      name="modalidadesLocke"
+                      value="Vidalocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-vidalocke" class="form-check-label">Vidalocke</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      id="locke-hardlocke"
+                      name="modalidadesLocke"
+                      value="Hardlocke"
+                      class="form-check-input"
+                      disabled
+                    />
+                    <label for="locke-hardlocke" class="form-check-label">Hardlocke</label>
+                  </div>
+                </div>
+                <div class="invalid-feedback d-block" id="error-modalidades-locke"></div>
+              </fieldset>
+            </div>
+          </div>
+
+          <hr class="my-4" />
+
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div>
+              <h2 class="h5 fw-bold mb-0">⚔️ Equipo Campeón</h2>
+              <p class="text-muted small mb-0" id="contador-equipo">
+                Registra entre 1 y 6 Pokémon en tu equipo
+              </p>
+            </div>
+            <button type="button" id="btn-anadir-pokemon" class="btn btn-outline-primary btn-sm">
+              ➕ Añadir Pokémon
+            </button>
+          </div>
+
+          <div id="lista-equipo"></div>
+
+          <hr class="my-4" />
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                id="hubo-leyendas-caidas"
+                name="huboLeyendasCaidas"
+                class="form-check-input"
+                value="si"
+              />
+              <label for="hubo-leyendas-caidas" class="form-check-label fw-semibold">
+                🕯️ ¿Hubo leyendas caídas durante la aventura?
+              </label>
+            </div>
+            <p class="text-muted small mb-0 ms-4">
+              Guarda un hueco especial para los Pokémon que cayeron en el camino pero siguen en
+              nuestros corazones
+            </p>
+          </div>
+
+          <div id="bloque-leyendas-caidas" class="bloque-leyenda-caida rounded p-3 mb-3" hidden>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <div>
+                <h2 class="h6 fw-bold mb-0">⭐ Leyendas Caídas · En nuestros corazones</h2>
+                <p class="text-muted small mb-0" id="contador-leyendas">
+                  Añade entre 1 y 6 Pokémon que cayeron por el camino
+                </p>
+              </div>
+              <button
+                type="button"
+                id="btn-anadir-leyenda"
+                class="btn btn-outline-warning text-dark btn-sm"
+                disabled
+              >
+                ➕ Añadir Leyenda Caída
+              </button>
+            </div>
+
+            <div id="lista-leyendas"></div>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <a href="listado.html" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" id="btn-guardar-partida" class="btn btn-primary fw-bold">
+              Guardar recuerdo
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <template id="plantilla-pokemon">
+      <fieldset class="border rounded p-3 mb-3 bg-light" data-fila-pokemon>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <legend class="fs-6 fw-bold mb-0" data-titulo-pokemon></legend>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-accion="quitar-pokemon">
+            Quitar
+          </button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <label class="form-label small fw-semibold" data-etiqueta="mote">Mote o especie</label>
+            <input
+              type="text"
+              name="pokemonMote"
+              class="form-control"
+              placeholder="Ej. Typhlosion"
+              data-campo="mote"
+              data-validar="motePokemon"
+              required
+            />
+            <div class="invalid-feedback" data-error="mote"></div>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label small fw-semibold" data-etiqueta="nivel">Nivel</label>
+            <input
+              type="number"
+              name="pokemonNivel"
+              class="form-control"
+              placeholder="1-100"
+              min="1"
+              max="100"
+              data-campo="nivel"
+              data-validar="nivelPokemon"
+              required
+            />
+            <div class="invalid-feedback" data-error="nivel"></div>
+          </div>
+
+          <div class="col-12 col-md-5">
+            <label class="form-label small fw-semibold" data-etiqueta="movimiento">
+              Movimiento clave
+            </label>
+            <input
+              type="text"
+              name="pokemonMovimiento"
+              class="form-control"
+              placeholder="Ej. Lanzallamas"
+              data-campo="movimiento"
+              data-validar="movimientoClave"
+              required
+            />
+            <div class="invalid-feedback" data-error="movimiento"></div>
+          </div>
+        </div>
+      </fieldset>
+    </template>
+
+    <template id="plantilla-leyenda-caida">
+      <fieldset class="border border-warning rounded p-3 mb-3 bg-white" data-fila-leyenda>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <legend class="fs-6 fw-bold mb-0" data-titulo-leyenda></legend>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-accion="quitar-leyenda">
+            Quitar
+          </button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-3">
+            <label class="form-label small fw-semibold" data-etiqueta="mote">Mote o especie</label>
+            <input
+              type="text"
+              name="leyendaMote"
+              class="form-control"
+              placeholder="Ej. Ampharos"
+              data-campo="mote"
+              data-validar="motePokemon"
+              required
+            />
+            <div class="invalid-feedback" data-error="mote"></div>
+          </div>
+
+          <div class="col-12 col-md-2">
+            <label class="form-label small fw-semibold" data-etiqueta="nivel">
+              Nivel al caer
+            </label>
+            <input
+              type="number"
+              name="leyendaNivel"
+              class="form-control"
+              placeholder="1-100"
+              min="1"
+              max="100"
+              data-campo="nivel"
+              data-validar="nivelPokemon"
+              required
+            />
+            <div class="invalid-feedback" data-error="nivel"></div>
+          </div>
+
+          <div class="col-12 col-md-7">
+            <label class="form-label small fw-semibold" data-etiqueta="hazana">
+              Hazaña o recuerdo en el corazón
+            </label>
+            <input
+              type="text"
+              name="leyendaHazana"
+              class="form-control"
+              placeholder='Ej. Hizo un crítico, congeló y se tanqueó un "A bocajarro" en la medalla 7'
+              data-campo="hazana"
+              data-validar="mencionHonor"
+              required
+            />
+            <div class="invalid-feedback" data-error="hazana"></div>
+          </div>
+        </div>
+      </fieldset>
+    </template>
+
+    <footer class="py-3 text-center text-muted small mt-auto border-top">
+      PokeMemories · Por: Manuel Guerrero 🐉
+    </footer>
+
+    <script type="module">
+      import { iniciarFicha } from './js/paginas/ficha.js';
+      iniciarFicha();
+    </script>
+  </body>
+</html>
