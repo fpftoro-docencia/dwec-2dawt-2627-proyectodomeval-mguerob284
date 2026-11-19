@@ -28,7 +28,7 @@ export const RETARDO_BUSQUEDA_MS = 250;
 
 /**
  * Construye el texto buscable de una partida para el filtro sin tildes ni mayúsculas.
- * @param {import('../datos/partidas.js').RegistroPartida} partida
+ * @param {Object} partida
  * @returns {string}
  */
 function textoBuscablePartida(partida) {
@@ -57,7 +57,7 @@ function textoBuscablePartida(partida) {
  * Crea el nodo de tarjeta de una partida a partir de `<template id="plantilla-partida">`.
  * Rellena únicamente con `textContent` y atributos (sin `innerHTML` ni estilos en JS).
  * @param {HTMLTemplateElement} plantilla
- * @param {import('../datos/partidas.js').RegistroPartida} partida
+ * @param {Object} partida
  * @param {Document} doc
  * @returns {DocumentFragment}
  */

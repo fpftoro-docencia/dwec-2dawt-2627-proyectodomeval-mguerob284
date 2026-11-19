@@ -27,34 +27,43 @@ export const RETARDO_BUSQUEDA_USUARIOS_MS = 250;
 
 /**
  * Crea una fila de usuario clonando `<template id="plantilla-usuario">` con `textContent` y atributos.
+ * Si el parser del entorno descartó la etiqueta `<tr>` por estar el `<template>` fuera de `<table>`,
+ * envuelve automáticamente las celdas en un `<tr>` para garantizar la estructura semántica.
  * @param {HTMLTemplateElement} plantilla
- * @param {import('../datos/usuarios.js').Usuario} usuario
+ * @param {Object} usuario
  * @param {{nombreUsuario: string, rol: string}} sesion
  * @param {number} indiceFila
- * @returns {DocumentFragment}
+ * @param {Document} [doc=document]
+ * @returns {HTMLTableRowElement}
  */
-function crearFilaUsuario(plantilla, usuario, sesion, indiceFila) {
+function crearFilaUsuario(plantilla, usuario, sesion, indiceFila, doc = document) {
   const fragmento = plantilla.content.cloneNode(true);
+  const filaExistente = fragmento.querySelector('tr');
+  const fila = filaExistente || doc.createElement('tr');
+  if (!filaExistente) {
+    fila.append(...fragmento.childNodes);
+  }
+
   const esAdmin = usuario.rol === 'administrador';
   const esPropio = usuario.nombreUsuario.toLowerCase() === sesion.nombreUsuario.toLowerCase();
 
-  const nodoNombre = fragmento.querySelector('[data-campo="nombreUsuario"]');
+  const nodoNombre = fila.querySelector('[data-campo="nombreUsuario"]');
   if (nodoNombre) nodoNombre.textContent = usuario.nombreUsuario;
 
-  const etiquetaTu = fragmento.querySelector('[data-campo="etiquetaTu"]');
+  const etiquetaTu = fila.querySelector('[data-campo="etiquetaTu"]');
   if (etiquetaTu) etiquetaTu.hidden = !esPropio;
 
-  const nodoEmail = fragmento.querySelector('[data-campo="email"]');
+  const nodoEmail = fila.querySelector('[data-campo="email"]');
   if (nodoEmail) nodoEmail.textContent = usuario.email;
 
-  const nodoRol = fragmento.querySelector('[data-campo="rol"]');
+  const nodoRol = fila.querySelector('[data-campo="rol"]');
   if (nodoRol) {
     nodoRol.textContent = esAdmin ? 'Administrador' : 'Usuario';
     nodoRol.className = esAdmin ? 'badge bg-warning text-dark' : 'badge bg-secondary';
   }
 
-  const botonRol = fragmento.querySelector('[data-accion="cambiar-rol"]');
-  const avisoPropio = fragmento.querySelector('[data-campo="avisoPropio"]');
+  const botonRol = fila.querySelector('[data-accion="cambiar-rol"]');
+  const avisoPropio = fila.querySelector('[data-campo="avisoPropio"]');
 
   if (botonRol) {
     botonRol.dataset.usuario = usuario.nombreUsuario;
@@ -78,7 +87,7 @@ function crearFilaUsuario(plantilla, usuario, sesion, indiceFila) {
     }
   }
 
-  return fragmento;
+  return fila;
 }
 
 /**

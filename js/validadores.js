@@ -5,8 +5,14 @@
  */
 
 /**
+ * @typedef {Object} ResultadoValidacion
+ * @property {boolean} valido - Si el dato cumple la regla de validación.
+ * @property {string} [motivo] - Mensaje explicativo cuando el dato no es válido.
+ */
+
+/**
  * Ediciones oficiales de juegos Pokémon admitidas en PokeMemories.
- * @type {readonly string[]}
+ * @type {string[]}
  */
 export const EDICIONES_OFICIALES = Object.freeze([
   'Rojo Fuego',
@@ -37,13 +43,13 @@ export const EDICIONES_OFICIALES = Object.freeze([
 
 /**
  * Tipos de partida permitidos (mutuamente excluyentes: Clásica o Locke).
- * @type {readonly string[]}
+ * @type {string[]}
  */
 export const TIPOS_PARTIDA = Object.freeze(['Clásica', 'Locke']);
 
 /**
  * Modalidades combinables disponibles cuando la partida es de tipo Locke.
- * @type {readonly string[]}
+ * @type {string[]}
  */
 export const MODALIDADES_LOCKE = Object.freeze([
   'Nuzlocke',
@@ -54,7 +60,7 @@ export const MODALIDADES_LOCKE = Object.freeze([
 
 /**
  * Estados permitidos para cada Pokémon dentro del equipo de una partida.
- * @type {readonly string[]}
+ * @type {string[]}
  */
 export const ESTADOS_POKEMON = Object.freeze(['Campeón', 'Leyenda Caída']);
 
@@ -75,7 +81,7 @@ export function obtenerFechaHoyIso(fecha = new Date()) {
 /**
  * Validador de nombre de usuario: 3 a 15 caracteres alfanuméricos y guion bajo.
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarNombreUsuario('AshKetchum'); // { valido: true }
  */
@@ -103,7 +109,7 @@ export function validarNombreUsuario(valor) {
 /**
  * Valida formato de correo electrónico.
  * @param {string} email
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarEmail('ash@liga.pkm'); // { valido: true }
  */
@@ -128,7 +134,7 @@ export function validarEmail(email) {
  *   minuscula: boolean,
  *   mayuscula: boolean,
  *   cifra: boolean,
- *   esValida: boolean,
+ *   esValida: boolean
  * }}
  * @example
  * analizarRequisitosClave('Pikachu9').esValida; // true
@@ -151,7 +157,7 @@ export function analizarRequisitosClave(clave = '') {
 /**
  * Valida la contraseña completa.
  * @param {string} clave
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarClave('Pikachu9'); // { valido: true }
  */
@@ -171,7 +177,7 @@ export function validarClave(clave) {
  * Valida que la repetición de la contraseña coincida.
  * @param {string} clave
  * @param {string} repeticion
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarRepeticionClave('Pikachu9', 'Pikachu9'); // { valido: true }
  */
@@ -188,7 +194,7 @@ export function validarRepeticionClave(clave, repeticion) {
 /**
  * Valida el código de registro de una partida (formato POKE-XXX-0000).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarCodigoRegistro('POKE-HGD-0042'); // { valido: true }
  */
@@ -211,7 +217,7 @@ export function validarCodigoRegistro(valor) {
 /**
  * Valida la parte numérica que escribe el usuario para el código de registro (1 a 4 dígitos).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarNumeroRegistro('001'); // { valido: true }
  */
@@ -229,7 +235,7 @@ export function validarNumeroRegistro(valor) {
 /**
  * Valida el título de una partida (3 a 40 caracteres).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarTituloPartida('Nuzlocke Johto'); // { valido: true }
  */
@@ -247,7 +253,7 @@ export function validarTituloPartida(valor) {
 /**
  * Valida que la edición elegida pertenezca a la lista de ediciones oficiales.
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarEdicion('HeartGold'); // { valido: true }
  */
@@ -265,7 +271,7 @@ export function validarEdicion(valor) {
  * Valida la fecha de victoria: formato YYYY-MM-DD real y no posterior a la fecha actual.
  * @param {string} valor
  * @param {Date} [fechaReferencia=new Date()] - Fecha de referencia para pruebas deterministas.
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarFechaVictoria('2026-10-01', new Date(2026, 10, 17)); // { valido: true }
  */
@@ -304,7 +310,7 @@ export function validarFechaVictoria(valor, fechaReferencia = new Date()) {
 /**
  * Valida el tiempo de juego en formato Horas:Minutos (ej. 45:30 o 120:05).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarTiempoJuego('45:30'); // { valido: true }
  */
@@ -326,7 +332,7 @@ export function validarTiempoJuego(valor) {
 /**
  * Valida el ID de Entrenador con formato `00000-0` (5 dígitos y dígito de control módulo 10).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarIdEntrenador('00151-7'); // { valido: true }
  */
@@ -362,7 +368,7 @@ export function validarIdEntrenador(valor) {
 /**
  * Valida la mención de honor para las Leyendas Caídas (campo condicional, 10 a 120 caracteres).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarMencionHonor('Pidgeot cayó protegiendo al equipo en la Calle Victoria'); // { valido: true }
  */
@@ -386,7 +392,7 @@ export function validarMencionHonor(valor) {
 /**
  * Valida el mote o especie de un Pokémon del equipo (2 a 20 caracteres).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarMotePokemon('Typhlosion'); // { valido: true }
  */
@@ -404,7 +410,7 @@ export function validarMotePokemon(valor) {
 /**
  * Valida el nivel de un Pokémon del equipo (número entero entre 1 y 100).
  * @param {string|number} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarNivelPokemon(68); // { valido: true }
  */
@@ -426,7 +432,7 @@ export function validarNivelPokemon(valor) {
 /**
  * Valida el estado de un Pokémon en la partida ('Campeón' o 'Leyenda Caída').
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarEstadoPokemon('Campeón'); // { valido: true }
  */
@@ -440,7 +446,7 @@ export function validarEstadoPokemon(valor) {
 /**
  * Valida el movimiento clave de un Pokémon del equipo (2 a 30 caracteres).
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarMovimientoClave('Lanzallamas'); // { valido: true }
  */
@@ -457,8 +463,8 @@ export function validarMovimientoClave(valor) {
 
 /**
  * Valida la estructura completa de un equipo Pokémon (de 1 a 6 miembros válidos).
- * @param {Array<{mote: string, nivel: number|string, estado?: string, movimientoClave: string}>} equipo
- * @returns {{valido: boolean, motivo?: string}}
+ * @param {Array<Object>} equipo
+ * @returns {ResultadoValidacion}
  * @example
  * validarEquipoPokemon([{ mote: 'Pikachu', nivel: 55, movimientoClave: 'Rayo' }]);
  */
@@ -490,8 +496,8 @@ export function validarEquipoPokemon(equipo) {
 
 /**
  * Valida la lista condicional de Leyendas Caídas (de 1 a 6 Pokémon caídos válidos).
- * @param {Array<{mote: string, nivel: number|string, hazana: string}>} leyendas
- * @returns {{valido: boolean, motivo?: string}}
+ * @param {Array<Object>} leyendas
+ * @returns {ResultadoValidacion}
  * @example
  * validarLeyendasCaidas([{ mote: 'Pidgeot', nivel: 48, hazana: 'Cayó protegiendo al equipo en la Calle Victoria' }]);
  */
@@ -521,7 +527,7 @@ export function validarLeyendasCaidas(leyendas) {
 /**
  * Valida el tipo de partida ('Clásica' o 'Locke').
  * @param {string} valor
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarTipoPartida('Locke'); // { valido: true }
  */
@@ -535,7 +541,7 @@ export function validarTipoPartida(valor) {
 /**
  * Valida las modalidades elegidas para una partida tipo Locke (al menos una modalidad oficial).
  * @param {string[]} modalidades
- * @returns {{valido: boolean, motivo?: string}}
+ * @returns {ResultadoValidacion}
  * @example
  * validarModalidadesLocke(['Nuzlocke', 'Hardlocke']); // { valido: true }
  */
@@ -552,7 +558,7 @@ export function validarModalidadesLocke(modalidades) {
 
 /**
  * Mapa centralizado de validadores de formato (patrón Estrategia) seleccionables por `data-validar`.
- * @type {Record<string, (valor: string) => {valido: boolean, motivo?: string}>}
+ * @type {Object.<string, Function>}
  */
 export const validadores = {
   nombreUsuario: validarNombreUsuario,

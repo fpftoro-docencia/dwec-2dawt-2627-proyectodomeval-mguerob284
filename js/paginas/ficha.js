@@ -331,7 +331,7 @@ export function iniciarFicha({
 
   /**
    * Añade una fila al equipo campeón desde `<template>` con ids, `htmlFor` y cajas de error únicos.
-   * @param {{mote?: string, nivel?: number|string, movimientoClave?: string}} [datos={}]
+   * @param {Object} [datos={}]
    */
   function anadirFilaPokemon(datos = {}) {
     const actuales = listaEquipo.querySelectorAll('[data-fila-pokemon]').length;
@@ -406,7 +406,7 @@ export function iniciarFicha({
 
   /**
    * Añade una fila condicional de Leyenda Caída desde `<template>` con ids y cajas de error únicos.
-   * @param {{mote?: string, nivel?: number|string, hazana?: string}} [datos={}]
+   * @param {Object} [datos={}]
    */
   function anadirFilaLeyenda(datos = {}) {
     if (!listaLeyendas || !plantillaLeyenda) return;

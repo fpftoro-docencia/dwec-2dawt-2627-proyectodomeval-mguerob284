@@ -86,18 +86,17 @@
 
 ## 5. Estado Actual y Próximos Pasos
 
-* **Rama activa:** `feature/sprint-2-ficha-admin-validacion` (apilada sobre `feature/sprint-2-datos-listado`)
-* **Progreso en Trello (17 Nov):**
+* **Rama activa:** `feature/sprint-2-ficha-admin-validacion` (lista para fusionar en `main` tras completar el Sprint 2).
+* **Progreso en Trello (19 Nov 2026):**
   * ✅ **Sprint 1 cerrado (Tarjetas 1–12 en «DONE», PR `#2` fusionada en `main` y tag `v0.1`).**
-  * ✅ **Sprint 2 — Tercio 1 completado (Tarjetas 13–16 en «DONE»):** Validadores de entidad + DNI mod 23, `partidas.js`, paginación pura + componente DOM/URL, `listado.html` + `listado.js`, tests unitarios + integración listado y cobertura 100%.
-  * ✅ **Sprint 2 — Tercio 2 completado (Tarjetas 17–20 en «DONE»):**
-    * `ficha.html` + `js/paginas/ficha.js` (alta y edición `?id=...`, `max` fecha dinámico, campo condicional `hidden`/`disabled`, grupo dinámico `<template>` 1–6 Pokémon con delegación y `FormData.getAll`).
-    * `usuarios.html` + `js/paginas/usuarios.js` (protección solo admin, buscador, paginación reutilizada, cambio de rol por delegación y bloqueo de auto-degradación con explicación).
-    * `js/componentes/validacionFormulario.js` aplicado a los 3 formularios (`index.html`, `registro.html`, `ficha.html`) con `blur` en fase de captura, `data-validar`, `setCustomValidity`, `aria-describedby`, `aria-invalid`, `is-invalid` y foco al primer error.
-  * 📋 **Pendiente de Sprint 2 — Tercio 3 final (Tarjetas 21–23):**
-    * **Tarjeta 21:** Tests de integración restantes (`tests/integracion/ficha.test.js` y `tests/integracion/usuarios.test.js` — protección por rol y administración) + 2 recorridos E2E en Playwright (`e2e/sesion.spec.js` y `e2e/crud.spec.js` con helpers compartidos).
-    * **Tarjeta 22:** CI Paso 2 en `.github/workflows/ci.yml` (`Tests` con `npm run coverage` + artefacto `coverage/`, trabajo `E2E` con Chromium + artefacto `playwright-report/` en `if: failure()`, `concurrency` con `cancel-in-progress: true` e insignia en `README.md`).
-    * **Tarjeta 23:** Completar secciones del `README.md` (Arquitectura, Almacenamiento, Formularios/Regex, Eventos, Pruebas/Cobertura, CI Paso 2, Reflexión Sprint 2), entrada del Sprint 2 en `blog/README.md`, fusión por Pull Request en `main` y creación del tag `v0.2`.
+  * ✅ **Sprint 2 cerrado al 100% (Tarjetas 13–23 en «DONE»):**
+    * **Tercio 1 (Tarjetas 13–16):** Validadores de entidad, `partidas.js`, paginación pura + componente DOM/URL, `listado.html` + `listado.js` con `<template>` y `<dialog>`, tests unitarios y cobertura 100%.
+    * **Tercio 2 (Tarjetas 17–20):** `ficha.html` + `ficha.js` (selector de 24 carátulas locales, prefijo `POKE-XXX-` automático, Clásica vs Locke, Leyendas Caídas dinámicas de 1 a 6, equipo campeón de 1 a 6, `FormData.getAll`), `usuarios.html` + `usuarios.js` (zona admin con bloqueo de auto-degradación) y motor `validacionFormulario.js` accesible con `blur` en captura.
+    * **Tercio 3 (Tarjetas 21–23):**
+      * **Tarjeta 21:** Pirámide de pruebas completa: 134 tests en Vitest (100% de cobertura en líneas en funciones puras), pruebas de integración para ficha (`ficha.test.js`) y administración (`usuarios.test.js`), y 2 recorridos E2E en Playwright (`e2e/sesion.spec.js` y `e2e/crud.spec.js` con helpers reutilizables en `e2e/ayudas.js`).
+      * **Tarjeta 22:** CI Paso 2 en `.github/workflows/ci.yml` (`concurrency` con `cancel-in-progress: true`, trabajo `Tests` con `npm run coverage` y subida del artefacto `coverage/`, trabajo `E2E` dependiente de `Tests` con Chromium y subida de `playwright-report/` en caso de fallo `if: failure()`, e insignia activa en `README.md`).
+      * **Tarjeta 23:** Documentación exhaustiva en `README.md` (diagrama Mermaid, arquitectura, almacenamiento, formularios con tabla de regexes, propagación y delegación de eventos, pirámide de pruebas con salidas reales y reflexión), entrada del Sprint 2 en `blog/README.md`, tarjetas 21–23 movidas a «DONE» en Trello y creación del tag `v0.2`.
+* **Próximo objetivo:** **Sprint 3 (`v1.0`)** — Despliegue continuo en Vercel, vistas previas en Pull Requests, pruebas contra lo desplegado, prueba de humo (`e2e/humo.spec.js`), workflow de Releases automáticas y entrega final.
 
 ---
 
@@ -116,3 +115,4 @@
 * **17 Nov 2026 (Código de registro automático):** Añadidas las 24 abreviaturas oficiales (`SIGLAS_EDICIONES`) en `js/datos/ediciones.js`; en `ficha.html`, el prefijo `POKE-XXX-` se rellena automáticamente al elegir carátula y el entrenador solo introduce el número (`^\d{1,4}$`, normalizado a 4 dígitos `POKE-XXX-0000`).
 * **17 Nov 2026 (Estilo visual y colores por edición):** Aumentada la escala tipográfica base (`html { font-size: 17.5px }`) para una interfaz más visual y añadidos temas de color por juego (`data-edicion-tema` + variables CSS en `css/estilos.css` sin estilos inline en JS) para la insignia `Seleccionada`, la carátula activa y los badges de edición en `listado.html`.
 * **17 Nov 2026 (Fondo Pokéball global):** Aplicado en `css/estilos.css` un fondo fijo de tres franjas simulando una Pokéball (rojo superior 0–43%, franja oscura central más estrecha 43–56%, blanco inferior 56–100%) en las 5 páginas (`index.html`, `registro.html`, `listado.html`, `ficha.html`, `usuarios.html`), con encabezados blancos legibles sobre la franja roja y tarjetas elevadas.
+* **19 Nov 2026 (Cierre de Sprint 2 - v0.2):** Implementadas las pruebas de integración de ficha y administración (`ficha.test.js`, `usuarios.test.js`), los recorridos E2E en Playwright (`e2e/sesion.spec.js`, `e2e/crud.spec.js`), el workflow completo de CI Paso 2 con concurrencia y artefactos, actualización de toda la documentación requerida en `README.md`, entrada de blog y movimiento de tarjetas 21–23 a «DONE» en Trello. Tag `v0.2` creado y preparado para entrega.

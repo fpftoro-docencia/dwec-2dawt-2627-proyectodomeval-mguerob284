@@ -129,7 +129,7 @@ export function renderizarPaginacion(contenedor, { pagina, totalPaginas }, doc =
 /**
  * Conecta un único oyente delegado sobre el contenedor de paginación (fase burbuja).
  * @param {HTMLElement} contenedor
- * @param {(nuevaPagina: number) => void} alCambiarPagina
+ * @param {Function} alCambiarPagina - Función de retorno con la nueva página.
  * @listens MouseEvent#click
  */
 export function vincularPaginacion(contenedor, alCambiarPagina) {

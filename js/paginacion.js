@@ -27,7 +27,7 @@ export function normalizarTextoBusqueda(texto = '') {
  * @template T
  * @param {T[]} lista - Colección original.
  * @param {string} consulta - Texto escrito por el usuario en el buscador.
- * @param {(elemento: T) => string} obtenerTexto - Función que concatena los campos buscables.
+ * @param {Function} obtenerTexto - Función que concatena los campos buscables.
  * @returns {T[]}
  * @example
  * filtrarLista([{ nombre: 'Rubí' }], 'rubi', (x) => x.nombre); // [{ nombre: 'Rubí' }]
@@ -54,10 +54,10 @@ export function filtrarLista(lista, consulta, obtenerTexto) {
  * @param {number|string} [pagina=1] - Página solicitada (1-indexada).
  * @param {number} [porPagina=6] - Elementos máximos por página.
  * @returns {{
- *   elementos: T[],
+ *   elementos: Array<*>,
  *   pagina: number,
  *   totalPaginas: number,
- *   totalElementos: number,
+ *   totalElementos: number
  * }}
  * @example
  * paginar(['a', 'b', 'c'], 2, 2); // { elementos: ['c'], pagina: 2, totalPaginas: 2, totalElementos: 3 }

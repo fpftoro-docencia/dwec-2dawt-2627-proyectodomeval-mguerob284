@@ -108,15 +108,11 @@ function esCampoValidable(nodo) {
  * @param {HTMLFormElement} formulario
  * @param {Object} [opciones={}]
  * @param {Document} [opciones.doc=document]
- * @param {Record<string, (campo: HTMLElement) => {valido: boolean, motivo?: string}>} [opciones.reglasExtra={}]
+ * @param {Object.<string, Function>} [opciones.reglasExtra={}]
  *   Reglas personalizadas por `id` o `data-validar` (ej. comprobar usuario duplicado o repetir clave).
- * @param {Record<string, string[]>} [opciones.dependencias={}]
+ * @param {Object.<string, string[]>} [opciones.dependencias={}]
  *   Mapa `idCampoOrigen -> idsCamposDependientes` que se revalidan cuando cambia el origen.
- * @returns {{
- *   validarCampo: (campo: HTMLElement, forzarTocado?: boolean) => boolean,
- *   limpiarCampo: (campo: HTMLElement) => void,
- *   validarFormulario: () => {valido: boolean, primerError: HTMLElement|null},
- * }}
+ * @returns {Object} Controlador con métodos `validarCampo`, `limpiarCampo` y `validarFormulario`.
  * @listens FocusEvent#blur
  * @listens Event#input
  * @listens Event#change

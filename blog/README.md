@@ -37,3 +37,27 @@ export function obtenerUsuarios(almacen = localStorage) {
 ```
 
 De este modo, cuando el navegador ejecuta la aplicación usa `localStorage` automáticamente, pero en `tests/unitarios/datos.test.js` podemos pasarle `new AlmacenFalso()` y probar todas las funciones de guardado, roles y datos corruptos de forma aislada y ultrarrápida.
+
+
+## 19/11/2026 · Sprint 2 · El CRUD, la zona de administración, validación accesible y pruebas de extremo a extremo
+
+### Dificultades y cómo las resolví
+
+**Captura del evento `blur` para la validación en tiempo real:** Al implementar el motor de validación accesible en `js/componentes/validacionFormulario.js`, queríamos que los errores solo se mostraran cuando el usuario abandona un campo por primera vez (para no agobiarle en rojo mientras escribe desde el principio). Sin embargo, el evento estándar `blur` no burbujea por el árbol del DOM (`bubbles: false`). En lugar de recorrer todos los campos y asociar oyentes individuales (lo cual fallaría al añadir dinámicamente nuevos miembros al equipo Pokémon), registramos el oyente de `blur` directamente sobre el formulario en la **fase de captura** (`capture: true`):
+
+```javascript
+// js/componentes/validacionFormulario.js
+formulario.addEventListener('blur', manejarSalidaCampo, true);
+```
+
+De esta forma, cuando el foco abandona cualquier control hijo, el evento viaja desde la raíz hacia el objetivo pasando por el formulario durante la bajada (fase de captura), permitiendo marcar el campo como tocado y mostrar el error de forma centralizada.
+
+**Filtrado multi-término insensible a mayúsculas y acentos en el buscador:** En la vitrina de recuerdos y en la tabla de usuarios, las búsquedas simples con `indexOf` o `includes` fallaban cuando el usuario introducía palabras separadas en diferente orden (por ejemplo, «epico rubi» para encontrar «Rubí Omega Épico») o escribía sin acentos. Lo resolvimos en `js/paginacion.js` mediante la función pura `filtrarLista`, combinando `normalize('NFD').replace(/[\u0300-\u036f]/g, '')` para eliminar diacríticos y dividiendo la consulta en términos individuales (`split(/\s+/)`) para exigir con `every` que todas las palabras buscadas coincidan en el texto normalizado.
+
+**Manejo de grupos dinámicos y lectura con `FormData.getAll()`:** La ficha de partida incluye dos grupos repetibles: el equipo campeón (1 a 6 miembros) y las leyendas caídas (1 a 6 caídos condicionales). Al enviar el formulario, `new FormData(formulario)` permite recolectar los campos homogéneos mediante `getAll('pokemonMote')`, `getAll('pokemonNivel')` y `getAll('pokemonMovimiento')`, reconstruyendo el array de objetos con un simple mapeo por índice sin tener que recorrer el DOM manualmente.
+
+### Problemas conceptuales
+
+**Delegación de eventos con `closest` en interfaces dinámicas:** En lugar de asociar eventos `click` a cada botón de borrar o editar en las tarjetas de recuerdos, a cada botón de eliminar fila de Pokémon o a cada botón de cambiar rol en la tabla de usuarios, aplicamos **delegación de eventos**. Añadimos un único oyente al contenedor padre (`#lista-partidas`, `#lista-equipo`, `#lista-usuarios`) y usamos `evento.target.closest('button[data-accion="..."]')`. Esto no solo reduce drásticamente el consumo de memoria y simplifica el ciclo de vida de los elementos dinámicos, sino que evita errores de oyentes huérfanos cuando se reemplazan o eliminan nodos del DOM.
+
+**Aislamiento y determinismo en las pruebas de extremo a extremo con Playwright:** Al preparar los recorridos E2E (`e2e/sesion.spec.js` y `e2e/crud.spec.js`), un aspecto crucial fue entender que Playwright crea un contexto de navegador limpio para cada prueba con el almacenamiento vacío. Esto garantizó que el primer usuario registrado en cada test siempre fuera administrador, permitiendo diseñar pruebas independientes y reproducibles. Encapsular las acciones repetidas en `e2e/ayudas.js` (`registrarse`, `iniciarSesion`, `crearRecuerdo`) mantuvo los tests limpios y enfocados en las aserciones de usuario.
