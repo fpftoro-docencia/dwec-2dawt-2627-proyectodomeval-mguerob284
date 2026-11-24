@@ -27,16 +27,49 @@ export const POR_PAGINA_LISTADO = 6;
 export const RETARDO_BUSQUEDA_MS = 250;
 
 /**
+ * Formatea el texto visible de un Pokémon (campeón o leyenda).
+ * Si no tiene mote: "Pikachu"
+ * Si tiene mote: "Antoñito (Pikachu)"
+ * @param {Object} [pokemon]
+ * @param {string} [pokemon.especie]
+ * @param {string} [pokemon.mote]
+ * @param {boolean} [pokemon.tieneMote]
+ * @returns {string}
+ */
+export function formatearNombrePokemon(pokemon) {
+  if (!pokemon) return '';
+  const especie = String(pokemon.especie || pokemon.mote || '').trim();
+  const mote = String(pokemon.mote || '').trim();
+  const tieneMote = Boolean(
+    pokemon.tieneMote !== undefined
+      ? pokemon.tieneMote && mote && especie && mote.toLowerCase() !== especie.toLowerCase()
+      : mote && especie && mote.toLowerCase() !== especie.toLowerCase(),
+  );
+
+  if (tieneMote) {
+    return `${mote} (${especie})`;
+  }
+  return especie || mote;
+}
+
+/**
  * Construye el texto buscable de una partida para el filtro sin tildes ni mayúsculas.
  * @param {Object} partida
  * @returns {string}
  */
 function textoBuscablePartida(partida) {
   const motes = Array.isArray(partida.equipo)
-    ? partida.equipo.map((miembro) => `${miembro.mote} ${miembro.movimientoClave}`).join(' ')
+    ? partida.equipo
+        .map(
+          (miembro) =>
+            `${miembro.especie || ''} ${miembro.mote || ''} ${miembro.movimientoClave || ''}`,
+        )
+        .join(' ')
     : '';
   const leyendas = Array.isArray(partida.leyendasCaidas)
-    ? partida.leyendasCaidas.map((leyenda) => `${leyenda.mote} ${leyenda.hazana}`).join(' ')
+    ? partida.leyendasCaidas
+        .map((leyenda) => `${leyenda.especie || ''} ${leyenda.mote || ''} ${leyenda.hazana || ''}`)
+        .join(' ')
     : '';
   const modalidades = Array.isArray(partida.modalidadesLocke)
     ? partida.modalidadesLocke.join(' ')
@@ -108,7 +141,7 @@ function crearTarjetaPartida(plantilla, partida, doc) {
     const chips = partida.equipo.map((miembro) => {
       const item = doc.createElement('li');
       item.className = 'badge bg-light text-dark border';
-      item.textContent = `${miembro.mote} Nv.${miembro.nivel}`;
+      item.textContent = `${formatearNombrePokemon(miembro)} lvl.${miembro.nivel}`;
       item.title = `Movimiento clave: ${miembro.movimientoClave}`;
       return item;
     });
@@ -127,7 +160,7 @@ function crearTarjetaPartida(plantilla, partida, doc) {
       const itemsLeyendas = partida.leyendasCaidas.map((leyenda) => {
         const item = doc.createElement('li');
         const nombre = doc.createElement('strong');
-        nombre.textContent = `★ ${leyenda.mote} (Nv.${leyenda.nivel})`;
+        nombre.textContent = `★ ${formatearNombrePokemon(leyenda)} (lvl.${leyenda.nivel})`;
         item.append(nombre, ` — ${leyenda.hazana}`);
         return item;
       });

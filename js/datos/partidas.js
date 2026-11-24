@@ -80,17 +80,45 @@ export function normalizarPartida(datos = {}) {
   const leyendasEntrada =
     huboLeyendasCaidas && Array.isArray(datos.leyendasCaidas) ? datos.leyendasCaidas : [];
 
-  const equipo = equipoEntrada.map((miembro) => ({
-    mote: String(miembro?.mote ?? '').trim(),
-    nivel: Number(miembro?.nivel ?? 1),
-    movimientoClave: String(miembro?.movimientoClave ?? '').trim(),
-  }));
+  const equipo = equipoEntrada.map((miembro) => {
+    const especie = String(miembro?.especie ?? miembro?.mote ?? '').trim();
+    const mote = String(miembro?.mote ?? '').trim();
+    const tieneMote = Boolean(
+      miembro?.tieneMote !== undefined
+        ? miembro.tieneMote
+        : mote && especie && mote.toLowerCase() !== especie.toLowerCase(),
+    );
+    const obj = {
+      mote: tieneMote && mote ? mote : especie,
+      nivel: Number(miembro?.nivel ?? 1),
+      movimientoClave: String(miembro?.movimientoClave ?? '').trim(),
+    };
+    if (miembro?.especie !== undefined || tieneMote) {
+      obj.especie = especie;
+      obj.tieneMote = tieneMote;
+    }
+    return obj;
+  });
 
-  const leyendasCaidas = leyendasEntrada.map((leyenda) => ({
-    mote: String(leyenda?.mote ?? '').trim(),
-    nivel: Number(leyenda?.nivel ?? 1),
-    hazana: String(leyenda?.hazana ?? '').trim(),
-  }));
+  const leyendasCaidas = leyendasEntrada.map((leyenda) => {
+    const especie = String(leyenda?.especie ?? leyenda?.mote ?? '').trim();
+    const mote = String(leyenda?.mote ?? '').trim();
+    const tieneMote = Boolean(
+      leyenda?.tieneMote !== undefined
+        ? leyenda.tieneMote
+        : mote && especie && mote.toLowerCase() !== especie.toLowerCase(),
+    );
+    const obj = {
+      mote: tieneMote && mote ? mote : especie,
+      nivel: Number(leyenda?.nivel ?? 1),
+      hazana: String(leyenda?.hazana ?? '').trim(),
+    };
+    if (leyenda?.especie !== undefined || tieneMote) {
+      obj.especie = especie;
+      obj.tieneMote = tieneMote;
+    }
+    return obj;
+  });
 
   return {
     codigoRegistro: String(datos.codigoRegistro ?? '')

@@ -341,8 +341,18 @@ export function iniciarFicha({
     const sufijo = contadorFilasEquipo;
     const fragmento = plantillaPokemon.content.cloneNode(true);
 
+    const tieneMote = Boolean(
+      datos.tieneMote ||
+      (datos.mote &&
+        datos.especie &&
+        datos.mote.trim().toLowerCase() !== datos.especie.trim().toLowerCase()),
+    );
+    const especie = datos.especie || (!tieneMote ? datos.mote : '') || '';
+    const mote = tieneMote ? datos.mote || '' : '';
+
     const campos = [
-      { clave: 'mote', valor: datos.mote ?? '' },
+      { clave: 'especie', valor: especie },
+      { clave: 'mote', valor: mote },
       { clave: 'nivel', valor: datos.nivel ?? '' },
       { clave: 'movimiento', valor: datos.movimientoClave ?? '' },
     ];
@@ -364,6 +374,37 @@ export function iniciarFicha({
       }
     }
 
+    const idTieneMote = `pokemon-tiene-mote-${sufijo}`;
+    const checkTieneMote = fragmento.querySelector('[data-campo="tieneMote"]');
+    const etiquetaTieneMote = fragmento.querySelector('[data-etiqueta="tieneMote"]');
+    const bloqueMote = fragmento.querySelector('[data-bloque="mote"]');
+    const inputMote = fragmento.querySelector('[data-campo="mote"]');
+
+    if (etiquetaTieneMote) etiquetaTieneMote.htmlFor = idTieneMote;
+    if (checkTieneMote) {
+      checkTieneMote.id = idTieneMote;
+      checkTieneMote.checked = tieneMote;
+      if (bloqueMote && inputMote) {
+        bloqueMote.hidden = !tieneMote;
+        inputMote.disabled = !tieneMote;
+        inputMote.required = tieneMote;
+      }
+      checkTieneMote.addEventListener('change', () => {
+        const activo = checkTieneMote.checked;
+        if (bloqueMote && inputMote) {
+          bloqueMote.hidden = !activo;
+          inputMote.disabled = !activo;
+          inputMote.required = activo;
+          if (!activo) {
+            inputMote.value = '';
+            validador.limpiarCampo(inputMote);
+          } else {
+            inputMote.focus();
+          }
+        }
+      });
+    }
+
     listaEquipo.append(fragmento);
     actualizarEstadoEquipo();
   }
@@ -383,12 +424,28 @@ export function iniciarFicha({
         leyenda.textContent = `⭐ Leyenda Caída #${indice + 1}`;
       }
       const controles = fila.querySelectorAll('input, select, textarea');
+      const checkMote = fila.querySelector('input[data-campo="tieneMote"]');
+      const inputMote = fila.querySelector('input[data-campo="mote"]');
+      const bloqueMote = fila.querySelector('[data-bloque="mote"]');
+
       controles.forEach((control) => {
-        control.disabled = !activo;
-        if (!activo) {
-          validador.limpiarCampo(control);
+        if (control === inputMote) {
+          control.disabled = !activo || !checkMote?.checked;
+          if (!activo) {
+            validador.limpiarCampo(control);
+          }
+        } else {
+          control.disabled = !activo;
+          if (!activo) {
+            validador.limpiarCampo(control);
+          }
         }
       });
+
+      if (bloqueMote) {
+        bloqueMote.hidden = !activo || !checkMote?.checked;
+      }
+
       const btnQuitar = fila.querySelector('[data-accion="quitar-leyenda"]');
       if (btnQuitar) {
         btnQuitar.disabled = !activo || total <= MIN_LEYENDAS_CAIDAS;
@@ -417,8 +474,18 @@ export function iniciarFicha({
     const sufijo = contadorFilasLeyendas;
     const fragmento = plantillaLeyenda.content.cloneNode(true);
 
+    const tieneMote = Boolean(
+      datos.tieneMote ||
+      (datos.mote &&
+        datos.especie &&
+        datos.mote.trim().toLowerCase() !== datos.especie.trim().toLowerCase()),
+    );
+    const especie = datos.especie || (!tieneMote ? datos.mote : '') || '';
+    const mote = tieneMote ? datos.mote || '' : '';
+
     const campos = [
-      { clave: 'mote', valor: datos.mote ?? '' },
+      { clave: 'especie', valor: especie },
+      { clave: 'mote', valor: mote },
       { clave: 'nivel', valor: datos.nivel ?? '' },
       { clave: 'hazana', valor: datos.hazana ?? '' },
     ];
@@ -438,6 +505,37 @@ export function iniciarFicha({
         control.setAttribute('aria-describedby', idError);
         control.value = String(valor);
       }
+    }
+
+    const idTieneMote = `leyenda-tiene-mote-${sufijo}`;
+    const checkTieneMote = fragmento.querySelector('[data-campo="tieneMote"]');
+    const etiquetaTieneMote = fragmento.querySelector('[data-etiqueta="tieneMote"]');
+    const bloqueMote = fragmento.querySelector('[data-bloque="mote"]');
+    const inputMote = fragmento.querySelector('[data-campo="mote"]');
+
+    if (etiquetaTieneMote) etiquetaTieneMote.htmlFor = idTieneMote;
+    if (checkTieneMote) {
+      checkTieneMote.id = idTieneMote;
+      checkTieneMote.checked = tieneMote;
+      if (bloqueMote && inputMote) {
+        bloqueMote.hidden = !tieneMote;
+        inputMote.disabled = !tieneMote;
+        inputMote.required = tieneMote;
+      }
+      checkTieneMote.addEventListener('change', () => {
+        const activo = checkTieneMote.checked;
+        if (bloqueMote && inputMote) {
+          bloqueMote.hidden = !activo;
+          inputMote.disabled = !activo;
+          inputMote.required = activo;
+          if (!activo) {
+            inputMote.value = '';
+            validador.limpiarCampo(inputMote);
+          } else {
+            inputMote.focus();
+          }
+        }
+      });
     }
 
     listaLeyendas.append(fragmento);
@@ -633,24 +731,51 @@ export function iniciarFicha({
       sincronizarCodigoRegistro(obtenerEdicionSeleccionada());
       // Requisito 17: lectura con FormData (`get` y `getAll` para los grupos dinámicos)
       const datosFormulario = new FormData(formulario);
-      const motes = datosFormulario.getAll('pokemonMote');
-      const niveles = datosFormulario.getAll('pokemonNivel');
-      const movimientos = datosFormulario.getAll('pokemonMovimiento');
 
-      const equipo = motes.map((mote, indice) => ({
-        mote: String(mote),
-        nivel: Number(niveles[indice]),
-        movimientoClave: String(movimientos[indice]),
-      }));
+      const filasEquipo = Array.from(listaEquipo.querySelectorAll('[data-fila-pokemon]'));
+      const equipo = filasEquipo.map((fila) => {
+        const inputEspecie = fila.querySelector('input[data-campo="especie"]');
+        const checkMote = fila.querySelector('input[data-campo="tieneMote"]');
+        const inputMote = fila.querySelector('input[data-campo="mote"]');
+        const inputNivel = fila.querySelector('input[data-campo="nivel"]');
+        const inputMovimiento = fila.querySelector('input[data-campo="movimiento"]');
+
+        const especie = String(inputEspecie?.value || inputMote?.value || '').trim();
+        const tieneMote = Boolean(checkMote?.checked);
+        const mote = tieneMote ? String(inputMote?.value || '').trim() : '';
+
+        return {
+          especie,
+          tieneMote,
+          mote: tieneMote && mote ? mote : especie,
+          nivel: Number(inputNivel?.value || 1),
+          movimientoClave: String(inputMovimiento?.value || '').trim(),
+        };
+      });
 
       const huboLeyendasCaidas = datosFormulario.get('huboLeyendasCaidas') !== null;
-      const leyendasCaidas = huboLeyendasCaidas
-        ? datosFormulario.getAll('leyendaMote').map((mote, indice) => ({
-            mote: String(mote),
-            nivel: Number(datosFormulario.getAll('leyendaNivel')[indice]),
-            hazana: String(datosFormulario.getAll('leyendaHazana')[indice]),
-          }))
+      const filasLeyendas = huboLeyendasCaidas
+        ? Array.from(listaLeyendas.querySelectorAll('[data-fila-leyenda]'))
         : [];
+      const leyendasCaidas = filasLeyendas.map((fila) => {
+        const inputEspecie = fila.querySelector('input[data-campo="especie"]');
+        const checkMote = fila.querySelector('input[data-campo="tieneMote"]');
+        const inputMote = fila.querySelector('input[data-campo="mote"]');
+        const inputNivel = fila.querySelector('input[data-campo="nivel"]');
+        const inputHazana = fila.querySelector('input[data-campo="hazana"]');
+
+        const especie = String(inputEspecie?.value || inputMote?.value || '').trim();
+        const tieneMote = Boolean(checkMote?.checked);
+        const mote = tieneMote ? String(inputMote?.value || '').trim() : '';
+
+        return {
+          especie,
+          tieneMote,
+          mote: tieneMote && mote ? mote : especie,
+          nivel: Number(inputNivel?.value || 1),
+          hazana: String(inputHazana?.value || '').trim(),
+        };
+      });
 
       const tipoPartida =
         String(datosFormulario.get('tipoPartida') || 'Clásica') === 'Locke' ? 'Locke' : 'Clásica';

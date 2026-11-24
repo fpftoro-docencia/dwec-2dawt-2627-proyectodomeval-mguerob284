@@ -146,4 +146,64 @@ describe('Integración: Listado de recuerdos (listado.html)', () => {
       'Recuerdo borrado correctamente',
     );
   });
+
+  it('muestra el formato Pikachu lvl.100 y Antoñito (Pikachu) lvl.100 según si tiene mote', () => {
+    crearPartida(
+      'AshKetchum',
+      crearPartidaDemo(1, {
+        titulo: 'Partida Motes',
+        equipo: [
+          {
+            especie: 'Pikachu',
+            tieneMote: false,
+            mote: 'Pikachu',
+            nivel: 100,
+            movimientoClave: 'Rayo',
+          },
+          {
+            especie: 'Pikachu',
+            tieneMote: true,
+            mote: 'Antoñito',
+            nivel: 100,
+            movimientoClave: 'Placaje',
+          },
+        ],
+        huboLeyendasCaidas: true,
+        leyendasCaidas: [
+          {
+            especie: 'Charizard',
+            tieneMote: true,
+            mote: 'Fuego',
+            nivel: 80,
+            hazana: 'Héroe',
+          },
+          {
+            especie: 'Blastoise',
+            tieneMote: false,
+            mote: 'Blastoise',
+            nivel: 75,
+            hazana: 'Escudo',
+          },
+        ],
+      }),
+      almacenPartidas,
+    );
+
+    iniciarListado({
+      doc: document,
+      almacenPartidas,
+      almacenSesion,
+      localizacion,
+      historial,
+      porPagina: 6,
+    });
+
+    const equipoTexto = document.querySelector('[data-campo="equipo"]').textContent;
+    expect(equipoTexto).toContain('Pikachu lvl.100');
+    expect(equipoTexto).toContain('Antoñito (Pikachu) lvl.100');
+
+    const leyendasTexto = document.querySelector('[data-campo="leyendasCaidas"]').textContent;
+    expect(leyendasTexto).toContain('★ Fuego (Charizard) (lvl.80)');
+    expect(leyendasTexto).toContain('★ Blastoise (lvl.75)');
+  });
 });

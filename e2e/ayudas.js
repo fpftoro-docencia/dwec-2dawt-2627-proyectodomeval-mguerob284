@@ -68,7 +68,7 @@ export async function crearRecuerdo(
   await page.getByLabel('ID de Entrenador').fill(idEntrenador);
 
   const filaEquipo = page.locator('[data-fila-pokemon]').first();
-  await filaEquipo.locator('input[name="pokemonMote"]').fill(mote);
+  await filaEquipo.locator('input[data-campo="especie"]').fill(mote);
   await filaEquipo.locator('input[name="pokemonNivel"]').fill(nivel);
   await filaEquipo.locator('input[name="pokemonMovimiento"]').fill(movimiento);
 

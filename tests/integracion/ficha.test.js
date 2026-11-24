@@ -149,7 +149,7 @@ describe('Integración: Ficha de recuerdo (ficha.html)', () => {
 
     // Rellenar Pokémon del equipo
     const filaEquipo = document.querySelector('[data-fila-pokemon]');
-    escribir(filaEquipo.querySelector('input[name="pokemonMote"]'), 'Typhlosion');
+    escribir(filaEquipo.querySelector('input[data-campo="especie"]'), 'Typhlosion');
     escribir(filaEquipo.querySelector('input[name="pokemonNivel"]'), '65');
     escribir(filaEquipo.querySelector('input[name="pokemonMovimiento"]'), 'Lanzallamas');
 

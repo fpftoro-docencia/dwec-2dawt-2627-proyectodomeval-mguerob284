@@ -300,25 +300,58 @@
     <template id="plantilla-pokemon">
       <fieldset class="border rounded p-3 mb-3 bg-light" data-fila-pokemon>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <legend class="fs-6 fw-bold mb-0" data-titulo-pokemon></legend>
-          <button type="button" class="btn btn-outline-danger btn-sm" data-accion="quitar-pokemon">
+          <legend
+            class="fs-6 fw-bold mb-0 float-none w-auto flex-grow-1"
+            data-titulo-pokemon
+          ></legend>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm text-nowrap flex-shrink-0 ms-2"
+            data-accion="quitar-pokemon"
+          >
             Quitar
           </button>
         </div>
 
-        <div class="row g-3">
-          <div class="col-12 col-md-4">
-            <label class="form-label small fw-semibold" data-etiqueta="mote">Mote o especie</label>
+        <div class="row g-3 align-items-start">
+          <div class="col-12 col-md-5">
+            <label class="form-label small fw-semibold" data-etiqueta="especie">Pokémon</label>
             <input
               type="text"
-              name="pokemonMote"
+              name="pokemonEspecie"
               class="form-control"
-              placeholder="Ej. Typhlosion"
-              data-campo="mote"
+              placeholder="Ej. Pikachu"
+              data-campo="especie"
               data-validar="motePokemon"
               required
             />
-            <div class="invalid-feedback" data-error="mote"></div>
+            <div class="invalid-feedback" data-error="especie"></div>
+
+            <div class="form-check mt-2">
+              <input
+                type="checkbox"
+                name="pokemonTieneMote"
+                class="form-check-input"
+                data-campo="tieneMote"
+              />
+              <label class="form-check-label small fw-semibold" data-etiqueta="tieneMote">
+                ¿Tiene mote?
+              </label>
+            </div>
+
+            <div class="mt-2" data-bloque="mote" hidden>
+              <label class="form-label small fw-semibold" data-etiqueta="mote">Mote</label>
+              <input
+                type="text"
+                name="pokemonMote"
+                class="form-control"
+                placeholder="Ej. Antoñito"
+                data-campo="mote"
+                data-validar="motePokemon"
+                disabled
+              />
+              <div class="invalid-feedback" data-error="mote"></div>
+            </div>
           </div>
 
           <div class="col-12 col-md-3">
@@ -337,7 +370,7 @@
             <div class="invalid-feedback" data-error="nivel"></div>
           </div>
 
-          <div class="col-12 col-md-5">
+          <div class="col-12 col-md-4">
             <label class="form-label small fw-semibold" data-etiqueta="movimiento">
               Movimiento clave
             </label>
@@ -359,31 +392,62 @@
     <template id="plantilla-leyenda-caida">
       <fieldset class="border border-warning rounded p-3 mb-3 bg-white" data-fila-leyenda>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <legend class="fs-6 fw-bold mb-0" data-titulo-leyenda></legend>
-          <button type="button" class="btn btn-outline-danger btn-sm" data-accion="quitar-leyenda">
+          <legend
+            class="fs-6 fw-bold mb-0 float-none w-auto flex-grow-1"
+            data-titulo-leyenda
+          ></legend>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm text-nowrap flex-shrink-0 ms-2"
+            data-accion="quitar-leyenda"
+          >
             Quitar
           </button>
         </div>
 
-        <div class="row g-3">
-          <div class="col-12 col-md-3">
-            <label class="form-label small fw-semibold" data-etiqueta="mote">Mote o especie</label>
+        <div class="row g-3 align-items-start">
+          <div class="col-12 col-md-4">
+            <label class="form-label small fw-semibold" data-etiqueta="especie">Pokémon</label>
             <input
               type="text"
-              name="leyendaMote"
+              name="leyendaEspecie"
               class="form-control"
               placeholder="Ej. Ampharos"
-              data-campo="mote"
+              data-campo="especie"
               data-validar="motePokemon"
               required
             />
-            <div class="invalid-feedback" data-error="mote"></div>
+            <div class="invalid-feedback" data-error="especie"></div>
+
+            <div class="form-check mt-2">
+              <input
+                type="checkbox"
+                name="leyendaTieneMote"
+                class="form-check-input"
+                data-campo="tieneMote"
+              />
+              <label class="form-check-label small fw-semibold" data-etiqueta="tieneMote">
+                ¿Tiene mote?
+              </label>
+            </div>
+
+            <div class="mt-2" data-bloque="mote" hidden>
+              <label class="form-label small fw-semibold" data-etiqueta="mote">Mote</label>
+              <input
+                type="text"
+                name="leyendaMote"
+                class="form-control"
+                placeholder="Ej. Chispa"
+                data-campo="mote"
+                data-validar="motePokemon"
+                disabled
+              />
+              <div class="invalid-feedback" data-error="mote"></div>
+            </div>
           </div>
 
           <div class="col-12 col-md-2">
-            <label class="form-label small fw-semibold" data-etiqueta="nivel">
-              Nivel al caer
-            </label>
+            <label class="form-label small fw-semibold" data-etiqueta="nivel">Nivel al caer</label>
             <input
               type="number"
               name="leyendaNivel"
@@ -398,7 +462,7 @@
             <div class="invalid-feedback" data-error="nivel"></div>
           </div>
 
-          <div class="col-12 col-md-7">
+          <div class="col-12 col-md-6">
             <label class="form-label small fw-semibold" data-etiqueta="hazana">
               Hazaña o recuerdo en el corazón
             </label>

@@ -157,6 +157,18 @@ footer {
   overflow-wrap: anywhere;
 }
 
+/* Corrección de maquetación en fieldset y botones de acción dinámicos */
+fieldset legend {
+  float: none !important;
+  width: auto !important;
+}
+
+[data-accion='quitar-pokemon'],
+[data-accion='quitar-leyenda'] {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
 /* Diálogo nativo de confirmación */
 .dialogo-confirmacion {
   max-width: 28rem;
