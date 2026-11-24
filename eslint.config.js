@@ -15,6 +15,9 @@ export default [
       'no-var': 'error',
       'prefer-const': 'error',
       eqeqeq: 'error',
+      camelcase: ['error', { properties: 'never' }],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-duplicate-imports': 'error',
     },
   },
 ];

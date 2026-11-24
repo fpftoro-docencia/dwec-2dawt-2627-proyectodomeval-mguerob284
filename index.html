@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PokeMemories · Iniciar Sesión</title>
+    <link rel="icon" type="image/png" href="img/logo.png" />
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/estilos.css" />
+  </head>
+  <body>
+    <header class="bg-dark text-white py-4 shadow-sm text-center">
+      <div class="container">
+        <img
+          src="img/logo.png"
+          alt="Logo PokeMemories"
+          width="76"
+          height="76"
+          class="mb-2 shadow-sm rounded-circle border border-2 border-warning logo-header"
+        />
+        <h1 class="h3 mb-1 fw-bold">PokeMemories</h1>
+        <p class="small text-secondary mb-0">Salón de la Fama y Álbum de Recuerdos Pokémon</p>
+      </div>
+    </header>
+
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+          <div id="zona-avisos" role="status" aria-live="polite" class="mb-3"></div>
+
+          <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4">
+              <h2 class="card-title h4 mb-3 fw-bold text-center">Acceso de Entrenadores</h2>
+              <form id="form-login" novalidate>
+                <div class="mb-3">
+                  <label for="usuario" class="form-label">Nombre de Entrenador</label>
+                  <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    class="form-control"
+                    placeholder="Ej. AshKetchum"
+                    required
+                    autocomplete="username"
+                    aria-describedby="error-usuario"
+                  />
+                  <div class="invalid-feedback" id="error-usuario"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="clave" class="form-label">Contraseña</label>
+                  <div class="input-group has-validation">
+                    <input
+                      type="password"
+                      id="clave"
+                      name="clave"
+                      class="form-control"
+                      placeholder="Introduzca su contraseña"
+                      required
+                      autocomplete="current-password"
+                      aria-describedby="error-clave"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary d-flex align-items-center"
+                      data-alternar-clave="clave"
+                      aria-label="Mostrar contraseña"
+                      aria-pressed="false"
+                      title="Mostrar contraseña"
+                    >
+                      <svg
+                        data-icono="mostrar"
+                        aria-hidden="true"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"
+                        />
+                        <path
+                          d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"
+                        />
+                      </svg>
+                      <svg
+                        data-icono="ocultar"
+                        aria-hidden="true"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                        hidden
+                      >
+                        <path
+                          d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"
+                        />
+                        <path
+                          d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"
+                        />
+                      </svg>
+                    </button>
+                    <div class="invalid-feedback" id="error-clave"></div>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                  <button type="submit" id="btn-entrar" class="btn btn-primary fw-bold">
+                    Iniciar Sesión
+                  </button>
+                </div>
+              </form>
+
+              <hr />
+              <div class="text-center">
+                <span class="text-muted small">¿Eres un nuevo entrenador?</span>
+                <a href="registro.html" class="ms-1 fw-bold text-decoration-none">
+                  Crear una cuenta
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-3 text-center text-muted small mt-auto border-top">
+      PokeMemories · Por: Manuel Guerrero 🐉
+    </footer>
+
+    <script type="module">
+      import { iniciarLogin } from './js/paginas/login.js';
+      iniciarLogin();
+    </script>
+  </body>
+</html>
